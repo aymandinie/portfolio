@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+<title>Goldfinch · Member Portal</title>
+<meta name="theme-color" content="#022135" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<link rel="icon" type="image/png" href="assets/app-icon.png" />
+<link rel="apple-touch-icon" href="assets/app-icon.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/styles.css" />
+<style>
+  :focus-visible { outline: 2px solid var(--focus, #F2C21A); outline-offset: 2px; border-radius: 3px; }
+  a:focus-visible, button:focus-visible, [role="button"]:focus-visible,
+  select:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--focus, #F2C21A); outline-offset: 2px;
+  }
+  :focus:not(:focus-visible) { outline: none; }
+</style>
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      colors: {
+        navy:{950:'#011827',900:'#022135',800:'#0A3A57',700:'#114A66',600:'#23536E'},
+        gold:{300:'#FDE08A',400:'#FBD33A',500:'#F2C21A',600:'#E0B200',700:'#B98F00'},
+        brass:'#BFA46F',
+        taupe:{100:'#EFE9E2',300:'#D7C9BC',500:'#7E97AA',700:'#8A7B6B'},
+        cream:{50:'#FBF6EE',100:'#F3E9DA',200:'#ECDCC8',DEFAULT:'#ECDCC8'},
+        slate:{300:'#7E97AA',500:'#4E6D80'}
+      },
+      fontFamily:{ sans:['Inter','-apple-system','BlinkMacSystemFont','sans-serif'] }
+    }}
+  }
+</script>
+<style>
+  /* Deep brand-navy canvas (never pure black, never warm tints) */
+  html,body { background:#011827; }
+  .pwa-shell {
+    background:#022135;
+    color:#fff;
+    min-height:100vh;
+    min-height:100dvh;
+    max-width:440px;
+    margin:0 auto;
+    position:relative;
+    box-shadow:0 0 50px rgba(0,0,0,0.45);
+    display:flex;
+    flex-direction:column;
+  }
+  .pwa-header {
+    color:#fff;
+    padding:52px 20px 20px;
+    position:relative;
+  }
+  .pwa-bottom-nav {
+    position:sticky; bottom:0;
+    background:#011827;
+    border-top:1px solid #1A3F58;
+    display:flex;
+    justify-content:space-around;
+    align-items:flex-end;
+    padding:8px 0 16px;
+    z-index:30;
+  }
+  /* F21 — raised centre "Refer" hero tab */
+  .bottom-nav-hero {
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+    color:var(--gold); font-size:11px; font-weight:600; cursor:pointer;
+    margin-top:-26px; text-decoration:none;
+  }
+  .bottom-nav-hero-btn {
+    width:52px; height:52px; border-radius:50%;
+    background:var(--gold-grad); color:var(--navy);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 20px -6px rgba(242,194,26,0.55), 0 0 0 4px #011827;
+    transition:transform .12s ease;
+  }
+  .bottom-nav-hero:active .bottom-nav-hero-btn { transform:scale(.94); }
+  .bottom-nav-hero-btn svg { width:24px; height:24px; }
+  .bottom-nav-hero-label { color:var(--icon-inactive); font-weight:500; }
+  .bottom-nav-hero.active .bottom-nav-hero-label { color:var(--gold); }
+  .pwa-shell.theme-light .bottom-nav-hero-btn { box-shadow:0 8px 20px -6px rgba(242,194,26,0.55), 0 0 0 4px #FFFFFF; }
+  .pwa-shell.theme-light .bottom-nav-hero-label { color:#9AA8B2; }
+  .pwa-shell.theme-light .bottom-nav-hero.active .bottom-nav-hero-label { color:#9A7A00; }  /* active hero label = gold in light mode too */
+  /* F24 — portal bottom-sheet surface (theme-aware) */
+  .portal-sheet { background:#0A3A57; color:#fff; }
+  .pwa-shell.theme-light .portal-sheet { background:#FFFFFF; color:#022135; }
+  /* Brand logo colour vs surface: brand tone on the light theme; white on the dark theme +
+     on always-dark surfaces (sign-in gate, membership card). logo-full.png is transparent RGBA. */
+  .portal-brand { transition: filter .2s ease; }
+  .pwa-shell:not(.theme-light) .portal-brand { filter: brightness(0) invert(1); }
+  .portal-brand.always-white { filter: brightness(0) invert(1); }
+  /* F25 — Bella ambassador hero band behind the Home greeting/wallet.
+     Drop assets/ambassador-bella.jpg in and it shows through the scrim. */
+  .home-hero-band {
+    /* Portrait-silhouette placeholder (gold bust). Sits UNDER the real image slot,
+       so dropping assets/ambassador-bella.jpg in simply covers it. */
+    --bella-ph: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20240%20300%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22g%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23F6D66A%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%239A6E15%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cg%20fill%3D%22url(%23g)%22%3E%3Cpath%20d%3D%22M120%2026c32%200%2052%2024%2052%2056%200%2018-7%2032-19%2042%203%2010%2011%2015%2022%2018%2018%205%2031%2015%2038%2031%2010%2024%2013%2071%2013%20101H14c0-30%203-77%2013-101%207-16%2020-26%2038-31%2011-3%2019-8%2022-18-12-10-19-24-19-42%200-32%2020-56%2052-56z%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E");
+    position:absolute; top:0; left:0; right:0; height:340px; z-index:0; pointer-events:none;
+    background:
+      radial-gradient(130% 90% at 88% -10%, rgba(242,194,26,0.28), transparent 55%),
+      linear-gradient(180deg, rgba(1,24,39,0) 34%, #011827 96%),
+      image-set(url('assets/ambassador-bella.jpg') 1x),
+      var(--bella-ph);
+    background-size: cover, cover, cover, auto 300px;
+    background-position: center, center, 78% 12%, right -12px bottom;
+    background-repeat: no-repeat;
+    opacity:.92;
+  }
+  .pwa-header { position:relative; }
+  .pwa-header > *:not(.home-hero-band) { position:relative; z-index:1; }
+  .home-hero-tag {
+    display:inline-flex; align-items:center; gap:5px; margin-bottom:14px;
+    font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    color:#3D2C05; background:var(--gold-grad); padding:4px 10px 4px 8px; border-radius:999px;
+  }
+  .home-hero-tag svg { width:12px; height:12px; }
+  .pwa-shell.theme-light .home-hero-band {
+    background:
+      radial-gradient(130% 90% at 88% -10%, rgba(242,194,26,0.30), transparent 55%),
+      linear-gradient(180deg, rgba(238,241,244,0) 30%, var(--app-bg,#EEF1F4) 96%),
+      image-set(url('assets/ambassador-bella.jpg') 1x),
+      var(--bella-ph);
+    background-size: cover, cover, cover, auto 300px;
+    background-position: center, center, 78% 12%, right -12px bottom;
+    background-repeat: no-repeat;
+  }
+  /* Bella ambassador photo placeholder — a portrait frame pinned top-right of the Home
+     hero. Drop assets/ambassador-bella.jpg in and it fills the frame; until then it
+     reads unmistakably as a placeholder (dashed frame + person glyph + "BELLA"). */
+  .gf-bella-portrait {
+    width:66px; height:84px; border-radius:14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    border:1.5px dashed #55708A; background:rgba(255,255,255,0.04);
+    background-image:image-set(url('assets/ambassador-bella.jpg') 1x);
+    background-size:cover; background-position:center top;
+  }
+  .pwa-content { padding-bottom:84px; flex:1 0 auto; }
+
+  /* Interactive 3D membership card — tilts toward the pointer/tilt with a moving gold glare */
+  .card-stage { perspective:1100px; }
+  .card-stage .wallet-card {
+    transition:transform .12s ease-out;
+    will-change:transform;
+    transform:rotateX(0deg) rotateY(0deg);
+  }
+  .card-glare {
+    position:absolute; inset:0; border-radius:inherit; pointer-events:none; z-index:2;
+    background:radial-gradient(circle at 70% 12%, rgba(255,255,255,0.16), transparent 55%);
+    mix-blend-mode:screen; transition:background .12s ease-out;
+  }
+  .wallet-card { box-shadow:0 24px 48px -18px rgba(0,0,0,0.6), 0 2px 0 rgba(191,164,111,0.25) inset; }
+  /* keep real content above the glare */
+  .wallet-card > *:not(.card-glare) { position:relative; z-index:3; }
+
+  .qr-fake {
+    width:100%; aspect-ratio:1; background:white;
+    background-image:
+      repeating-linear-gradient(0deg, #000 0 4px, transparent 4px 8px),
+      repeating-linear-gradient(90deg, #000 0 4px, transparent 4px 8px);
+    mask:
+      radial-gradient(circle at 16% 16%, transparent 12%, black 13%),
+      radial-gradient(circle at 84% 16%, transparent 12%, black 13%),
+      radial-gradient(circle at 16% 84%, transparent 12%, black 13%);
+    -webkit-mask-composite: source-over;
+  }
+</style>
+</head>
+<body>
+
+<div class="pwa-shell">
+  <!-- Phone status bar -->
+  <div class="absolute top-0 left-0 right-0 flex justify-between items-center px-6 py-3 text-white text-xs font-medium z-50 pointer-events-none">
+    <span>9:41</span>
+    <div class="flex items-center gap-1">
+      <span>·· 5G</span>
+      <svg class="w-4 h-3" viewBox="0 0 16 12" fill="currentColor"><rect x="0" y="0" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1"/><rect x="2" y="2" width="9" height="6" fill="currentColor"/><rect x="14" y="3" width="2" height="4" fill="currentColor"/></svg>
+    </div>
+  </div>
+
+  <main id="pwaContent" class="pwa-content"></main>
+
+  <!-- Bottom nav -->
+  <nav class="pwa-bottom-nav" id="bottomNav"></nav>
+
+  <!-- Portal bottom-sheet (F24 request-an-update, etc.) -->
+  <div id="portalSheet" class="hidden" style="position:fixed;inset:0;z-index:120;">
+    <div style="position:absolute;inset:0;background:rgba(1,15,25,.6)" onclick="closeSheet()"></div>
+    <!-- Sheet is capped to the phone-shell width (440px) and centred, so on a desktop it sits
+         inside the phone column instead of stretching edge-to-edge. On mobile it's full-width. -->
+    <div id="portalSheetBody" class="sheet-enter portal-sheet" style="position:absolute;left:0;right:0;bottom:0;margin-left:auto;margin-right:auto;width:100%;max-width:440px;border-radius:20px 20px 0 0;max-height:88vh;overflow-y:auto;padding:20px 20px calc(20px + env(safe-area-inset-bottom))"></div>
+  </div>
+</div>
+
+<script src="assets/qrcode.min.js"></script>
+<script src="assets/i18n.js"></script>
+<script src="assets/data.js"></script>
+<script src="assets/engine.js"></script>
+<script src="assets/components.js"></script>
+<script>
+/* Real scannable QR (navy modules on white) — falls back to a placeholder if the lib is absent */
+function qrSvg(text, opts) {
+  opts = opts || {};
+  if (typeof qrcode === 'undefined') return '<div class="qr-fake w-full h-full"></div>';
+  const qr = qrcode(0, opts.ec || 'M');
+  qr.addData(text); qr.make();
+  const n = qr.getModuleCount();
+  const cell = opts.cell || 6, margin = (opts.margin != null ? opts.margin : 1);
+  const size = (n + margin*2) * cell, dark = opts.dark || '#022135';
+  let rects = '';
+  for (let r=0;r<n;r++) for (let c=0;c<n;c++) if (qr.isDark(r,c)) rects += `<rect x="${(c+margin)*cell}" y="${(r+margin)*cell}" width="${cell}" height="${cell}"/>`;
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${size} ${size}" width="100%" height="100%" shape-rendering="crispEdges"><rect width="${size}" height="${size}" fill="#fff"/><g fill="${dark}">${rects}</g></svg>`;
+}
+
+/* Portal date helpers — demo clock pinned to 15 May 2026 (matches engine/admin). */
+const PORTAL_TODAY = '2026-05-15';
+const _PMON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function fmtDMY(s){ if(!s) return ''; const d=new Date(s); if(isNaN(d)) return s; return d.getDate()+' '+_PMON[d.getMonth()]+' '+d.getFullYear(); }
+function daysUntil(iso){ if(!iso) return null; const d=new Date(iso), t=new Date(PORTAL_TODAY+'T00:00:00'); return Math.round((d-t)/864e5); }
+// Plan lifecycle from real fields (paidMonths/totalMonths/status) — never a hardcoded badge.
+function planUiStatus(p){
+  const done = (p.paidMonths||0) >= p.totalMonths || p.status==='elapsed';
+  if (done) return { key:'done',  label:'Completed' };
+  if ((p.totalMonths - (p.paidMonths||0)) <= 1 || p.status==='final') return { key:'final', label:'Final month' };
+  return { key:'active', label:'On track' };
+}
+// The member's soonest-due active plan (for Home 'Up Next'); null if none upcoming.
+function memberUpNextPlan(me){
+  return (GF_DATA.atomePlans||[])
+    .filter(p => p.memberId===me.id && p.nextDate && !((p.paidMonths||0)>=p.totalMonths || p.status==='elapsed'))
+    .sort((a,b)=> new Date(a.nextDate) - new Date(b.nextDate))[0] || null;
+}
+
+/* F21 — client decision: 5 tabs with Refer raised in the centre (hero slot).
+   Home · Card · Refer · Rewards · Profile. Refer routes to the referral ledger. */
+const NAV = [
+  { id:'home',    label:'Home',    icon:'home' },
+  { id:'wallet',  label:'Card',    icon:'wallet' },
+  { id:'rewards', label:'Rewards', icon:'star', hero:true },   // main action — centre hero
+  { id:'refer',   label:'Refer',   icon:'gift', href:'account/referral' },
+  { id:'account', label:'Profile', icon:'user' }
+];
+
+/* Brand logo lockup (falls back to the badge SVG until the PNG export is dropped in) */
+const LOGO = `<a href="index.html" aria-label="Back to Goldfinch home" class="inline-flex"><img src="assets/logo-full.png" onerror="this.onerror=null;this.src='assets/logo.svg'" alt="Goldfinch Jewelry" class="portal-brand h-14 w-auto" /></a>`;
+
+/* Light / dark theme — ZAC delivers a light variant alongside the dark Portal for evaluation */
+let PORTAL_THEME = 'light';
+function applyTheme() {
+  const sh = document.querySelector('.pwa-shell');
+  // The sign-in SCREEN (the phone) stays a dark premium screen regardless of theme — force dark
+  // while signed out. (The frame/sides around it are lightened via html.signin-frame.)
+  const lightNow = PORTAL_THEME === 'light' && (typeof SIGNED_IN === 'undefined' || SIGNED_IN);
+  if (sh) sh.classList.toggle('theme-light', lightNow);
+  const tc = document.querySelector('meta[name="theme-color"]');
+  if (tc) tc.setAttribute('content', lightNow ? '#EEF1F4' : '#022135');
+}
+function toggleTheme() {
+  PORTAL_THEME = PORTAL_THEME === 'light' ? 'dark' : 'light';
+  applyTheme();
+  toast(PORTAL_THEME === 'light' ? 'Light theme on' : 'Dark theme on', 'success');
+  route();
+}
+
+/* F23 — English + Bahasa Melayu. The whole portal translates: nav labels via t() below, and every
+   other rendered string via the shared DOM localiser (assets/i18n.js localizeDOM), driven by
+   PORTAL_LANG. The member's choice is remembered in localStorage (gf_portal_lang). */
+let PORTAL_LANG = (function(){ try { return localStorage.getItem('gf_portal_lang') || 'en'; } catch(e){ return 'en'; } })();
+const I18N = {
+  en: { 'nav.home':'Home','nav.wallet':'Card','nav.refer':'Refer','nav.rewards':'Rewards','nav.account':'Profile',
+        'home.refer':'Refer & Earn','home.share':'Share on WhatsApp','home.featured':'Featured',
+        'lang.title':'Language','lang.note':'Switches the entire portal — labels and content — to your chosen language.' },
+  ms: { 'nav.home':'Utama','nav.wallet':'Kad','nav.refer':'Rujuk','nav.rewards':'Ganjaran','nav.account':'Profil',
+        'home.refer':'Rujuk & Menang','home.share':'Kongsi di WhatsApp','home.featured':'Pilihan',
+        'lang.title':'Bahasa','lang.note':'Menukar keseluruhan portal — label dan kandungan — ke bahasa pilihan anda.' }
+};
+function t(key, fallback){ const d=I18N[PORTAL_LANG]||I18N.en; return d[key]!=null?d[key] : (I18N.en[key]!=null?I18N.en[key] : (fallback!=null?fallback:key)); }
+// Keep the DOM localiser's language flag in step with the portal's choice (no gf_lang write — that
+// key belongs to the CRM cashier toggle; the portal persists its own gf_portal_lang).
+function syncPortalLang(){ if (typeof window !== 'undefined') window.GF_LANG = (PORTAL_LANG === 'ms') ? 'ms' : 'en'; }
+syncPortalLang();
+function setLang(l){ PORTAL_LANG=l; try { localStorage.setItem('gf_portal_lang', l); } catch(e){} syncPortalLang(); renderNav(); route(); toast(l==='ms'?'Bahasa ditukar ke Bahasa Melayu':'Language set to English','success'); }
+
+function renderNav() {
+  const hash = location.hash.replace('#','') || 'home';
+  const cur = hash.split('/')[0];
+  const onRefer = hash.startsWith('account/referral');
+  document.getElementById('bottomNav').innerHTML = NAV.map(n => {
+    const href = n.href || n.id;
+    // Active by tab identity (not by the hero slot). Refer lives under the account/referral
+    // route, so it — not Profile — lights up there. Rewards (the hero) lights on #rewards.
+    const active = n.id === 'refer'   ? onRefer
+                 : n.id === 'account' ? (cur === 'account' && !onRefer)
+                 : (n.id === cur);
+    const label = t('nav.'+n.id, n.label);
+    if (n.hero) {
+      return `<a href="#${href}" class="bottom-nav-hero ${active?'active':''}" aria-label="${label}"><span class="bottom-nav-hero-btn">${ICONS[n.icon]}</span><span class="bottom-nav-hero-label">${label}</span></a>`;
+    }
+    return `<a href="#${href}" class="bottom-nav-item ${active?'active':''}">${ICONS[n.icon]}<span>${label}</span></a>`;
+  }).join('');
+}
+
+const RENDERERS = {};
+
+/* Lightweight session gate (demo only — no real auth). Signing out shows the
+   branded sign-in screen; signing in returns to Home. */
+let SIGNED_IN = true;
+
+/* §3.4 NavStack — the portal back stack. No back control hardcodes a
+   destination; back reads the stack, and a cold deep-link falls back to the
+   screen's logical parent (not Home). Scroll position is restored per entry. */
+const BACK = { stack: [], scroll: {}, popping: false };
+const PARENT = { account: 'home', rewards: 'home', wallet: 'home', home: null };
+function currentHash() { return location.hash.replace('#', '') || 'home'; }
+function parentOf(hash) {
+  const [section] = hash.split('/');
+  return hash.includes('/') ? section : (PARENT[section] != null ? PARENT[section] : 'home');
+}
+function goBack() {
+  if (BACK.stack.length > 1) {
+    BACK.stack.pop();                         // drop current
+    BACK.popping = true;
+    location.hash = BACK.stack[BACK.stack.length - 1];
+  } else {
+    const parent = parentOf(currentHash());
+    BACK.popping = true;
+    location.hash = parent || 'home';
+  }
+}
+function backLabel() {
+  const dest = BACK.stack.length > 1 ? BACK.stack[BACK.stack.length - 2] : parentOf(currentHash());
+  const sec = (dest || 'home').split('/')[0];
+  return ({ home: 'Home', account: 'Profile', rewards: 'Rewards', wallet: 'Card' })[sec] || 'Back';
+}
+
+function route() {
+  const hash = currentHash();
+  let [section, sub] = hash.split('/');
+  if (!section) section = 'home';
+  const nav = document.getElementById('bottomNav');
+
+  if (!SIGNED_IN) {
+    const pc = document.getElementById('pwaContent');
+    pc.classList.add('signin-bg');           // premium dark gold-texture backdrop for sign-in
+    document.documentElement.classList.add('signin-frame');   // white sides around the phone
+    pc.innerHTML = signInScreen();
+    if (nav) nav.style.display = 'none';
+    window.scrollTo(0, 0);
+    applyTheme();
+    syncPortalLang();
+    if (typeof localizeDOM === 'function') localizeDOM(pc);
+    return;
+  }
+  document.getElementById('pwaContent').classList.remove('signin-bg');
+  document.documentElement.classList.remove('signin-frame');
+
+  // Maintain the stack: forward nav pushes + saves outgoing scroll; back pops.
+  if (BACK.popping) {
+    BACK.popping = false;
+  } else {
+    const top = BACK.stack[BACK.stack.length - 1];
+    if (top != null) BACK.scroll[top] = window.scrollY;
+    if (top !== hash) BACK.stack.push(hash);
+  }
+
+  if (nav) nav.style.display = '';
+  renderNav();
+  const r = RENDERERS[section];
+  // §C.2 — real fallback so an unknown hash never freezes the previous screen.
+  const pc = document.getElementById('pwaContent');
+  pc.innerHTML = r ? r(sub) : renderNotFound(hash);
+  // Full-portal BM: translate every rendered string (nav labels already come from t()).
+  syncPortalLang();
+  if (typeof localizeDOM === 'function') { localizeDOM(pc); if (nav) localizeDOM(nav); }
+  mountCard3D();
+  applyTheme();
+  // §C.3 — restore scroll on back; top of page on forward.
+  const y = BACK.scroll[hash];
+  window.scrollTo(0, y != null ? y : 0);
+  if (y != null) delete BACK.scroll[hash];
+}
+function renderNotFound(hash) {
+  return `
+    <header class="pwa-header" style="padding-bottom:16px;">
+      <button type="button" onclick="goBack()" class="text-slate-300 hover:text-white flex items-center gap-1 text-sm transition"><span class="w-5 h-5">${ICONS.chevL}</span><span>${backLabel()}</span></button>
+    </header>
+    <section class="px-5 py-16 text-center">
+      <div class="text-2xl text-white font-light mb-2">Page not found</div>
+      <p class="text-sm text-slate-300 mb-6">We couldn't find <span class="font-mono-tight">#${(hash||'').replace(/</g,'&lt;')}</span>.</p>
+      <button type="button" class="btn-gold mx-auto" onclick="location.hash='home'">Back to Home</button>
+    </section>`;
+}
+window.addEventListener('hashchange', route);
+window.goBack = goBack;
+
+function signOut() {
+  SIGNED_IN = false;
+  route();
+}
+function signIn() {
+  SIGNED_IN = true;
+  if ((location.hash.replace('#','')||'home').split('/')[0] !== 'home') { location.hash = 'home'; }
+  route();
+  toast('Welcome back, ' + GF_DATA.me.firstName, 'success');
+}
+function signInScreen() {
+  return `
+    <div class="min-h-screen flex flex-col justify-center px-7 py-10 relative overflow-hidden">
+      <div class="gf-signin-dust">${[[14,0,4.4,4],[30,1.2,5.0,3],[52,.5,4.1,5],[70,1.7,5.2,3],[86,.3,4.6,4],[22,2.5,4.8,3],[64,2.1,5.1,4]].map(([l,d,dur,sz])=>`<i style="left:${l}%;width:${sz}px;height:${sz}px;animation-delay:${d}s;animation-duration:${dur}s"></i>`).join('')}</div>
+      <div class="relative flex flex-col items-center text-center">
+        <!-- Logo — whitened, with a warm gold halo, so it reads on the dark texture. -->
+        <div class="relative mb-6">
+          <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full pointer-events-none" style="width:230px;height:230px;background:radial-gradient(circle, rgba(250,200,5,.30), rgba(250,200,5,.08) 42%, transparent 68%);filter:blur(6px)"></div>
+          <img src="assets/logo-full.png" onerror="this.onerror=null;this.src='assets/logo.svg'" alt="Goldfinch Jewelry" class="portal-brand always-white h-20 w-auto relative" />
+        </div>
+        <div class="text-[11px] tracking-[0.24em] uppercase text-gold-500 font-medium mb-3">Member sign-in</div>
+        <h1 class="text-[26px] font-light leading-tight mb-2 text-white">Welcome back to<br><span class="italic text-gold-400">Goldfinch</span></h1>
+        <p class="text-sm text-white/60 leading-relaxed mb-8 max-w-[280px]">Your points, vouchers and installment plans — all in one place.</p>
+
+        <div class="w-full text-left">
+          <label class="text-[11px] tracking-[0.14em] uppercase text-white/55 font-medium block mb-1.5">Phone or Member ID</label>
+          <input type="text" value="+60 12-345 6789" class="signin-input w-full px-4 py-3 rounded-xl text-sm font-medium mb-4" />
+          <label class="text-[11px] tracking-[0.14em] uppercase text-white/55 font-medium block mb-1.5">PIN</label>
+          <input type="password" value="000000" class="signin-input w-full px-4 py-3 rounded-xl text-sm font-medium tracking-[0.3em] mb-6" />
+
+          <button type="button" class="btn-gold w-full justify-center !py-3.5 !text-base" onclick="signIn()">Sign in</button>
+          <button type="button" class="w-full mt-3 py-2 text-center text-sm text-white/60 hover:text-white transition" onclick="toast('A one-time PIN would be sent via SMS','success')">Use a one-time SMS code instead</button>
+        </div>
+
+        <div class="mt-8 text-xs text-white/55">New to Goldfinch? <button type="button" class="text-gold-500 font-medium underline-offset-2 hover:underline" onclick="toast('Join in-store or scan a QR at any outlet','success')">Join in-store</button></div>
+      </div>
+    </div>`;
+}
+
+/* Interactive 3D card: tilt toward pointer (desktop) or device tilt (mobile) + moving glare */
+function mountCard3D() {
+  document.querySelectorAll('.card-stage').forEach(stage => {
+    const card  = stage.querySelector('.wallet-card');
+    const glare = stage.querySelector('.card-glare');
+    if (!card) return;
+    let raf = null;
+    const apply = (px, py) => {
+      const ry = (px - 0.5) * 26;    // rotateY (left/right)
+      const rx = -(py - 0.5) * 18;   // rotateX (up/down)
+      card.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+      if (glare) glare.style.background =
+        `radial-gradient(circle at ${(px*100).toFixed(0)}% ${(py*100).toFixed(0)}%, rgba(255,255,255,0.32), rgba(250,200,5,0.06) 32%, transparent 62%)`;
+    };
+    const fromEvent = e => {
+      const t = e.touches ? e.touches[0] : e;
+      const r = stage.getBoundingClientRect();
+      const px = Math.min(1, Math.max(0, (t.clientX - r.left) / r.width));
+      const py = Math.min(1, Math.max(0, (t.clientY - r.top) / r.height));
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => apply(px, py));
+    };
+    const reset = () => {
+      if (raf) cancelAnimationFrame(raf);
+      card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+      if (glare) glare.style.background = 'radial-gradient(circle at 70% 12%, rgba(255,255,255,0.16), transparent 55%)';
+    };
+    stage.addEventListener('pointermove', fromEvent);
+    stage.addEventListener('pointerleave', reset);
+    stage.addEventListener('touchmove', fromEvent, { passive: true });
+    stage.addEventListener('touchend', reset);
+    if (window.DeviceOrientationEvent) {
+      window.addEventListener('deviceorientation', ev => {
+        if (ev.gamma == null) return;
+        apply(0.5 + ev.gamma / 45, 0.5 + (ev.beta - 35) / 45);
+      });
+    }
+  });
+}
+
+/* Refresh = re-sync the points balance (e.g. after an in-store purchase) */
+function refreshPoints() {
+  // A synced in-store earn adds to BOTH pools (you can spend it AND it counts toward status).
+  GF_DATA.me.points += 120;
+  if (GF_DATA.me.pointsBalance != null) GF_DATA.me.pointsBalance = GF_DATA.me.points;
+  if (GF_DATA.me.qualifyingPoints != null) GF_DATA.me.qualifyingPoints += 120;
+  toast('Points synced · +120 pts (redeemable & status)', 'success');
+  route();
+}
+
+/* Points ledger — a member-specific feed: purchase rewards derived from the member's own ledger
+   history (earned by gold grade) + explicit events (bonuses, redemptions). Newest first. */
+function memberPointsFeed() {
+  const me = GF_DATA.me;
+  const rateFor = g => g === '999.9' ? 10 : g === '916' ? 5 : 2;
+  const purchases = ((GF_DATA.purchaseHistory && GF_DATA.purchaseHistory[me.id]) || []).map(p => ({
+    type: 'earn', label: 'Purchase reward',
+    points: Math.floor((p.amount || 0) / rateFor(p.grade)),
+    date: p.date, meta: `${(p.item || '').split(' +')[0]} · ${p.outlet || ''}`, invoice: p.invoice
+  })).filter(x => x.points > 0);
+  const events = (GF_DATA.activity || []).filter(a => a.label !== 'Purchase reward'); // bonuses + redemptions
+  const D = s => { const d = new Date(s); return isNaN(d.getTime()) ? 0 : d.getTime(); };
+  return [...purchases, ...events].sort((a, b) => D(b.date) - D(a.date));
+}
+function renderPointsHistory() {
+  const feed = memberPointsFeed();
+  const earned = feed.filter(x => x.points > 0).reduce((s, x) => s + x.points, 0);
+  const spent  = feed.filter(x => x.points < 0).reduce((s, x) => s + Math.abs(x.points), 0);
+  return `
+    ${memberSubHeader('Points activity', 'Account')}
+    <section class="px-5 py-4">
+      <div class="grid grid-cols-2 gap-3 mb-4">
+        <div class="rounded-2xl bg-navy-800 border border-navy-600 p-4"><div class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Earned</div><div class="display text-2xl text-gold-500 mt-1 leading-none">+${fmtNum(earned)}</div><div class="text-[10px] text-slate-400 mt-1">all-time</div></div>
+        <div class="rounded-2xl bg-navy-800 border border-navy-600 p-4"><div class="text-[10px] uppercase tracking-wider text-slate-400 font-medium">Redeemed</div><div class="display text-2xl text-white mt-1 leading-none">−${fmtNum(spent)}</div><div class="text-[10px] text-slate-400 mt-1">spent on rewards</div></div>
+      </div>
+      <div class="rounded-2xl bg-navy-800 border border-navy-600 overflow-hidden">
+        ${feed.length ? feed.map(a => `
+          <div class="flex items-center justify-between gap-3 px-4 py-3.5 border-b border-navy-600 last:border-0">
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <span class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${a.points>=0?'bg-gold-500/15 text-gold-500':'bg-white/10 text-slate-300'}"><span class="w-4 h-4">${a.points>=0?(ICONS.coin||ICONS.plus):ICONS.gift}</span></span>
+              <div class="min-w-0"><div class="text-sm font-medium text-white truncate">${a.label}</div><div class="text-[11px] text-slate-400 truncate">${a.date}${a.meta?' · '+a.meta:''}</div></div>
+            </div>
+            <div class="text-sm font-medium font-mono-tight flex-shrink-0 ${a.points>=0?'text-gold-500':'text-slate-300'}">${a.points>=0?'+':'−'}${fmtNum(Math.abs(a.points))}</div>
+          </div>`).join('') : '<div class="px-4 py-10 text-center text-sm text-slate-400">No points activity yet.</div>'}
+      </div>
+      <p class="text-[11px] text-slate-400 mt-3 px-1 leading-relaxed">Purchase rewards are earned by gold grade — <span class="text-slate-200">999.9 at 1 pt / RM 10</span>, <span class="text-slate-200">916 at 1 pt / RM 5</span>, others at 1 pt / RM 2. Redeeming spends redeemable points; your status points and tier stay put.</p>
+    </section>
+  `;
+}
+
+/* ============================================================
+   HOME
+   ============================================================ */
+RENDERERS.home = () => {
+  const me = GF_DATA.me;
+  const top = me.topTier;
+  const tierName = me.tier.charAt(0).toUpperCase() + me.tier.slice(1);
+  const ts = (typeof tierStatus === 'function') ? tierStatus(me, GF_DATA.transactions)
+           : { redeemable: me.points, status: me.points, nextTier: null, toNext: 0, nextThreshold: null, threshold: 0, maintainNeed: 0, maintainSpend: 0, statusMet: true, spendMet: true };
+  const nextName = ts.nextTier ? ts.nextTier.charAt(0).toUpperCase() + ts.nextTier.slice(1) : null;
+  const pctToNext = ts.nextThreshold ? Math.min(100, Math.max(4, (ts.status / ts.nextThreshold) * 100)) : 100;
+
+  return `
+    <!-- Header -->
+    <header class="pwa-header" style="padding-bottom:8px;">
+      <div class="flex items-center justify-between mb-8 relative">
+        ${LOGO}
+        <button type="button" onclick="location.hash='account'" class="w-9 h-9 rounded-full bg-navy-800 border border-navy-600 flex items-center justify-center text-slate-300 hover:text-white transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </button>
+      </div>
+      <div class="flex items-start justify-between gap-3 mb-6">
+        <div class="min-w-0">
+          ${me.birthdayToday ? `
+          <div class="flex items-center gap-1.5 text-[11px] tracking-[0.2em] uppercase mb-1 font-medium text-gold-500"><span class="w-3.5 h-3.5">${ICONS.cake}</span> Happy Birthday</div>
+          <div class="text-[28px] text-white font-light leading-tight mb-1">Happy Birthday, ${me.firstName}!</div>
+          <a href="#rewards" class="inline-flex items-center gap-1 text-xs text-gold-500 font-medium">Your birthday gift is ready <span class="w-3.5 h-3.5">${ICONS.chevR}</span></a>
+          ` : `
+          <div class="text-[11px] tracking-[0.2em] text-slate-300 uppercase mb-1 font-medium">Good afternoon</div>
+          <div class="text-[28px] text-white font-light leading-tight">${me.firstName}</div>
+          `}
+        </div>
+        <!-- Bella ambassador photo placeholder — top-right of the hero. Drop
+             assets/ambassador-bella.jpg in and it fills this frame. -->
+        <div class="gf-bella-portrait flex-shrink-0" role="img" aria-label="Bella — brand ambassador photo placeholder">
+          <span class="w-5 h-5 text-slate-400">${ICONS.user}</span>
+          <span class="text-[8px] tracking-[0.14em] text-slate-400 uppercase mt-1">Bella</span>
+        </div>
+      </div>
+
+      <!-- Membership card (hero · interactive 3D) -->
+      <div class="card-stage">
+      <div class="wallet-card">
+        <div class="card-glare"></div>
+        <div class="flex justify-between items-start mb-8 relative">
+          <div>
+            <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase font-medium">Member</div>
+            <div class="text-lg text-white font-light leading-tight mt-1">${me.name}</div>
+          </div>
+          <span class="tier-capsule">${tierName.toUpperCase()} MEMBER</span>
+        </div>
+        <div class="relative flex items-end justify-between gap-4">
+          <div>
+            <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase mb-1 font-medium">Redeemable</div>
+            <div class="display text-6xl text-white leading-none">${fmtNum(ts.redeemable)}<span class="text-lg ml-2 text-slate-300 font-normal">pts</span></div>
+            <div class="text-[10px] text-slate-400 mt-1">spend on rewards</div>
+          </div>
+          <div class="text-right pb-1 min-w-0">
+            <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase mb-1 font-medium">Status</div>
+            <div class="text-2xl text-gold-500 font-light leading-none">${fmtNum(ts.status)}</div>
+            <div class="text-[10px] text-slate-400 mt-1 leading-tight">keeps your tier</div>
+          </div>
+        </div>
+        ${top ? `
+        <div class="mt-6 relative">
+          <div class="flex justify-between text-[10px] uppercase tracking-[0.12em] text-slate-300 mb-2 font-medium"><span>Gold · top tier</span><span>${ts.spendMet ? 'Min RM '+fmtNum(ts.maintainNeed)+'/yr · kept ✓' : 'RM '+fmtNum(ts.maintainSpend)+' / '+fmtNum(ts.maintainNeed)+' this yr'}</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:100%"></div></div>
+        </div>` : `
+        <div class="mt-6 relative">
+          <div class="flex justify-between text-[10px] uppercase tracking-[0.12em] text-slate-300 mb-2 font-medium"><span>${tierName}</span><span>${fmtNum(ts.toNext)} status pts → ${nextName}</span></div>
+          <div class="progress-track"><div class="progress-fill" style="width:${pctToNext}%"></div></div>
+        </div>`}
+      </div>
+      </div>
+    </header>
+
+    <!-- Quick actions (control row) -->
+    <section class="px-5 mt-5 relative z-10">
+      <div class="grid grid-cols-3 gap-3">
+        ${[
+          ['#rewards',         'gift',    String(walletVoucherCount('active')),                                        'Vouchers'],
+          ['#account/atome',   'package', String((GF_DATA.atomePlans||[]).filter(p=>p.memberId===me.id).length),        'Installments'],
+          ['#account/history', 'receipt', String((GF_DATA.purchaseHistory[me.id]||[]).length),                          'Purchases']
+        ].map(([href,ic,n,l]) => `
+          <a href="${href}" class="rounded-2xl py-4 text-center bg-navy-800 border border-navy-600 hover:bg-navy-700 transition">
+            <div class="w-7 h-7 mx-auto mb-2.5 text-gold-500">${ICONS[ic]}</div>
+            <div class="text-2xl text-white font-light leading-none">${n}</div>
+            <div class="text-[10px] tracking-[0.1em] text-slate-300 uppercase mt-2">${l}</div>
+          </a>`).join('')}
+      </div>
+    </section>
+
+
+    <!-- Marketing placeholders — fixed promo slots (artwork supplied by Goldfinch) -->
+    <section class="mt-7">
+      <div class="flex items-center justify-between px-5 mb-3">
+        <div class="text-[11px] tracking-[0.2em] text-slate-300 uppercase font-medium">For You</div>
+        <span class="text-[10px] text-slate-500">Promotions</span>
+      </div>
+      <div class="mkt-rail">
+        ${[
+          ['Raya Collection 2026','New arrivals · limited pieces'],
+          ['Gold Bar · Member Price','Member-only rate, in-app'],
+          ['Refer a Friend','Earn RM 2/g when friends buy']
+        ].map(([t,s]) => `
+          <div class="mkt-banner keep-dark flex-shrink-0" style="width:78%; max-width:320px; height:144px;">
+            <div class="gf-bird absolute -right-3 -top-3 w-28 h-28 opacity-10"></div>
+            <span class="mkt-tag">Marketing</span>
+            <div class="absolute inset-0 p-5 flex flex-col justify-end">
+              <div class="text-lg text-white font-light leading-tight">${t}</div>
+              <div class="text-xs text-slate-300 mt-0.5">${s}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+    </section>
+
+    <!-- Up next: installment — soonest-due active plan, derived from real data -->
+    ${(() => {
+      const up = memberUpNextPlan(me);
+      if (!up) return '';
+      const d = daysUntil(up.nextDate);
+      const dueTag = d==null ? '' : (d<=0 ? 'Due now' : d===1 ? 'Tomorrow' : d+' days');
+      return `
+    <section class="px-5 mt-7">
+      <div class="text-[11px] tracking-[0.2em] text-slate-300 uppercase mb-3 font-medium">Up Next</div>
+      <div class="rounded-2xl p-5 bg-navy-800 border border-navy-600">
+        <div class="flex items-center gap-3 mb-5">
+          <div class="w-10 h-10 rounded-xl bg-navy-700 flex items-center justify-center text-gold-500"><span class="w-5 h-5">${ICONS.package}</span></div>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium text-white">Next installment</div>
+            <div class="text-xs text-slate-300 truncate">${up.item} · ${up.provider}</div>
+          </div>
+          <span class="text-[10px] tracking-[0.1em] text-warn uppercase font-medium whitespace-nowrap">${dueTag}</span>
+        </div>
+        <div class="flex items-end justify-between">
+          <div>
+            <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase font-medium">Amount due</div>
+            <div class="text-3xl text-white font-light mt-1">${fmtRM(up.monthly)}</div>
+            <div class="text-[11px] text-slate-300 mt-1">due ${fmtDMY(up.nextDate)}</div>
+          </div>
+          <button type="button" class="btn-gold !py-2.5 !px-5" onclick="location.hash='account/atome'">View plan</button>
+        </div>
+      </div>
+    </section>`;
+    })()}
+
+    <!-- Recent Activity -->
+    <section class="px-5 mt-7">
+      <div class="flex items-center justify-between mb-3">
+        <div class="text-[11px] tracking-[0.2em] text-slate-300 uppercase font-medium">Recent Activity</div>
+        <a href="#account/points" class="text-[11px] text-gold-500 font-medium inline-flex items-center gap-1">View all <span class="w-3 h-3">${ICONS.chevR}</span></a>
+      </div>
+      <div class="rounded-2xl bg-navy-800 border border-navy-600 divide-y divide-navy-600">
+        ${memberPointsFeed().slice(0,4).map(a => `
+          <div class="flex items-center justify-between px-4 py-3.5">
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <span class="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${a.points>=0?'bg-pos/15 text-pos':'bg-neg/15 text-neg'}"><span class="w-4 h-4">${a.points>=0?ICONS.plus:ICONS.gift}</span></span>
+              <div class="min-w-0">
+                <div class="text-sm font-medium text-white truncate">${a.label}</div>
+                <div class="text-[11px] text-slate-300">${a.date}${a.meta ? ' · '+a.meta : ''}</div>
+              </div>
+            </div>
+            <div class="text-sm font-medium ${a.points >= 0 ? 'text-pos' : 'text-neg'}">${a.points >= 0 ? '+' : ''}${a.points}</div>
+          </div>`).join('')}
+      </div>
+    </section>
+
+    <div class="h-10"></div>
+  `;
+};
+
+/* ============================================================
+   REWARDS · VOUCHERS
+   ============================================================ */
+let REWARDS_TAB = 'active';
+
+// A member is "lapsing" within 60 days of their tier expiry — the only window the win-back
+// voucher is meant to show (register 17 Jul: win-back is NOT shown to everyone).
+function isLapsingMember(m){
+  if (!m || !m.tierExpiresOn) return false;
+  const d = daysUntil(m.tierExpiresOn);
+  return d != null && d >= 0 && d <= 60;
+}
+RENDERERS.rewards = () => {
+  const me = GF_DATA.me;
+  const lapsing = isLapsingMember(me);
+  const filtered = GF_DATA.vouchers.filter(v =>
+    // Win-back vouchers only surface to lapsing members (within 60 days of tier expiry).
+    (v.winback && !lapsing) ? false :
+    REWARDS_TAB === 'active' ? v.status === 'active' :
+    REWARDS_TAB === 'used' ? (v.status === 'used' || v.status === 'expired') :
+    v.status === 'locked'
+  );
+  const catalogue = GF_DATA.pointsRewards || [];
+
+  return `
+    <header class="pwa-header" style="padding-bottom:18px;">
+      <div class="flex items-center justify-between mb-5">
+        <div class="text-2xl text-white font-light">My Vouchers</div>
+        <button type="button" onclick="location.hash='home'" class="text-slate-300 hover:text-white transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="flex gap-1 bg-navy-950/60 p-1 rounded-lg">
+        ${[['active','Active',walletVoucherCount('active')],['used','Used',walletVoucherCount('used')],['locked','Locked',walletVoucherCount('locked')]].map(([k,l,c]) => `
+          <button type="button" onclick="REWARDS_TAB='${k}';route()" class="flex-1 py-2 text-xs font-medium rounded-md transition ${REWARDS_TAB===k?'bg-navy-700 text-white':'text-slate-300 hover:text-white'}">
+            ${l} · ${c}
+          </button>`).join('')}
+      </div>
+    </header>
+
+    <!-- Claim a reward — spend Redeemable points to CLAIM a voucher into your wallet -->
+    <section class="px-5 pt-5">
+      <div class="rounded-2xl bg-navy-800 border border-navy-600 p-5">
+        <div class="flex items-center justify-between mb-1">
+          <div class="flex items-center gap-2"><span class="w-5 h-5 text-gold-500">${ICONS.gift}</span><div class="text-sm font-medium text-white">Claim a reward</div></div>
+          <div class="text-xs text-slate-300"><span class="text-gold-500 font-medium">${fmtNum(me.pointsBalance!=null?me.pointsBalance:me.points)}</span> redeemable pts</div>
+        </div>
+        <p class="text-[11px] text-slate-400 mb-4">Spend redeemable points to claim a voucher — it lands in <span class="text-slate-200">Active</span> below, ready to show in-store. Claiming <span class="text-slate-200">doesn't touch your status points or tier</span>.</p>
+        <div class="grid grid-cols-2 gap-2.5">
+          ${catalogue.map(r => { const bal = me.pointsBalance!=null?me.pointsBalance:me.points; const ok = bal >= r.cost; return `
+            <button type="button" ${ok?'':'disabled'} onclick="redeemPoints(${r.cost},${r.value})" class="text-left rounded-xl border p-3.5 transition ${ok?'border-gold-500/50 bg-navy-700 hover:border-gold-500 active:scale-[.98]':'border-navy-600 bg-navy-800/60 opacity-50 cursor-not-allowed'}">
+              <div class="display text-2xl text-white leading-none">RM ${r.value}</div>
+              <div class="text-[11px] text-slate-300 mt-1.5">${fmtNum(r.cost)} pts</div>
+              <div class="text-[10px] font-medium mt-1 ${ok?'text-gold-500':'text-slate-500'}">${ok?'Claim →':'Not enough pts'}</div>
+            </button>`; }).join('')}
+        </div>
+      </div>
+    </section>
+
+    <section class="px-5 py-5 space-y-6">
+      ${filtered.length ? filtered.map(v => {
+        const vs = voucherStyle(v);
+        const locked = v.status === 'locked';
+        const used = v.status === 'used' || v.status === 'expired';
+        const dim = locked || used;
+        const stubMap = {sparkles:'WELCOME',cake:'BONUS',starFill:'VIP',refresh:'WIN-BACK',tag:'FESTIVE',gift:'GIFT',percent:'OFFER'};
+        const rm = v.title.match(/RM\s?\d+/), pct = v.title.match(/\d+%/), pts = v.title.match(/(\d[\d,]*)\s*(?:bonus\s*)?point/i);
+        const big = locked ? 'LOCKED' : (rm ? rm[0] : pct ? pct[0] : pts ? pts[1]+' pts' : (stubMap[vs.icon]||'OFFER'));
+        const stubBg = locked ? '#13384F' : used ? '#5A6B78' : vs.tile;
+        const stubInk = dim ? '#C9D3DB' : vs.glyph;
+        return `
+        <div class="coupon flex ${used?'is-used':''} ${dim?'opacity-70':''}">
+          <div class="w-[96px] flex-shrink-0 relative flex flex-col items-center justify-center text-center px-2 py-5 rounded-l-2xl" style="background:${stubBg};${used?'filter:grayscale(0.5)':''}">
+            <span class="w-6 h-6 mb-1.5" style="color:${locked?'#7E97AA':stubInk}">${locked?ICONS.lock:used?ICONS.check:ICONS[vs.icon]}</span>
+            <div class="text-base font-medium leading-none" style="color:${locked?'#7E97AA':stubInk}">${big}</div>
+            <div class="text-[8px] uppercase tracking-[0.16em] mt-1.5" style="color:${locked?'#7E97AA':stubInk};opacity:.85">${stubMap[vs.icon]||'OFFER'}</div>
+          </div>
+          <div class="coupon-perf" style="left:96px"></div>
+          <div class="coupon-notch top" style="left:96px"></div>
+          <div class="coupon-notch bot" style="left:96px"></div>
+          <div class="coupon-body flex-1 min-w-0 border border-l-0 border-navy-600 rounded-r-2xl p-4 flex items-center gap-3 cursor-pointer" onclick="openVoucherDetail('${v.id}')">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5 flex-wrap">
+                <span class="text-sm font-medium ${dim?'text-slate-300 line-through decoration-slate-500':'text-white'} leading-tight">${v.title}</span>
+                ${!dim && v.firstTime?'<span class="text-[9px] tracking-wide uppercase text-pos border border-pos/40 rounded px-1.5 py-0.5">Welcome</span>':''}
+                ${!dim && v.autoApply?'<span class="text-[9px] tracking-wide uppercase text-pos border border-pos/40 rounded px-1.5 py-0.5">Auto</span>':''}
+              </div>
+              <div class="text-xs text-slate-300 truncate">${v.subtitle}</div>
+              <div class="text-[10px] text-slate-500 mt-1 tracking-wide">${v.tier.toUpperCase()} · ${used?(v.status==='used'?'USED':'EXPIRED'):('EXP '+v.expires)}${used&&v.usedOn?' · '+v.usedOn:''}${((v.states&&v.states.length)||(v.outlets&&v.outlets.length))?' · <span class="text-gold-500/80">SELECTED OUTLETS</span>':''}</div>
+            </div>
+            <div class="flex-shrink-0">
+              ${locked ? '<span class="text-[10px] text-slate-300">Locked</span>'
+                : used ? '<span class="text-[10px] font-medium text-slate-400 uppercase tracking-wide">'+(v.status==='used'?'Redeemed':'Expired')+'</span>'
+                : v.autoApply ? '<span class="w-7 h-7 rounded-full bg-pos/15 text-pos inline-flex items-center justify-center"><span class="w-4 h-4">'+ICONS.check+'</span></span>'
+                : `<button type="button" class="btn-gold !text-[11px] !py-1.5 !px-4" onclick="event.stopPropagation();redeemVoucher('${v.id}')">Redeem</button>`}
+            </div>
+          </div>
+        </div>`; }).join('') :
+        '<div class="text-center py-10 text-slate-300 text-sm">No vouchers in this category yet.</div>'
+      }
+    </section>
+
+    <!-- How redemption works + rules -->
+    <section class="px-5 pb-1">
+      <div class="rounded-2xl bg-navy-800 border border-navy-600 p-5">
+        <div class="flex items-center gap-2 mb-3.5">
+          <span class="w-5 h-5 text-gold-500">${ICONS.gift}</span>
+          <div class="text-sm font-medium text-white">How to redeem in-store</div>
+        </div>
+        <ol class="space-y-3 mb-4">
+          ${[['Tap Redeem','on any active voucher above'],['Show the QR or code','to the cashier at any Goldfinch outlet'],['They apply it','to your purchase at checkout']].map(([t,s],i)=>`
+            <li class="flex items-start gap-3">
+              <span class="w-6 h-6 rounded-full bg-gold-500/15 text-gold-500 text-xs font-medium flex items-center justify-center flex-shrink-0 mt-0.5">${i+1}</span>
+              <div class="min-w-0"><span class="text-sm font-medium text-white">${t}</span> <span class="text-xs text-slate-300">${s}</span></div>
+            </li>`).join('')}
+        </ol>
+        <div class="pt-3 border-t border-navy-600">
+          <div class="text-[10px] tracking-[0.14em] uppercase font-medium text-slate-400 mb-1.5">Terms</div>
+          <div class="text-[11px] text-slate-300 leading-relaxed">One voucher per transaction · Not valid on workmanship (upah) · Cannot be exchanged for cash · Non-transferable · Subject to each voucher's own validity date. Goldfinch Group Berhad reserves the right to amend the terms and conditions without prior notice.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gold member benefits recap -->
+    <section class="px-5 pb-5">
+      <div class="card-navy keep-dark" style="border-color:var(--brass)">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-5 h-5 text-gold-500">${ICONS.starFill}</span>
+          <div class="text-[10px] tracking-[0.18em] uppercase font-medium text-gold-500">Gold Member</div>
+        </div>
+        <div class="text-xl text-white font-light mb-3">Your Gold benefits</div>
+        <div class="text-xs text-slate-300 leading-relaxed">VIP vouchers · 7-day early access · priority service · VIP events</div>
+      </div>
+    </section>
+  `;
+};
+
+// In-store redemption — the member presents a QR + code to the cashier, who applies it in
+// New Purchase (admin). Viewing the code does NOT consume the voucher (the POS does that);
+// a demo shortcut lets the member mark it used to show the lifecycle.
+function redeemVoucher(id) {
+  const v = GF_DATA.vouchers.find(x => x.id === id);
+  if (!v || v.status !== 'active') return;
+  const meId = (GF_DATA.me && GF_DATA.me.id) || '';
+  const payload = `GF-REDEEM|${v.code}|${meId}`;
+  openSheet(`
+    <div class="text-center">
+      <div class="w-10 h-1 rounded-full mx-auto mb-4" style="background:currentColor;opacity:.18"></div>
+      <div class="text-[10px] tracking-[0.2em] uppercase text-gold-500 font-medium mb-1">Redeem in-store</div>
+      <div class="text-xl font-light leading-tight">${v.title}</div>
+      <div class="text-xs opacity-70 mt-1 mb-5">${v.subtitle} · exp ${v.expires}</div>
+      <div class="mx-auto mb-5 bg-white rounded-2xl p-3 shadow-lg" style="width:196px;height:196px">${qrSvg(payload,{cell:5,margin:1})}</div>
+      <div class="text-[10px] tracking-[0.18em] uppercase opacity-60 mb-2">Voucher code</div>
+      <div class="inline-flex items-center rounded-xl px-4 py-2.5 mb-5" style="background:rgba(250,200,5,.12);border:1px solid rgba(250,200,5,.32)">
+        <span class="text-2xl font-medium text-gold-500" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em">${v.code}</span>
+      </div>
+      <p class="text-xs opacity-70 leading-relaxed mb-3" style="max-width:280px;margin-left:auto;margin-right:auto">Show this QR to the cashier at any Goldfinch outlet. Once they scan it, the voucher is applied to your purchase and marked used automatically.</p>
+      <p class="text-[10px] opacity-50 leading-relaxed mb-5" style="max-width:280px;margin-left:auto;margin-right:auto">${v.terms ? v.terms : 'One voucher per transaction · not valid on workmanship (upah) · non-transferable · no cash value.'}</p>
+      <button type="button" class="btn-gold w-full justify-center !py-3" onclick="closeSheet()">Done</button>
+    </div>
+  `);
+}
+function markVoucherUsed(id) {
+  const v = GF_DATA.vouchers.find(x => x.id === id);
+  if (v) { v.status = 'used'; v.usedOn = 'Today'; }
+  closeSheet();
+  toast('Voucher marked as redeemed', 'success');
+  setTimeout(route, 250);
+}
+
+// Referral rate card (client Rebate Table) — the flat per-weight rebate for bars/special items,
+// plus RM2/g for 916 jewellery. Opened from the referral page + the gold-bar card.
+function openReferralRateCard(){
+  const rc = (GF_DATA.referralRebateTable) || { groups: [] };
+  const groups = rc.groups.map(g => `
+    <div class="mb-3.5 last:mb-0">
+      <div class="text-sm font-medium text-white leading-tight mb-1.5">${g.type}${g.sub?` <span class="text-[10px] opacity-55 font-normal">${g.sub}</span>`:''}</div>
+      <div class="rounded-xl overflow-hidden border border-white/10">
+        ${g.rows.map((r,i)=>`<div class="flex items-center justify-between px-3.5 py-2 text-sm ${i%2?'bg-white/5':''}">
+          <span class="opacity-70">${r.weight}</span>
+          <span class="font-medium text-gold-500" style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace">${r.perGram?'RM '+r.rate+' / g':'RM '+fmtNum(r.rate)}${r.star?' <span class="opacity-70">❋</span>':''}</span>
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+  openSheet(`
+    <div>
+      <div class="w-10 h-1 rounded-full mx-auto mb-4" style="background:currentColor;opacity:.18"></div>
+      <div class="text-center mb-4">
+        <div class="text-[10px] tracking-[0.2em] uppercase text-gold-500 font-medium mb-1">Referral rewards</div>
+        <div class="text-xl font-light">Rate card</div>
+      </div>
+      <div class="max-h-[52vh] overflow-y-auto pr-1">${groups}</div>
+      <p class="text-[11px] opacity-55 leading-relaxed my-4">${rc.note||''}</p>
+      <button type="button" class="btn-gold w-full justify-center !py-3" onclick="closeSheet()">Done</button>
+    </div>
+  `);
+}
+// Human "redeemable at" line from a voucher's scoping (empty = network-wide).
+function portalVoucherWhere(v){
+  const st = (v && v.states)||[], ot = (v && v.outlets)||[];
+  if (!st.length && !ot.length) return 'Any Goldfinch outlet, nationwide';
+  const parts = [];
+  if (st.length) parts.push(st.join(', '));
+  if (ot.length) {
+    // Resolve outlet CODES to names so the member can actually tell where it's valid.
+    const oName = {}; (GF_DATA.outlets||[]).forEach(o => oName[o.code] = o.name);
+    const names = ot.map(c => oName[c] || c);
+    parts.push(names.length <= 2 ? names.join(' & ') : (names.slice(0,2).join(', ') + ' +' + (names.length-2) + ' more'));
+  }
+  return parts.join(' · ');
+}
+// One filter for the member's wallet — so the Active/Used/Locked COUNTS and the rendered LIST always
+// agree (win-back is hidden for non-lapsing members, and that must apply to the badges too).
+function walletVoucherCount(kind){
+  const lapsing = (typeof isLapsingMember==='function') && isLapsingMember(GF_DATA.me);
+  return (GF_DATA.vouchers||[]).filter(v => {
+    if (v.winback && !lapsing) return false;
+    if (kind==='used') return v.status==='used' || v.status==='expired';
+    if (kind==='locked') return v.status==='locked';
+    return v.status==='active';
+  }).length;
+}
+
+// Voucher DETAIL — tapping a voucher card opens this: what it is, the criteria, where it can be
+// redeemed, and the T&C. Info only — NO QR here (viewing a voucher does not redeem it). The QR
+// lives on the separate "Redeem in-store" hand-off sheet, which is the moment the cashier scans.
+function openVoucherDetail(id){
+  const v = GF_DATA.vouchers.find(x => x.id === id); if (!v) return;
+  const active = v.status === 'active';
+  const rm = v.title.match(/RM\s?\d+/), pct = v.title.match(/\d+%/), pts = v.title.match(/(\d[\d,]*)\s*(?:bonus\s*)?point/i);
+  const big = rm ? rm[0] : pct ? pct[0] : pts ? pts[1]+' pts' : 'Gift';
+  const terms = (typeof voucherTermsList==='function') ? voucherTermsList(v)
+                        : (v.terms ? v.terms.split(/\.\s+/).filter(Boolean).map(s=>s.replace(/\.$/,'')+'.') : (GF_DATA.voucherTerms || []));
+  const row = (label, val) => `<div class="flex items-start justify-between gap-4 py-2 border-b border-white/10"><span class="text-[11px] uppercase tracking-wider opacity-55">${label}</span><span class="text-sm text-right">${val}</span></div>`;
+  openSheet(`
+    <div>
+      <div class="w-10 h-1 rounded-full mx-auto mb-4" style="background:currentColor;opacity:.18"></div>
+      <div class="text-center mb-4">
+        <div class="text-[10px] tracking-[0.2em] uppercase text-gold-500 font-medium mb-1">Voucher detail</div>
+        <div class="display text-4xl text-gold-500 leading-none">${big}${rm?' OFF':''}</div>
+        <div class="text-lg font-light leading-tight mt-2">${v.title}</div>
+        <div class="text-xs opacity-70 mt-1">${v.subtitle||''}</div>
+      </div>
+      <div class="rounded-xl bg-white/5 border border-white/10 px-4 py-1 mb-4">
+        ${row('Status', active?'<span class="text-pos">Active</span>':(v.status==='used'?'Redeemed'+(v.usedOn?' · '+v.usedOn:''):v.status.charAt(0).toUpperCase()+v.status.slice(1)))}
+        ${row('Eligible tier', (v.tier||'All tiers'))}
+        ${v.minSpend?row('Minimum spend', 'RM '+v.minSpend+' single receipt'):''}
+        ${row('Redeemable at', portalVoucherWhere(v))}
+        ${row('Valid until', v.expires||'—')}
+      </div>
+      <div class="text-[11px] uppercase tracking-wider opacity-55 mb-2">Terms &amp; conditions</div>
+      <ul class="text-xs opacity-75 leading-relaxed mb-5 space-y-1.5" style="list-style:none;padding:0">
+        ${terms.map(t=>`<li class="flex gap-2"><span class="text-gold-500 flex-shrink-0">·</span><span>${t}</span></li>`).join('')}
+      </ul>
+      ${active ? `<button type="button" class="btn-gold w-full justify-center !py-3 mb-1" onclick="closeSheet(); setTimeout(()=>redeemVoucher('${v.id}'),180)">Redeem in-store</button>` : ''}
+      <button type="button" class="w-full text-center text-xs py-2.5" style="opacity:.55" onclick="closeSheet()">Close</button>
+    </div>
+  `);
+}
+
+// Points redemption — the member spends points for an in-store voucher (same catalogue the
+// CRM counter uses). Deducts points, mints an active voucher, and shows its QR straight away.
+function redeemPoints(cost, value){
+  const me = GF_DATA.me;
+  const bal = me.pointsBalance != null ? me.pointsBalance : me.points;
+  if (bal < cost){ toast('Not enough redeemable points for that reward', 'warn'); return; }
+  openSheet(`
+    <div class="text-center">
+      <div class="w-10 h-1 rounded-full mx-auto mb-4" style="background:currentColor;opacity:.18"></div>
+      <div class="text-[10px] tracking-[0.2em] uppercase text-gold-500 font-medium mb-1">Claim reward</div>
+      <div class="text-2xl font-light leading-tight">RM ${value} voucher</div>
+      <div class="text-xs opacity-70 mt-1 mb-5">Costs <b>${fmtNum(cost)} redeemable points</b></div>
+      <div class="rounded-xl p-4 mb-4 text-left" style="background:rgba(250,200,5,.08);border:1px solid rgba(250,200,5,.22)">
+        <div class="flex items-center justify-between text-sm"><span class="opacity-70">Redeemable now</span><span class="font-medium">${fmtNum(bal)}</span></div>
+        <div class="flex items-center justify-between text-sm mt-1.5 pt-1.5" style="border-top:1px solid rgba(255,255,255,.08)"><span class="opacity-70">After claiming</span><span class="font-medium text-gold-500">${fmtNum(bal - cost)}</span></div>
+      </div>
+      <div class="text-[11px] opacity-60 mb-5 flex items-start gap-1.5"><span class="w-3.5 h-3.5 text-gold-500 flex-shrink-0 mt-px">${ICONS.starFill||''}</span><span>Your <b>status points</b> and <b>tier</b> stay exactly as they are — only redeemable points are spent.</span></div>
+      <button type="button" class="btn-gold w-full justify-center !py-3 mb-1" onclick="confirmRedeemPoints(${cost},${value})">Confirm · Claim RM ${value}</button>
+      <button type="button" class="w-full text-center text-xs py-2.5" style="opacity:.55" onclick="closeSheet()">Not now</button>
+    </div>
+  `);
+}
+function confirmRedeemPoints(cost, value){
+  const me = GF_DATA.me;
+  const bal = me.pointsBalance != null ? me.pointsBalance : me.points;
+  if (bal < cost){ toast('Not enough redeemable points', 'warn'); return; }
+  // Spend REDEEMABLE only — status/qualifying points untouched so the tier never drops on a claim.
+  me.points -= cost;
+  if (me.pointsBalance != null) me.pointsBalance = me.points;
+  const seq = (GF_DATA._ptsSeq = (GF_DATA._ptsSeq || 0) + 1);
+  // Voucher validity = 6 months from issue (CRM Pending Matters 3.7).
+  const exp = new Date(PORTAL_TODAY + 'T00:00:00'); exp.setMonth(exp.getMonth() + 6);
+  const expISO = exp.toISOString().slice(0, 10);
+  const v = {
+    id: 'V-PTS-' + String(1000 + seq),
+    title: 'RM ' + value + ' OFF · Points reward',
+    subtitle: 'Claimed with ' + fmtNum(cost) + ' points',
+    tier: 'All Tiers', expires: fmtDMY(expISO), claimedOn: fmtDMY(PORTAL_TODAY),
+    code: 'PTS' + value + '-' + String(1000 + seq),
+    status: 'active', memberId: me.id,
+    terms: 'Claimed with ' + fmtNum(cost) + ' loyalty points. Valid 6 months from issue. Cannot be used to offset the workmanship fee (upah). Single transaction; unused balance forfeited. Non-transferable, no cash value. Goldfinch Group Berhad reserves the right to amend the terms and conditions without prior notice.'
+  };
+  GF_DATA.vouchers.unshift(v);
+  closeSheet();
+  // CLAIM ≠ USE — the voucher lands in the wallet as Active. The member shows its QR at the till
+  // later (tap → Redeem in-store), which is the moment the cashier scans and it becomes Used.
+  toast('RM ' + value + ' voucher claimed · now Active in your wallet', 'success');
+  REWARDS_TAB = 'active';
+  route();
+}
+
+// ---- Referral credit → voucher conversion ----------------------------------------------------
+// Referral rewards accrue as a POOL of credit (RM 2/g, voucher-only). The member converts it into
+// vouchers in RM 10 steps; each conversion mints an Active voucher into Rewards and draws the pool
+// down. Never cash. me.referralConverted tracks how much of the earned pool has been converted.
+let REF_CONVERT_AMT = 10;
+function referralCreditMax(){
+  const me = GF_DATA.me;
+  const earned = (typeof referralTotals === 'function') ? referralTotals(me.id).earned : (me.referralEarned || 0);
+  return Math.floor(Math.max(0, earned - (me.referralConverted || 0)) / 10) * 10;   // whole RM 10 units
+}
+function openReferralConvert(){
+  const max = referralCreditMax();
+  if (max < 10){ toast('You need at least RM 10 of referral credit to convert', 'warn'); return; }
+  REF_CONVERT_AMT = Math.min(Math.max(10, REF_CONVERT_AMT), max);
+  openSheet(referralConvertInner(max));
+}
+function referralConvertInner(max){
+  const amt = REF_CONVERT_AMT;
+  const chip = (v,label) => `<button type="button" onclick="setReferralConvert(${v},${max})" class="text-[11px] px-3 py-1.5 rounded-full ${amt===v?'bg-gold-500 text-navy-950 font-medium':'text-slate-300'}" style="${amt===v?'':'background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)'}">${label}</button>`;
+  const stepBtn = (delta,sym,off) => `<button type="button" onclick="stepReferralConvert(${delta},${max})" ${off?'disabled':''} class="w-11 h-11 rounded-full flex items-center justify-center text-2xl ${off?'opacity-30':''}" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)">${sym}</button>`;
+  return `
+    <div class="text-center">
+      <div class="w-10 h-1 rounded-full mx-auto mb-4" style="background:currentColor;opacity:.18"></div>
+      <div class="text-[10px] tracking-[0.2em] uppercase text-gold-500 font-medium mb-1">Convert referral credit</div>
+      <div class="text-xs opacity-70 mb-5">Turn credit into an in-store voucher · RM 10 steps</div>
+      <div class="flex items-center justify-center gap-4 mb-3">
+        ${stepBtn(-10,'−',amt<=10)}
+        <div class="min-w-[130px]"><div class="display text-4xl text-white leading-none">RM ${fmtNum(amt)}</div><div class="text-[10px] opacity-55 mt-1">voucher value</div></div>
+        ${stepBtn(10,'+',amt>=max)}
+      </div>
+      <div class="flex items-center justify-center flex-wrap gap-2 mb-5">
+        ${[10,50,100].filter(v=>v<=max).map(v=>chip(v,'RM '+v)).join('')}${chip(max,'Max RM '+fmtNum(max))}
+      </div>
+      <div class="rounded-xl p-4 mb-4 text-left" style="background:rgba(250,200,5,.08);border:1px solid rgba(250,200,5,.22)">
+        <div class="flex items-center justify-between text-sm"><span class="opacity-70">Credit available</span><span class="font-medium">RM ${fmtNum(max)}</span></div>
+        <div class="flex items-center justify-between text-sm mt-1.5 pt-1.5" style="border-top:1px solid rgba(255,255,255,.08)"><span class="opacity-70">After converting</span><span class="font-medium text-gold-500">RM ${fmtNum(max-amt)}</span></div>
+      </div>
+      <div class="text-[11px] opacity-60 mb-5 flex items-start gap-1.5"><span class="w-3.5 h-3.5 text-gold-500 flex-shrink-0 mt-px">${ICONS.tag||ICONS.gift||''}</span><span>The voucher lands in <b>Rewards</b> as Active (valid 3 months). Voucher-only — no cash value.</span></div>
+      <button type="button" class="btn-gold w-full justify-center !py-3 mb-1" onclick="convertReferralToVoucher(${amt})">Convert · RM ${fmtNum(amt)} voucher</button>
+      <button type="button" class="w-full text-center text-xs py-2.5" style="opacity:.55" onclick="closeSheet()">Not now</button>
+    </div>`;
+}
+// In-place re-render (no re-animation) so the stepper feels instant.
+function reRenderReferralConvert(max){ const b = document.getElementById('portalSheetBody'); if (b) { b.innerHTML = referralConvertInner(max); if (typeof localizeDOM === 'function') localizeDOM(b); } }
+function stepReferralConvert(delta, max){ REF_CONVERT_AMT = Math.min(max, Math.max(10, REF_CONVERT_AMT + delta)); reRenderReferralConvert(max); }
+function setReferralConvert(v, max){ REF_CONVERT_AMT = Math.min(max, Math.max(10, v)); reRenderReferralConvert(max); }
+function convertReferralToVoucher(amt){
+  const me = GF_DATA.me;
+  const avail = referralCreditMax();
+  if (amt < 10 || amt % 10 !== 0 || amt > avail){ toast('Choose an amount in RM 10 steps within your credit', 'warn'); return; }
+  me.referralConverted = (me.referralConverted || 0) + amt;
+  const seq = (GF_DATA._refSeq = (GF_DATA._refSeq || 0) + 1);
+  const exp = new Date(PORTAL_TODAY + 'T00:00:00'); exp.setMonth(exp.getMonth() + 3);   // referral vouchers valid 3 months
+  const expISO = exp.toISOString().slice(0, 10);
+  const v = {
+    id: 'V-REF-' + String(1000 + seq),
+    title: 'RM ' + amt + ' OFF · Referral reward',
+    subtitle: 'Converted from referral credit',
+    tier: 'All Tiers', expires: fmtDMY(expISO), claimedOn: fmtDMY(PORTAL_TODAY),
+    code: 'REF' + amt + '-' + String(1000 + seq),
+    status: 'active', memberId: me.id,
+    terms: 'Converted from referral credit. Valid 3 months from issue. Cannot be used to offset the workmanship fee (upah). One voucher per transaction; unused balance forfeited. Non-transferable, no cash value. Goldfinch Group Berhad reserves the right to amend the terms and conditions without prior notice.'
+  };
+  GF_DATA.vouchers.unshift(v);
+  closeSheet();
+  toast('RM ' + amt + ' referral voucher created · now Active in Rewards', 'success');
+  REWARDS_TAB = 'active';
+  location.hash = '#rewards';
+}
+
+/* §8.3 — detect the platform so the right wallet button leads. UA detection
+   fails often enough that the other must always remain reachable. */
+function walletPlatform() {
+  const uaD = navigator.userAgentData;
+  const plat = (uaD && uaD.platform) || navigator.platform || '';
+  const ua = navigator.userAgent;
+  if (/Android/i.test(ua)) return 'google';
+  if (/iPhone|iPod|iPad/i.test(ua)) return 'apple';
+  if (/Mac/i.test(plat) && navigator.maxTouchPoints > 1) return 'apple';   // iPadOS as macOS
+  return 'both';
+}
+function walletButtons() {
+  const appleBtn = (primary) => `
+    <button type="button" class="apple-wallet w-full flex items-center justify-center gap-2.5 bg-black rounded-xl py-3.5 active:opacity-90 transition${primary?'':' mt-2'}" onclick="toast('Added to Apple Wallet','success')">
+      <span class="w-7 h-7 flex-shrink-0">${ICONS.apple}</span>
+      <span class="text-left leading-none"><span class="block text-[10px] font-light text-white/70">Add to</span><span class="block text-[19px] font-medium tracking-tight">Apple Wallet</span></span>
+    </button>`;
+  const appleLink = () => `<button type="button" class="w-full text-center text-[13px] text-slate-300 hover:text-white py-2 mt-1 transition" onclick="toast('Added to Apple Wallet','success')">Add to Apple Wallet instead</button>`;
+  const googleBtn = (primary) => `
+    <button type="button" class="google-wallet w-full flex items-center justify-center gap-2.5 rounded-xl py-3.5 active:opacity-90 transition${primary?'':' mt-2'}" style="background:#fff;border:1px solid #DADCE0" onclick="toast('Added to Google Wallet','success')">
+      <span class="w-6 h-6 flex-shrink-0 inline-flex"><svg viewBox="0 0 24 24" width="100%" height="100%"><path fill="#4285F4" d="M3 7a3 3 0 013-3h12a3 3 0 013 3v2H3z"/><path fill="#34A853" d="M3 11h18v6a3 3 0 01-3 3H6a3 3 0 01-3-3z"/><path fill="#FBBC04" d="M14 12h5v4h-5z" opacity=".9"/></svg></span>
+      <span class="text-left leading-none" style="color:#3C4043"><span class="block text-[10px] font-light" style="color:#5F6368">Add to</span><span class="block text-[19px] font-medium tracking-tight">Google Wallet</span></span>
+    </button>`;
+  const googleLink = () => `<button type="button" class="w-full text-center text-[13px] text-slate-300 hover:text-white py-2 mt-1 transition" onclick="toast('Added to Google Wallet','success')">Add to Google Wallet instead</button>`;
+  const plat = walletPlatform();
+  if (plat === 'apple')  return appleBtn(true) + googleLink();
+  if (plat === 'google') return googleBtn(true) + appleLink();
+  return appleBtn(true) + googleBtn(false);   // desktop / undetected → both
+}
+
+/* ============================================================
+   WALLET · DIGITAL MEMBERSHIP CARD  (faux-3D, tap to tilt)
+   ============================================================ */
+RENDERERS.wallet = () => {
+  const me = GF_DATA.me;
+  const tierName = me.tier.charAt(0).toUpperCase() + me.tier.slice(1);
+  const wts = (typeof tierStatus === 'function') ? tierStatus(me, GF_DATA.transactions) : { redeemable: me.points, status: (me.qualifyingPoints||me.points) };
+
+  return `
+    <header class="pwa-header" style="padding-bottom:18px;">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-2xl text-white font-light">Membership Card</div>
+        <button type="button" onclick="location.hash='home'" class="text-slate-300 hover:text-white transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <p class="text-xs text-slate-300">Scannable at any Goldfinch counter — no plastic, no app to install.</p>
+    </header>
+
+    <section class="px-5 mt-1 mb-5 card-stage" id="cardStage">
+      <div class="wallet-card !rounded-2xl">
+        <div class="card-glare"></div>
+        <div class="flex items-center justify-between mb-7 relative">
+          <img src="assets/logo-full.png" class="portal-brand always-white h-12 w-auto -ml-2" alt="Goldfinch Jewelry" />
+          <span class="tier-capsule">${tierName.toUpperCase()} MEMBER</span>
+        </div>
+
+        <div class="text-[9px] tracking-[0.18em] text-slate-300 uppercase">Member</div>
+        <div class="text-xl text-white font-light tracking-wide mt-0.5">${me.name.toUpperCase()}</div>
+
+        <div class="flex justify-between items-end mt-7 relative">
+          <div>
+            <div class="text-[9px] tracking-[0.18em] text-slate-300 uppercase">Member ID</div>
+            <div class="font-mono-tight text-xs text-white mt-0.5">${me.id}</div>
+          </div>
+          <div class="text-right">
+            <div class="text-[9px] tracking-[0.18em] text-slate-300 uppercase">Redeemable</div>
+            <div class="display text-2xl text-white mt-0.5 leading-none">${fmtNum(wts.redeemable)}</div>
+            <div class="text-[9px] text-slate-400 mt-1">Status ${fmtNum(wts.status)} · keeps ${tierName}</div>
+          </div>
+        </div>
+
+        <div class="text-center mt-5 pt-3 border-t border-brass/20 relative">
+          <div class="italic text-[10px] text-slate-300 font-light tracking-wide">Affordable Luxury for Everyone</div>
+        </div>
+      </div>
+      <div class="text-center text-[10px] text-slate-500 mt-3 tracking-wide">Move your phone or drag the card · scan below at any counter</div>
+    </section>
+
+    <!-- View membership details → tier status -->
+    <section class="px-5 mb-3">
+      <button type="button" onclick="location.hash='account/tier'" class="w-full flex items-center justify-between gap-2 rounded-xl py-3.5 px-4 bg-navy-800 border border-navy-600 hover:bg-navy-700 transition">
+        <span class="flex items-center gap-2.5"><span class="w-5 h-5 text-gold-500">${ICONS.starFill}</span><span class="text-sm font-medium text-white">View membership details</span></span>
+        <span class="w-4 h-4 text-slate-300">${ICONS.chevR}</span>
+      </button>
+    </section>
+
+    <!-- Add to wallet — OS-detected (§8.3). Primary matches the device; the other
+         is offered as a secondary link (UA detection fails often enough that a
+         member must never be stranded). Desktop shows both. -->
+    <section class="px-5 mb-3">${walletButtons()}</section>
+
+    <!-- Scan panel -->
+    <section class="px-5">
+      <div class="rounded-2xl p-5 bg-navy-800 border border-navy-600">
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase">Scan at counter</div>
+          <button type="button" onclick="refreshPoints()" class="inline-flex items-center gap-1.5 text-[11px] text-slate-300 hover:text-white transition"><span class="w-4 h-4">${ICONS.refresh}</span>Refresh</button>
+        </div>
+        <div class="mx-auto bg-white p-2.5 rounded-xl mb-3" style="width:184px;height:184px;">
+          ${qrSvg(me.id, {cell:6, margin:1})}
+        </div>
+        <div class="flex items-center justify-center gap-px h-7 mb-2 bg-white rounded px-3 py-1.5 max-w-[240px] mx-auto">
+          ${Array.from({length:50}).map((_,i) => `<div style="width:${(i%4)+1}px;height:100%;background:#000"></div>`).join('')}
+        </div>
+        <div class="font-mono-tight text-xs text-slate-300 text-center">${me.id}</div>
+      </div>
+    </section>
+  `;
+};
+
+/* ============================================================
+   PROFILE · TIER LADDER + ACCOUNT
+   ============================================================ */
+RENDERERS.account = (sub) => {
+  if (sub === 'tier') return renderTierLadder();
+  if (sub === 'points') return renderPointsHistory();
+  if (sub === 'referral') return renderReferral();
+  if (sub === 'history') return renderPurchaseHistory();
+  if (sub === 'atome') return renderMemberInstallments();
+  if (sub === 'personal') return renderPersonalInfo();
+  if (sub === 'messages') return renderMessagePrefs();
+  if (sub === 'language') return renderLanguage();
+  if (sub === 'help') return renderHelp();
+  return renderAccountHome();
+};
+
+// Shared header for member settings sub-pages.
+function memberSubHeader(title, eyebrow) {
+  return `
+    <header class="pwa-header" style="padding-bottom:16px;">
+      <div class="flex items-center justify-between mb-4">
+        <button type="button" onclick="goBack()" class="text-slate-300 hover:text-white flex items-center gap-1 text-sm transition"><span class="w-5 h-5">${ICONS.chevL}</span><span>${backLabel()}</span></button>
+        <span class="text-xs text-slate-300">${eyebrow||''}</span>
+      </div>
+      <div class="text-2xl text-white font-light">${title}</div>
+    </header>`;
+}
+function fieldRow(label, val) {
+  return `<div class="flex items-center justify-between px-4 py-3.5 border-b border-navy-600 last:border-0">
+    <span class="text-xs uppercase tracking-wider text-slate-300">${label}</span>
+    <span class="text-sm text-white font-medium text-right">${val}</span>
+  </div>`;
+}
+// Simple preference toggle — same .gf-switch component as the CRM (data-state driven).
+function toggleRow(label, sub, on) {
+  return `<button type="button" onclick="const s=this.querySelector('.gf-switch'); s.dataset.state=s.dataset.state==='on'?'off':'on'; s.setAttribute('aria-checked', s.dataset.state==='on'); toast('Preference updated','success')" class="w-full flex items-center justify-between px-4 py-3.5 border-b border-navy-600 last:border-0 text-left">
+    <span class="min-w-0 pr-3"><span class="block text-sm text-white font-medium">${label}</span>${sub?`<span class="block text-[11px] text-slate-300 mt-0.5">${sub}</span>`:''}</span>
+    <span class="gf-switch" role="switch" aria-checked="${on?'true':'false'}" data-state="${on?'on':'off'}"></span>
+  </button>`;
+}
+
+// Portal bottom-sheet primitives.
+function openSheet(html) {
+  const s = document.getElementById('portalSheet'), body = document.getElementById('portalSheetBody');
+  if (!s || !body) return;
+  body.innerHTML = html; body.classList.remove('sheet-exit'); body.classList.add('sheet-enter');
+  syncPortalLang();
+  if (typeof localizeDOM === 'function') localizeDOM(body);   // sheets/modals render outside route()
+  s.classList.remove('hidden'); document.body.style.overflow = 'hidden';
+}
+function closeSheet() {
+  const s = document.getElementById('portalSheet'); if (!s) return;
+  s.classList.add('hidden'); document.body.style.overflow = '';
+}
+// F24 — "Request an update" explains the real flow; submit → pending state + toast.
+let UPDATE_REQUESTED = false;
+function openUpdateRequest() {
+  const field = (f) => `<label class="flex items-center gap-2.5 text-sm cursor-pointer py-1.5"><input type="checkbox" class="w-4 h-4 accent-gold-500"/> <span>${f}</span></label>`;
+  openSheet(`
+    <div class="w-10 h-1 rounded-full bg-slate-500/40 mx-auto mb-4"></div>
+    <h3 class="text-lg font-medium mb-1">Request a change to your details</h3>
+    <p class="text-sm opacity-70 mb-4">Tell us what needs updating. Your request goes to Goldfinch HQ.</p>
+    <div class="rounded-xl border border-slate-500/20 px-3 py-1 mb-4">
+      ${['Phone number','Email address','Home outlet','Name / IC (needs verification)'].map(field).join('')}
+    </div>
+    <div class="rounded-xl bg-gold-500/10 border border-gold-500/30 p-3 text-[12px] leading-relaxed mb-4">
+      <span class="font-medium">How it works:</span> your request is submitted to Goldfinch HQ. To confirm a change, visit any outlet with your IC — or we'll WhatsApp you to verify. Name &amp; IC changes always need in-person verification.
+    </div>
+    <button type="button" class="btn-gold w-full justify-center !py-3 mb-2" onclick="submitUpdateRequest()">${ICONS.check||''} Submit request</button>
+    <button type="button" class="w-full text-center text-sm opacity-60 py-2" onclick="closeSheet()">Cancel</button>
+  `);
+}
+function submitUpdateRequest() {
+  UPDATE_REQUESTED = true;
+  closeSheet();
+  toast('Request submitted to Goldfinch HQ · we\'ll WhatsApp you to confirm', 'success');
+  if (location.hash.replace('#','') === 'account/personal') route();
+}
+
+function renderPersonalInfo() {
+  const me = GF_DATA.me;
+  return `
+    ${memberSubHeader('Personal info', 'Account')}
+    <section class="px-5 py-4">
+      <div class="rounded-2xl bg-navy-800 border border-navy-600 overflow-hidden mb-4">
+        ${fieldRow('Full name', me.name)}
+        ${fieldRow('Member ID', me.id)}
+        ${fieldRow('IC number', me.ic||'—')}
+        ${fieldRow('Phone', me.phone)}
+        ${fieldRow('Email', me.email)}
+        ${fieldRow('Date of birth', me.dob)}
+        ${fieldRow('Home outlet', 'Mydin Bukit Mertajam')}
+      </div>
+      <!-- E16 — no dead "Request an update" button: a plain instruction + a real Contact-us action. -->
+      <div class="rounded-2xl bg-navy-800 border border-navy-600 px-4 py-3.5">
+        <p class="text-[13px] text-slate-200 leading-relaxed">To change your details, visit any Goldfinch outlet with your IC — our staff will update them for you.</p>
+      </div>
+      <a href="https://wa.me/6042289988" target="_blank" rel="noopener" class="btn-gold w-full justify-center !py-3 mt-3">${ICONS.whatsapp||ICONS.chat||''} Contact us on WhatsApp</a>
+      <p class="text-[11px] text-slate-500 text-center mt-3">Your details are held securely by Goldfinch.</p>
+    </section>
+    <div class="h-8"></div>`;
+}
+
+// §1.4 / §8.2 — consent model. Each toggle writes GF_DATA.me.optIn and appends a
+// consentLog entry so the state is real: the CRM broadcast reach reads the same field.
+function optIn() {
+  const o = GF_DATA.me.optIn = GF_DATA.me.optIn || {};
+  o.marketing  = o.marketing  || { whatsapp:false, sms:false };
+  o.reminders  = o.reminders  || { whatsapp:false, sms:false };
+  o.consentLog = o.consentLog || [];
+  return o;
+}
+// group: 'marketing' | 'reminders'; channel: 'whatsapp' | 'sms'. confirmMsg gates opt-OUT.
+function setOptIn(group, channel, confirmMsg) {
+  const o = optIn();
+  const g = o[group] = o[group] || {};
+  const next = !g[channel];
+  if (!next && confirmMsg && !confirm(confirmMsg)) return;   // may miss a payment reminder
+  g[channel] = next;
+  o.consentLog.push({ channel: group + '.' + channel, value: next, ts: new Date().toISOString(), source: 'member-portal' });
+  toast(next ? 'Opted in — you’ll receive these' : 'Opted out — you won’t receive these', 'success');
+  route();
+}
+// Real toggle bound to optIn state. locked=always-on (transactional). confirm=opt-out gate.
+function optRow(group, channel, label, sub, locked, confirmMsg) {
+  const on = locked ? true : !!(optIn()[group] && optIn()[group][channel]);
+  // label/sub/confirmMsg are static UI copy (no user data) — safe to inline.
+  const handler = locked ? '' : `setOptIn('${group}','${channel}'${confirmMsg?`,'${confirmMsg.replace(/'/g,'’')}'`:''})`;
+  return `<button ${locked?'disabled aria-disabled="true"':''} type="button" ${handler?`onclick="${handler}"`:''} class="w-full flex items-center justify-between px-4 py-3.5 border-b border-navy-600 last:border-0 text-left ${locked?'opacity-70 cursor-not-allowed':''}">
+    <span class="min-w-0 pr-3"><span class="block text-sm text-white font-medium">${label}</span>${sub?`<span class="block text-[11px] text-slate-300 mt-0.5">${sub}</span>`:''}</span>
+    <span class="gf-switch ${locked?'opacity-70':''}" role="switch" aria-checked="${on?'true':'false'}" data-state="${on?'on':'off'}"></span>
+  </button>`;
+}
+
+function renderMessagePrefs() {
+  const PAY_CONFIRM = 'Turn off payment schedule reminders? You may miss a payment date with your installment provider.';
+  return `
+    ${memberSubHeader('Message preferences', 'Account')}
+    <section class="px-5 py-4 space-y-4">
+      <div>
+        <div class="text-[10px] tracking-[0.18em] uppercase text-slate-300 font-medium mb-2 px-1">Promotions &amp; campaigns</div>
+        <div class="rounded-2xl bg-navy-800 border border-navy-600 overflow-hidden">
+          ${optRow('marketing', 'whatsapp', 'WhatsApp', 'New collections, offers & tier rewards', false)}
+          ${optRow('marketing', 'sms', 'SMS', 'Offers by text message', false)}
+        </div>
+        <p class="text-[11px] text-slate-500 mt-1.5 px-1">Turn these off any time — you’ll still get everything below.</p>
+      </div>
+      <div>
+        <div class="text-[10px] tracking-[0.18em] uppercase text-slate-300 font-medium mb-2 px-1">Payment schedule reminders</div>
+        <div class="rounded-2xl bg-navy-800 border border-navy-600 overflow-hidden">
+          ${optRow('reminders', 'whatsapp', 'WhatsApp', 'Before each installment is due', false, PAY_CONFIRM)}
+          ${optRow('reminders', 'sms', 'SMS', 'Backup reminder by text', false, PAY_CONFIRM)}
+        </div>
+        <p class="text-[11px] text-warn/80 mt-1.5 px-1">Keep at least one on so you don’t miss an installment payment.</p>
+      </div>
+      <div>
+        <div class="text-[10px] tracking-[0.18em] uppercase text-slate-300 font-medium mb-2 px-1">Account &amp; security</div>
+        <div class="rounded-2xl bg-navy-800 border border-navy-600 overflow-hidden">
+          ${optRow('account', 'whatsapp', 'Purchase &amp; payment receipts', 'Always on — required for your account', true)}
+        </div>
+      </div>
+      <p class="text-[11px] text-slate-500 text-center">Your choices are logged with a timestamp. Transactional messages are always sent.</p>
+    </section>
+    <div class="h-8"></div>`;
+}
+
+function renderLanguage() {
+  const opt = (code, name, sub) => `<button type="button" onclick="setLang('${code}')" class="lang-opt w-full flex items-center justify-between px-4 py-4 border-b border-navy-600 last:border-0 text-left">
+    <span><span class="block text-sm text-white font-medium">${name}</span><span class="block text-[11px] text-slate-300">${sub}</span></span>
+    ${PORTAL_LANG===code ? `<span class="w-5 h-5 text-gold-500">${ICONS.check}</span>` : ''}
+  </button>`;
+  return `
+    ${memberSubHeader(t('lang.title','Language'), 'Account')}
+    <section class="px-5 py-4">
+      <div class="rounded-2xl bg-navy-800 border border-navy-600 overflow-hidden">
+        ${opt('en', 'English', 'Default')}
+        ${opt('ms', 'Bahasa Melayu', 'Bahasa rasmi Malaysia')}
+      </div>
+      <p class="text-[11px] text-slate-400 mt-3 px-1">${t('lang.note','')}</p>
+    </section>
+    <div class="h-8"></div>`;
+}
+
+// Member FAQ — client-supplied (CRM FAQ). Bilingual: follows the portal language toggle (PORTAL_LANG).
+// Tier names (Entry/Bronze/Silver/Gold) stay in English in both languages — they are the brand tiers.
+const HELP_FAQS = {
+  en: [
+    ['How do I sign up and activate my membership?', 'Sign up by completing the registration in the Member’s Portal with any purchase. Your membership is activated on the same or following day of your first purchase.'],
+    ['How do I keep track of my membership status and benefits?', 'Check your membership status and benefits in the Member’s Portal after logging in on the website, or visit any Goldfinch outlet for further assistance.'],
+    ['How do I collect and redeem reward points?', 'You collect reward points on purchases of selected products. Redeem your accumulated points before they expire for gift vouchers or other available gifts. Log in to the Goldfinch website to find out more.'],
+    ['What is the validity of the reward points?', 'Reward points are valid for 1.5 years from the transaction date. Redeem within 1.5 years; otherwise points expire on a first-in, first-out basis. Example: points collected on 1 Jan 2027 expire on 30 June 2028.'],
+    ['How do I upgrade my membership?', 'After a new purchase, your membership is upgraded once your accumulated amount exceeds the minimum for the higher tier within the membership cycle. The system reflects the new tier the following day.'],
+    ['What happens to my rewards and benefits when I’m upgraded?', 'Your rewards and benefits are upgraded to the higher tier accordingly.'],
+    ['How do I maintain my tier? Will my membership be downgraded?', 'To maintain your tier, reach the minimum accumulated amount within the membership cycle. Failing to reach it during the cycle results in your membership being downgraded.'],
+    ['Are there membership fees? How long does membership last?', 'It’s a FREE lifetime membership, activated with any purchase. However, if you make no transactions for 18 consecutive months, your membership becomes dormant and all reward points are reset to zero.'],
+    ['How does the tiered membership work?', 'There are four tiers — Entry, Bronze, Silver and Gold. You move to a higher tier once your accumulated spending during the membership cycle meets that tier’s minimum. Enhanced benefits await in the higher tier.'],
+    ['When does the accumulated amount start to count?', 'The accumulated amount begins counting from your membership activation date or upgrade date.']
+  ],
+  ms: [
+    ['Bagaimana saya mendaftar dan mengaktifkan keahlian?', 'Daftar dengan melengkapkan pendaftaran di Portal Ahli semasa sebarang pembelian. Keahlian anda diaktifkan pada hari yang sama atau keesokan hari selepas pembelian pertama anda.'],
+    ['Bagaimana saya menyemak status dan faedah keahlian?', 'Semak status dan faedah keahlian anda di Portal Ahli selepas log masuk di laman web, atau kunjungi mana-mana cawangan Goldfinch untuk bantuan lanjut.'],
+    ['Bagaimana saya mengumpul dan menebus mata ganjaran?', 'Anda mengumpul mata ganjaran atas pembelian produk terpilih. Tebus mata terkumpul sebelum tamat tempoh untuk baucar hadiah atau hadiah lain yang tersedia. Log masuk ke laman web Goldfinch untuk maklumat lanjut.'],
+    ['Berapakah tempoh sah mata ganjaran?', 'Mata ganjaran sah selama 1.5 tahun dari tarikh transaksi. Tebus dalam tempoh 1.5 tahun; jika tidak, mata akan luput mengikut asas masuk dahulu, keluar dahulu. Contoh: mata dikumpul pada 1 Jan 2027 akan luput pada 30 Jun 2028.'],
+    ['Bagaimana saya menaik taraf keahlian?', 'Selepas pembelian baharu, keahlian anda dinaik taraf apabila jumlah terkumpul melebihi minimum untuk peringkat lebih tinggi dalam kitaran keahlian. Sistem akan memaparkan peringkat baharu pada keesokan hari.'],
+    ['Apa berlaku kepada ganjaran dan faedah apabila dinaik taraf?', 'Ganjaran dan faedah anda akan dinaik taraf ke peringkat lebih tinggi sewajarnya.'],
+    ['Bagaimana saya mengekalkan peringkat? Adakah keahlian akan diturunkan taraf?', 'Untuk mengekalkan peringkat anda, capai jumlah terkumpul minimum dalam kitaran keahlian. Kegagalan mencapainya dalam kitaran akan menyebabkan keahlian anda diturunkan taraf.'],
+    ['Adakah yuran keahlian? Berapa lama tempoh keahlian?', 'Ini keahlian seumur hidup PERCUMA, diaktifkan dengan sebarang pembelian. Namun, jika anda tiada transaksi selama 18 bulan berturut-turut, keahlian anda menjadi tidak aktif dan semua mata ganjaran ditetapkan semula kepada sifar.'],
+    ['Bagaimana keahlian berperingkat berfungsi?', 'Terdapat empat peringkat — Entry, Bronze, Silver dan Gold. Anda naik ke peringkat lebih tinggi apabila perbelanjaan terkumpul anda dalam kitaran keahlian mencapai minimum peringkat tersebut. Faedah lebih baik menanti di peringkat lebih tinggi.'],
+    ['Bilakah jumlah terkumpul mula dikira?', 'Jumlah terkumpul mula dikira dari tarikh pengaktifan keahlian atau tarikh naik taraf anda.']
+  ]
+};
+function renderHelp() {
+  const ms = (typeof PORTAL_LANG !== 'undefined' && PORTAL_LANG === 'ms');
+  const L = ms
+    ? { help:'Bantuan & sokongan', acct:'Akaun', call:'Panggil', email:'E-mel', faq:'Soalan Lazim' }
+    : { help:'Help & support',    acct:'Account', call:'Call',   email:'Email', faq:'Frequently asked' };
+  const faqs = HELP_FAQS[ms ? 'ms' : 'en'];
+  return `
+    ${memberSubHeader(L.help, L.acct)}
+    <section class="px-5 py-4 space-y-4">
+      <div class="grid grid-cols-3 gap-3">
+        <a href="https://wa.me/6042289988" target="_blank" rel="noopener" class="rounded-2xl bg-navy-800 border border-navy-600 p-4 flex flex-col items-center gap-2 hover:bg-navy-700 transition"><span class="w-6 h-6 text-pos">${ICONS.whatsapp||ICONS.chat}</span><span class="text-[11px] text-white font-medium">WhatsApp</span></a>
+        <a href="tel:+6042289988" class="rounded-2xl bg-navy-800 border border-navy-600 p-4 flex flex-col items-center gap-2 hover:bg-navy-700 transition"><span class="w-6 h-6 text-gold-500">${ICONS.phone||ICONS.chat}</span><span class="text-[11px] text-white font-medium">${L.call}</span></a>
+        <a href="mailto:support@goldfinch.my" class="rounded-2xl bg-navy-800 border border-navy-600 p-4 flex flex-col items-center gap-2 hover:bg-navy-700 transition"><span class="w-6 h-6 text-slate-300">${ICONS.mail||ICONS.chat}</span><span class="text-[11px] text-white font-medium">${L.email}</span></a>
+      </div>
+      <div>
+        <div class="text-[10px] tracking-[0.18em] uppercase text-slate-300 font-medium mb-2 px-1">${L.faq}</div>
+        <div class="rounded-2xl bg-navy-800 border border-navy-600 overflow-hidden">
+          ${faqs.map(([q,a])=>`
+            <details class="border-b border-navy-600 last:border-0 group">
+              <summary class="flex items-center justify-between px-4 py-3.5 cursor-pointer list-none"><span class="text-sm text-white font-medium pr-3">${q}</span><span class="w-4 h-4 text-slate-400 group-open:rotate-90 transition-transform flex-shrink-0">${ICONS.chevR}</span></summary>
+              <div class="px-4 pb-3.5 -mt-1 text-[13px] text-slate-300 leading-relaxed">${a}</div>
+            </details>`).join('')}
+        </div>
+      </div>
+      <div class="text-center text-[11px] text-slate-500">Goldfinch Jewelry · +604 228 9988 · support@goldfinch.my</div>
+    </section>
+    <div class="h-8"></div>`;
+}
+
+// Purchase history — member-facing list of every transaction (real GF_DATA).
+function renderPurchaseHistory() {
+  const me = GF_DATA.me;
+  const list = GF_DATA.purchaseHistory[me.id] || [];
+  const totalSpend = list.reduce((s,p)=>s+p.amount,0);
+  const totalGrams = list.reduce((s,p)=>s+(p.grams||0),0);
+  return `
+    <header class="pwa-header" style="padding-bottom:18px;">
+      <div class="flex items-center justify-between mb-5">
+        <button type="button" onclick="goBack()" class="text-slate-300 hover:text-white flex items-center gap-1 text-sm transition"><span class="w-5 h-5">${ICONS.chevL}</span><span>${backLabel()}</span></button>
+        <span class="text-xs text-slate-300">Purchases</span>
+      </div>
+      <div class="text-2xl text-white font-light mb-4">Your purchases</div>
+      <div class="grid grid-cols-3 gap-3">
+        <div class="rounded-xl p-3 bg-navy-800 border border-navy-600 text-center"><div class="text-[9px] uppercase tracking-wider text-slate-300">Orders</div><div class="text-xl text-white font-light mt-0.5">${list.length}</div></div>
+        <div class="rounded-xl p-3 bg-navy-800 border border-navy-600 text-center"><div class="text-[9px] uppercase tracking-wider text-slate-300">Spent</div><div class="text-xl text-white font-light mt-0.5">${fmtRM(totalSpend)}</div></div>
+        <div class="rounded-xl p-3 bg-navy-800 border border-navy-600 text-center"><div class="text-[9px] uppercase tracking-wider text-slate-300">Gold</div><div class="text-xl text-gold-500 font-light mt-0.5">${totalGrams.toFixed(1)}g</div></div>
+      </div>
+    </header>
+    <section class="px-5 py-4 space-y-3">
+      ${list.map(p => `
+        <div class="rounded-2xl bg-navy-800 border border-navy-600 p-4">
+          <div class="flex items-start justify-between gap-3">
+            <div class="min-w-0">
+              <div class="text-sm font-medium text-white leading-snug">${p.item}</div>
+              <div class="text-[11px] text-slate-300 mt-1">${p.date} · ${p.outlet||''}</div>
+              <div class="text-[10px] text-slate-500 font-mono-tight mt-0.5">${p.invoice} · ${p.grade} · ${p.grams}g</div>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <div class="text-base text-white font-medium">${fmtRM(p.amount)}</div>
+              <div class="inline-block text-[9px] uppercase tracking-wider text-slate-300 border border-navy-600 rounded px-1.5 py-0.5 mt-1">${p.payment}</div>
+            </div>
+          </div>
+        </div>`).join('') || '<div class="text-center text-slate-300 text-sm py-10">No purchases yet.</div>'}
+    </section>
+    <div class="h-8"></div>
+  `;
+}
+
+// Installments — member-facing view of their BNPL plans with a monthly timeline.
+function renderMemberInstallments() {
+  const me = GF_DATA.me;
+  const plans = (GF_DATA.atomePlans||[]).filter(p => p.memberId === me.id);
+  return `
+    <header class="pwa-header" style="padding-bottom:18px;">
+      <div class="flex items-center justify-between mb-5">
+        <button type="button" onclick="goBack()" class="text-slate-300 hover:text-white flex items-center gap-1 text-sm transition"><span class="w-5 h-5">${ICONS.chevL}</span><span>${backLabel()}</span></button>
+        <span class="text-xs text-slate-300">Installments</span>
+      </div>
+      <div class="text-2xl text-white font-light">Your installments</div>
+      <p class="text-xs text-slate-300 mt-1">Buy-now-pay-later plans · 0% interest</p>
+    </header>
+    <section class="px-5 py-4 space-y-4">
+      ${plans.length ? plans.map(p => {
+        const monthPct = Math.min(1, (p.paidMonths||0)/p.totalMonths);
+        const st = planUiStatus(p);
+        const outstanding = Math.max(0, p.total - p.paid);
+        const badge = st.key==='done'
+          ? '<span class="text-[10px] uppercase tracking-wider text-slate-300 border border-navy-600 rounded-full px-2 py-0.5">Completed</span>'
+          : st.key==='final'
+          ? '<span class="text-[10px] uppercase tracking-wider text-gold-500 border border-gold-500/40 rounded-full px-2 py-0.5">Final month</span>'
+          : '<span class="text-[10px] uppercase tracking-wider text-pos border border-pos/40 rounded-full px-2 py-0.5">On track</span>';
+        return `
+        <div class="rounded-2xl bg-navy-800 border border-navy-600 p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div class="text-sm font-medium text-white">${p.item}</div>
+            ${badge}
+          </div>
+          <div class="flex items-end justify-between mb-4">
+            ${st.key==='done'
+              ? `<div><div class="text-[10px] uppercase tracking-wider text-slate-300">Status</div><div class="text-2xl text-white font-light mt-0.5">Fully paid</div><div class="text-[11px] text-pos mt-0.5">Plan complete</div></div>`
+              : `<div><div class="text-[10px] uppercase tracking-wider text-slate-300">Next payment</div><div class="text-2xl text-white font-light mt-0.5">${fmtRM(p.monthly)}</div>${p.nextDate?`<div class="text-[11px] text-warn mt-0.5">due ${fmtDMY(p.nextDate)}</div>`:''}</div>`}
+            <div class="text-right"><div class="text-[10px] uppercase tracking-wider text-slate-300">Outstanding</div><div class="text-lg text-gold-500 font-light mt-0.5">${fmtRM(outstanding)}</div></div>
+          </div>
+          <!-- monthly timeline (one dot per month) -->
+          <div class="relative mb-2" style="height:16px;">
+            <div class="absolute left-1.5 right-1.5 top-1/2 -translate-y-1/2 h-0.5 bg-navy-600"></div>
+            <div class="absolute left-1.5 top-1/2 -translate-y-1/2 h-0.5 rounded" style="background:var(--gold-grad);width:calc((100% - 12px) * ${monthPct})"></div>
+            <div class="absolute inset-0 flex justify-between items-center">
+              ${Array.from({length:p.totalMonths},(_,i)=>{const paid=i<p.paidMonths;const cur=i===p.paidMonths && st.key!=='done';return `<div class="rounded-full ${cur?'w-3 h-3':'w-2 h-2'} ${paid?'bg-gold-500':'bg-navy-600'} ${cur?'ring-2 ring-gold-500/30':''}"></div>`;}).join('')}
+            </div>
+          </div>
+          <div class="flex justify-between text-[11px] text-slate-300"><span>${p.paidMonths} of ${p.totalMonths} paid</span><span>${p.provider}</span></div>
+          ${st.key==='done' ? '' : `<button type="button" class="btn-gold w-full justify-center !py-2.5 mt-4" onclick="toast('Payment reminder set','success')">Remind me before due</button>`}
+        </div>`; }).join('') : '<div class="text-center text-slate-300 text-sm py-12">No active installment plans.</div>'}
+    </section>
+    <div class="h-8"></div>
+  `;
+}
+
+function renderAccountHome() {
+  const me = GF_DATA.me;
+  const tierName = me.tier.charAt(0).toUpperCase() + me.tier.slice(1);
+  return `
+    <header class="pwa-header" style="padding-bottom:24px;">
+      <div class="flex items-center justify-between mb-4">
+        <div class="text-2xl text-white font-light">Profile</div>
+        <button type="button" onclick="location.hash='home'" class="text-slate-300 hover:text-white transition">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <div class="flex items-center gap-3 mt-2 relative">
+        <div class="w-14 h-14 rounded-full bg-navy-800 border border-brass/40 flex items-center justify-center text-xl text-white font-light">${me.name.split(' ').map(n=>n[0]).slice(0,2).join('')}</div>
+        <div>
+          <div class="text-xl text-white font-light leading-tight">${me.name}</div>
+          <div class="text-xs text-slate-300 font-mono-tight">${me.id}</div>
+        </div>
+      </div>
+    </header>
+
+    <section class="px-5 mt-1 relative z-10">
+      <button type="button" onclick="location.hash='account/tier'" class="keep-dark w-full rounded-2xl p-5 flex items-center justify-between transition mb-4 relative overflow-hidden" style="background:linear-gradient(135deg,#022135 0%,#011827 60%);border:1px solid var(--brass)">
+        <div class="gf-bird absolute -right-4 -bottom-5 w-32 h-32 opacity-10"></div>
+        <div class="text-left relative z-10">
+          <div class="text-[10px] tracking-[0.18em] uppercase font-medium mb-1.5 text-gold-lux">${tierName} · Tier Status</div>
+          <div class="text-2xl text-white font-light leading-tight">${tierName} Member</div>
+          <div class="text-xs text-slate-300 mt-1.5">${me.topTier ? 'Top tier · '+(me.grams999+me.grams916).toFixed(0)+'g gold owned' : me.pointsToNext+' points to Gold'}</div>
+          <div class="inline-flex items-center gap-1 text-[11px] text-gold-500 font-medium mt-2">View full benefits <span class="w-3 h-3">${ICONS.chevR}</span></div>
+        </div>
+        <div class="tier-medal ${me.tier} flex-shrink-0 relative z-10" style="width:56px;height:56px"><span class="medal-bird">${ICONS.birdLogo}</span></div>
+      </button>
+    </section>
+
+    <!-- Refer & Earn — prominent gold-accented entry -->
+    <section class="px-5 mt-3">
+      <button type="button" onclick="location.hash='account/referral'" class="w-full rounded-2xl p-4 flex items-center gap-3.5 border transition text-left" style="background:linear-gradient(135deg, rgba(242,194,26,0.14), rgba(242,194,26,0.05)); border-color:rgba(242,194,26,0.35)">
+        <div class="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style="background:var(--gold-grad); color:#3D2C05"><span class="w-5 h-5">${ICONS.refer}</span></div>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm font-medium text-white">Refer &amp; Earn</div>
+          <div class="text-[11px] text-slate-300">Earn RM 2/g when friends buy · RM ${fmtNum((typeof referralTotals==='function'?referralTotals(GF_DATA.me.id).earned:GF_DATA.me.referralEarned)||0)} earned</div>
+        </div>
+        <span class="text-gold-500 w-4 h-4">${ICONS.chevR}</span>
+      </button>
+    </section>
+
+    <section class="px-5 mt-3 space-y-2">
+      ${[
+        ['Personal Info',         'Name, phone, email, DOB',          'user',    'account/personal'],
+        ['Installment Plans',     (() => { const n = (GF_DATA.atomePlans||[]).filter(p=>p.memberId===me.id).length; return n + ' active plan' + (n===1?'':'s'); })(), 'package', 'account/atome'],
+        ['Purchase History',      (GF_DATA.purchaseHistory[me.id]||[]).length + ' purchases',   'receipt', 'account/history'],
+        ['Points Activity',       'Every point earned & redeemed',    'coin',    'account/points'],
+        ['Message Preferences',   'WhatsApp · SMS · Email opt-ins',   'bell',    'account/messages'],
+        ['Language',              'English · BM available',           'globe',   'account/language'],
+        ['Help & Support',        'FAQ, contact Goldfinch',           'chat',    'account/help']
+      ].map(([t,s,ic,href]) => `
+        <button type="button" onclick="location.hash='${href}'" class="w-full rounded-xl p-3.5 bg-navy-800 border border-navy-600 flex items-center gap-3 hover:bg-navy-700 transition">
+          <div class="menu-tile w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"><span class="w-[18px] h-[18px]">${ICONS[ic]}</span></div>
+          <div class="flex-1 text-left">
+            <div class="text-sm font-medium text-white">${t}</div>
+            <div class="text-[11px] text-slate-300">${s}</div>
+          </div>
+          <span class="text-slate-500 w-4 h-4">${ICONS.chevR}</span>
+        </button>`).join('')}
+
+      <!-- Appearance: light / dark theme switch (light variant delivered alongside dark) -->
+      <button type="button" onclick="toggleTheme()" class="w-full rounded-xl p-3.5 bg-navy-800 border border-navy-600 flex items-center gap-3 hover:bg-navy-700 transition">
+        <div class="menu-tile w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"><span class="w-[18px] h-[18px]">${ICONS.sparkles}</span></div>
+        <div class="flex-1 text-left">
+          <div class="text-sm font-medium text-white">Appearance</div>
+          <div class="text-[11px] text-slate-300">${PORTAL_THEME==='light'?'Light theme':'Dark theme'} · tap to switch</div>
+        </div>
+        <span class="text-[10px] font-medium px-2 py-1 rounded-full ${PORTAL_THEME==='light'?'bg-gold-500/20 text-gold-500':'bg-navy-700 text-slate-300'}">${PORTAL_THEME==='light'?'LIGHT':'DARK'}</span>
+      </button>
+
+      <button type="button" class="w-full p-3 mt-4 text-center text-neg text-sm font-medium hover:text-neg transition" onclick="signOut()">Sign out</button>
+
+      <!-- brand sign-off (white line in dark, dark line in light) -->
+      <div class="flex flex-col items-center gap-1.5 pt-3 pb-8">
+        <img src="assets/logo-full.png" class="portal-brand profile-logo" style="height:26px" alt="Goldfinch Jewelry" />
+        <div class="text-[10px] text-slate-500 tracking-wide">Member App · v2.4 · Goldfinch Jewelry</div>
+      </div>
+    </section>
+  `;
+}
+
+function copyReferral() {
+  const code = GF_DATA.me.referralCode;
+  if (navigator.clipboard) navigator.clipboard.writeText(code).catch(()=>{});
+  toast('Referral code copied — ' + code, 'success');
+}
+function shareReferral() {
+  const me = GF_DATA.me;
+  const msg = `Join me at Goldfinch Jewelry! Use my code ${me.referralCode} when you sign up. — ${me.firstName}`;
+  if (navigator.share) { navigator.share({ title:'Goldfinch Jewelry', text: msg }).catch(()=>{}); }
+  else { window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank'); }
+  toast('Opening share…', 'success');
+}
+
+function renderReferral() {
+  const me = GF_DATA.me;
+  // Earned / pending are DERIVED from the referral records (never a stored figure) so the hero
+  // total can't diverge from the list below. earned = rewarded payouts; pending = qualified-not-
+  // yet-paid. Register 17 Jul — value-consistency sweep.
+  const totals = (typeof referralTotals === 'function')
+    ? referralTotals(me.id)
+    : (() => { const recs = (GF_DATA.referrals||[]).filter(r=>r.referrerId===me.id);
+        return { earned: recs.filter(r=>r.status==='rewarded').reduce((s,r)=>s+(r.reward||0),0),
+                 pending: recs.filter(r=>r.status==='qualified').reduce((s,r)=>s+(r.reward||0),0) }; })();
+  const mine = (GF_DATA.referrals || []).filter(r => r.referrerId === me.id);
+  const qualified = mine.filter(r => r.status !== 'pending').length;
+  // Referral credit is a POOL the member converts into vouchers (in RM 10 steps). available =
+  // lifetime earned minus what's already been converted. It is voucher-only — never cash.
+  const refConverted = me.referralConverted || 0;
+  const refAvailable = Math.max(0, totals.earned - refConverted);
+  const refConvertible = Math.floor(refAvailable / 10) * 10;   // only whole RM 10 units convert
+  const statusMap = {
+    pending:   { label:'Pending join',  cls:'text-slate-300 bg-navy-700' },
+    qualified: { label:'Qualified',     cls:'text-warn bg-warn/15' },
+    rewarded:  { label:'Rewarded',      cls:'text-pos bg-pos/15' }
+  };
+  return `
+    <header class="pwa-header" style="padding-bottom:20px;">
+      <div class="flex items-center justify-between mb-4">
+        <button type="button" onclick="goBack()" class="text-slate-300 hover:text-white flex items-center gap-1 text-sm transition">
+          <span class="w-5 h-5">${ICONS.chevL}</span><span>${backLabel()}</span>
+        </button>
+        <span class="text-xs text-slate-300">Refer &amp; Earn</span>
+      </div>
+      <div class="text-3xl text-white font-light mb-2">Give gold, <em class="text-gold-500 not-italic">get gold.</em></div>
+      <p class="text-xs text-slate-300 leading-relaxed">Earn <strong class="text-white font-medium">RM 2 for every gram</strong> your friends purchase — no limit.</p>
+    </header>
+
+    <section class="px-5 mt-2">
+      <!-- Earnings hero — reward is held as VOUCHER credit (no cash withdrawal yet). -->
+      <div class="keep-dark rounded-2xl p-5 mb-4 relative overflow-hidden" style="background:linear-gradient(135deg,#022135 0%,#011827 60%);border:1px solid var(--brass)">
+        <div class="gf-bird absolute -right-5 -bottom-6 w-32 h-32 opacity-10"></div>
+        <div class="relative z-10">
+          <div class="flex items-end justify-between">
+            <div>
+              <div class="text-[10px] tracking-[0.18em] text-gold-500 uppercase font-medium">Referral credit available</div>
+              <div class="display text-5xl text-white mt-1.5">RM ${fmtNum(refAvailable)}</div>
+              <div class="text-xs text-slate-300 mt-2">RM ${fmtNum(totals.pending)} pending · ${qualified} of ${mine.length} friends qualified${refConverted ? ` · RM ${fmtNum(refConverted)} converted` : ''}</div>
+            </div>
+            <span class="text-[9px] tracking-wider uppercase text-gold-500/90 border border-gold-500/40 rounded-full px-2 py-1 flex-shrink-0">Voucher only · no cash</span>
+          </div>
+          ${totals.awaitingApproval ? `<div class="mt-3 pt-3 border-t border-white/10 text-[11px] text-slate-300 flex items-center gap-1.5"><span class="w-3.5 h-3.5 text-gold-500">${ICONS.clock||''}</span>RM ${fmtNum(totals.awaitingApproval)} awaiting HQ approval · ${(GF_DATA.referralProgram||{}).approvalDaysText||'3–5 working days'}</div>` : ''}
+          <button type="button" onclick="openReferralConvert()" ${refConvertible < 10 ? 'disabled' : ''} class="mt-4 w-full justify-center btn-gold !py-3 ${refConvertible < 10 ? 'opacity-40 cursor-not-allowed' : ''}">
+            ${ICONS.tag||ICONS.gift} Convert to voucher
+          </button>
+          <div class="mt-2.5 text-[11px] text-slate-400 leading-relaxed">Convert your credit into a voucher in RM 10 steps — it lands in <strong class="text-slate-200 font-medium">Rewards</strong> ready to use in-store. Referral credit is voucher-only (valid 3 months) and can't be exchanged for cash.</div>
+        </div>
+      </div>
+
+      <!-- Referral code + share -->
+      <div class="rounded-2xl p-4 mb-4 bg-navy-800 border border-navy-600">
+        <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase mb-2 font-medium">Your Referral Code</div>
+        <div class="flex items-center gap-2">
+          <div class="flex-1 rounded-xl px-4 py-3 bg-navy-950/60 border border-navy-600 font-mono-tight text-lg text-white tracking-wide text-center">${me.referralCode}</div>
+          <button type="button" onclick="copyReferral()" class="w-11 h-11 rounded-xl bg-navy-700 border border-navy-600 flex items-center justify-center text-slate-300 hover:text-white transition" title="Copy code"><span class="w-5 h-5">${ICONS.copy||ICONS.check}</span></button>
+        </div>
+        <button type="button" onclick="shareReferral()" class="btn-gold w-full justify-center mt-3 !py-3">${ICONS.whatsapp||ICONS.share} Share with friends</button>
+      </div>
+
+      <!-- How it works — earn AND redeem, so the voucher-only flow is unmistakable -->
+      <div class="rounded-2xl p-4 mb-4 bg-navy-800 border border-navy-600">
+        <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase mb-3 font-medium">How It Works</div>
+        ${[
+          ['share','Share your code','Send your code to friends & family.'],
+          ['users','They join & buy','Your friend signs up and makes their first qualifying purchase.'],
+          ['gift','You earn credit','Earn RM 2 per gram they buy — added to your referral credit (voucher-only, never cash). No limit.'],
+          ['tag','Convert & redeem','Convert your credit into a voucher in RM 10 steps — it appears in Rewards. Show its QR to the cashier on your next purchase.']
+        ].map(([ic,t,d],i,arr) => `
+          <div class="flex items-start gap-3 ${i<arr.length-1?'pb-3 mb-3 border-b border-navy-600':''}">
+            <div class="w-8 h-8 rounded-lg bg-gold-500/15 text-gold-500 flex items-center justify-center flex-shrink-0"><span class="w-4 h-4">${ICONS[ic]||ICONS.check}</span></div>
+            <div>
+              <div class="text-sm font-medium text-white leading-tight">${t}</div>
+              <div class="text-[11px] text-slate-300 mt-0.5 leading-relaxed">${d}</div>
+            </div>
+          </div>`).join('')}
+      </div>
+
+      <!-- Gold bar & bullion — per-product referral rate (surfaced in both portal + CRM) -->
+      <button type="button" onclick="openReferralRateCard()" class="w-full text-left rounded-2xl p-4 mb-4 bg-navy-800 border border-navy-600 hover:border-gold-500/50 active:scale-[.99] transition flex items-start gap-3">
+        <div class="w-9 h-9 rounded-lg bg-gold-500/15 text-gold-500 flex items-center justify-center flex-shrink-0"><span class="w-4 h-4">${ICONS.coin||ICONS.gift}</span></div>
+        <div class="min-w-0 flex-1">
+          <div class="text-sm font-medium text-white leading-tight">Referring gold bars &amp; bullion?</div>
+          <div class="text-[11px] text-slate-300 mt-1 leading-relaxed">Gold bars, silver bars &amp; special items earn a flat rebate by weight. Jewellery earns RM 2 / g.</div>
+        </div>
+        <span class="text-[11px] text-gold-500 font-medium flex items-center gap-0.5 flex-shrink-0 self-center">Rates <span class="w-3.5 h-3.5">${ICONS.chevR}</span></span>
+      </button>
+
+      <!-- My referrals -->
+      <div class="rounded-2xl p-4 mb-6 bg-navy-800 border border-navy-600">
+        <div class="flex items-center justify-between mb-3">
+          <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase font-medium">Your Referrals</div>
+          <span class="text-[10px] text-slate-500">${mine.length} total</span>
+        </div>
+        ${mine.length ? mine.map(r => {
+          const s = statusMap[r.status] || statusMap.pending;
+          return `
+          <div class="flex items-center justify-between py-2.5 border-b border-navy-600 last:border-0">
+            <div class="min-w-0">
+              <div class="text-sm font-medium text-white truncate">${r.referee}</div>
+              <div class="text-[10px] tracking-wider text-slate-300 uppercase">${r.date}${r.grams?' · '+r.grams+'g':''}</div>
+            </div>
+            <div class="text-right flex-shrink-0 ml-3">
+              <div class="text-sm font-medium ${r.reward?'text-pos':'text-slate-500'}">${r.reward?'+RM '+r.reward:'—'}</div>
+              <span class="text-[9px] font-medium px-1.5 py-0.5 rounded-full ${s.cls}">${s.label}</span>
+            </div>
+          </div>`; }).join('') :
+          '<div class="text-center py-6 text-slate-300 text-sm">No referrals yet — share your code above.</div>'
+        }
+      </div>
+    </section>
+    <div class="h-6"></div>
+  `;
+}
+
+function renderTierLadder() {
+  const me = GF_DATA.me;
+  const order = ['entry','bronze','silver','gold'];
+  const curIdx = order.indexOf(me.tier);
+  const tierName = me.tier.charAt(0).toUpperCase() + me.tier.slice(1);
+  // The ladder is about TIER standing → drive it by STATUS points, not the redeemable pool.
+  const tts = (typeof tierStatus === 'function') ? tierStatus(me, GF_DATA.transactions)
+    : { status: (me.qualifyingPoints||me.points), nextTier: null, toNext: 0, spendMet: true, maintainNeed: 0 };
+  const nextTierName = tts.nextTier ? tts.nextTier.charAt(0).toUpperCase() + tts.nextTier.slice(1) : null;
+
+  // 4-tier ladder marks
+  const marks = [
+    { key:'entry',  label:'Entry',  pts:'1,000' },
+    { key:'bronze', label:'Bronze', pts:'2,500' },
+    { key:'silver', label:'Silver', pts:'7,000' },
+    { key:'gold',   label:'Gold',   pts:'15,000' }
+  ];
+
+  // Chagee-style tier cards (swipeable carousel) — one card per tier with its benefits.
+  // Points are earned by gold grade (999 / 916 / others), not by tier — tiers differ by perks.
+  const tierCards = [
+    { key:'entry',  name:'Entry',  disc:'entry',  threshold:'1,000 pts', hero:'1,000',  heroCap:'welcome points', accent:'#B7C3CC', benefits:[{ic:'gift',t:'Welcome RM 30 voucher · valid 6 months'},{ic:'coin',t:'Earn points on every purchase'},{ic:'cake',t:'Birthday gift'},{ic:'card',t:'Digital membership card'}] },
+    { key:'bronze', name:'Bronze', disc:'bronze', threshold:'2,500 pts', hero:'2,500',  heroCap:'to qualify',     accent:'#D2A877', benefits:[{ic:'refresh',t:'Maintain with RM 300 / year'},{ic:'cake',t:'Birthday gift'},{ic:'tag',t:'Seasonal vouchers'},{ic:'coin',t:'100 pts = RM 1 redemption'}] },
+    { key:'silver', name:'Silver', disc:'silver', threshold:'7,000 pts', hero:'7,000',  heroCap:'to qualify',     accent:'#CBD2D8', benefits:[{ic:'refresh',t:'Maintain with RM 600 / year'},{ic:'gift',t:'Exclusive vouchers'},{ic:'sparkles',t:'Early access to new pieces'},{ic:'starFill',t:'Priority service'}] },
+    { key:'gold',   name:'Gold',   disc:'gold',   threshold:'15,000 pts',hero:'15,000', heroCap:'to qualify',     accent:'#F2C21A', benefits:[{ic:'refresh',t:'Maintain with RM 1,000 / year'},{ic:'starFill',t:'VIP vouchers'},{ic:'clock',t:'7-day early access'},{ic:'sparkles',t:'VIP events'}] }
+  ];
+
+  return `
+    <header class="pwa-header" style="padding-bottom:20px;">
+      <div class="flex items-center justify-between mb-4">
+        <button type="button" onclick="goBack()" class="text-slate-300 hover:text-white flex items-center gap-1 text-sm transition">
+          <span class="w-5 h-5">${ICONS.chevL}</span><span>${backLabel()}</span>
+        </button>
+        <span class="text-xs text-slate-300">Tier Status</span>
+      </div>
+      <div class="text-3xl text-white font-light mb-2">A ladder worth <em class="text-gold-500 not-italic">climbing.</em></div>
+      <p class="text-xs text-slate-300 leading-relaxed">Earn points on every Goldfinch purchase. Climb tiers, unlock benefits.</p>
+    </header>
+
+    <section class="px-5 mt-2">
+      <!-- Current position -->
+      <div class="keep-dark rounded-2xl p-5 mb-5 relative overflow-hidden" style="background:#011827;border:1px solid var(--brass)">
+        <div class="flex items-start justify-between gap-3">
+          <div>
+            <div class="text-[10px] tracking-[0.18em] text-gold-500 uppercase font-medium">Status points · keeps your tier</div>
+            <div class="display text-5xl text-white mt-1.5">${fmtNum(tts.status)} <span class="text-lg text-slate-300 font-normal">pts</span></div>
+            <div class="text-xs text-slate-300 mt-2">${me.topTier ? '<strong class="text-white font-medium">Gold</strong> · top tier · '+(tts.spendMet?'min RM '+fmtNum(tts.maintainNeed)+'/yr kept ✓':'spend RM '+fmtNum(tts.maintainNeed)+'/yr to keep') : fmtNum(tts.toNext)+' status points to <strong class="text-white font-medium">'+(nextTierName||'next')+'</strong>'}</div>
+            <!-- gold purchased by grade (mirrors the CRM member detail) -->
+            <div class="flex gap-5 mt-3">
+              <div><div class="text-[9px] uppercase tracking-wider text-slate-300">999.9 Pure</div><div class="text-sm text-white font-medium">${me.grams999}g</div></div>
+              <div><div class="text-[9px] uppercase tracking-wider text-slate-300">916 Gold</div><div class="text-sm text-white font-medium">${me.grams916}g</div></div>
+              <div><div class="text-[9px] uppercase tracking-wider text-slate-300">Total</div><div class="text-sm text-gold-500 font-medium">${(me.grams999+me.grams916).toFixed(1)}g</div></div>
+            </div>
+          </div>
+          <div class="tier-medal ${me.tier} flex-shrink-0" style="width:68px;height:68px"><span class="medal-bird">${ICONS.birdLogo}</span></div>
+        </div>
+
+        <!-- Ladder · Entry → Bronze → Silver → Gold -->
+        <div class="mt-8">
+          <div class="relative" style="height:24px;">
+            <div class="absolute left-2.5 right-2.5 top-1/2 -translate-y-1/2 h-1 bg-navy-600 rounded-full"></div>
+            <div class="absolute left-2.5 top-1/2 -translate-y-1/2 h-1 rounded-full" style="background:var(--gold-grad);width:calc((100% - 20px) * ${me.topTier ? 1 : Math.min(1, tts.status/15000)})"></div>
+            <div class="absolute inset-0 flex justify-between items-center">
+              ${marks.map((mk,i) => `<div class="tier-dot ${i===curIdx?'current':''}"></div>`).join('')}
+            </div>
+          </div>
+          <div class="flex justify-between mt-3">
+            ${marks.map((mk,i) => `
+              <div class="${i===0?'text-left':i===marks.length-1?'text-right':'text-center'}">
+                <div class="text-[9px] tracking-widest ${i===curIdx?'text-gold-500 font-medium':'text-slate-300'}">${mk.label}</div>
+                <div class="text-[10px] ${i===curIdx?'text-slate-300 font-medium':'text-slate-500'}">${mk.pts}</div>
+              </div>`).join('')}
+          </div>
+        </div>
+      </div>
+
+      <!-- How tiers work — achieve by points (sticky), keep by a minimum purchase -->
+      <div class="rounded-xl p-4 mb-5 bg-navy-800 border border-navy-600">
+        <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase mb-3 font-medium">How your tier works</div>
+        <div class="flex items-start gap-3 mb-3">
+          <span class="w-7 h-7 rounded-lg bg-gold-500/15 text-gold-500 flex items-center justify-center flex-shrink-0"><span class="w-4 h-4">${ICONS.starFill}</span></span>
+          <div><div class="text-sm text-white font-medium">Reach it with status points</div><div class="text-xs text-slate-300 mt-0.5">Earn status points on every purchase. Once you cross a tier, it's yours — <span class="text-white">redeeming points never drops your tier</span>.</div></div>
+        </div>
+        <div class="flex items-start gap-3">
+          <span class="w-7 h-7 rounded-lg bg-gold-500/15 text-gold-500 flex items-center justify-center flex-shrink-0"><span class="w-4 h-4">${ICONS.refresh}</span></span>
+          <div><div class="text-sm text-white font-medium">Keep it with a minimum purchase</div><div class="text-xs text-slate-300 mt-0.5">Make at least the minimum purchase each 12 months to renew — <span class="text-white">Bronze RM 300 · Silver RM 600 · Gold RM 1,000</span>.</div></div>
+        </div>
+      </div>
+
+      <!-- Recent earnings -->
+      <div class="rounded-xl p-4 mb-5 bg-navy-800 border border-navy-600">
+        <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase mb-3 font-medium">Recent Earnings</div>
+        ${GF_DATA.activity.map(a => `
+          <div class="flex items-center justify-between py-2.5 border-b border-navy-600 last:border-0">
+            <div>
+              <div class="text-sm font-medium text-white">${a.label}</div>
+              <div class="text-[10px] tracking-wider text-slate-300 uppercase">${a.date}${a.meta?' · '+a.meta:''}</div>
+            </div>
+            <div class="text-sm font-medium ${a.points >= 0 ? 'text-pos' : 'text-neg'}">${a.points >= 0 ? '+' : ''}${a.points}</div>
+          </div>`).join('')}
+      </div>
+    </section>
+
+    <!-- Benefits per tier — Chagee-style swipeable carousel (replaces the comparison table) -->
+    <div class="mb-2">
+      <div class="px-5 mb-3 flex items-center justify-between">
+        <div class="text-[10px] tracking-[0.18em] text-slate-300 uppercase font-medium">Benefits By Tier</div>
+        <span class="text-[10px] text-slate-500 inline-flex items-center gap-1">Swipe <span class="w-3 h-3">${ICONS.chevR}</span></span>
+      </div>
+      <div class="tier-carousel">
+        ${tierCards.map(tc => {
+          const isCur = tc.key === me.tier;
+          return `
+          <div class="tier-card loyalty-card keep-dark ${tc.disc} ${isCur?'is-current':''}">
+            <div class="tier-card-sheen"></div>
+            <div class="lc-accent"></div>
+            <div class="relative flex items-center justify-between mb-4">
+              <div>
+                <div class="text-[11px] tracking-[0.18em] uppercase font-medium ${tc.key==='gold'?'text-gold-lux':''}" style="${tc.key==='gold'?'':'color:'+tc.accent}">${tc.name}${isCur?' · You':''}</div>
+                <div class="text-xs text-slate-300 mt-0.5">From ${tc.threshold}</div>
+              </div>
+              <div class="tier-medal ${tc.disc} flex-shrink-0" style="width:56px;height:56px"><span class="medal-bird">${ICONS.birdLogo}</span></div>
+            </div>
+            <div class="relative flex items-baseline gap-1.5 mb-4 pb-4 border-b border-white/10">
+              <span class="display text-5xl text-white">${tc.hero}</span>
+              <span class="text-xs text-slate-300">${tc.heroCap}</span>
+            </div>
+            <div class="relative space-y-2.5">
+              ${tc.benefits.map(b => `
+                <div class="flex items-center gap-3 rounded-xl px-3 py-2.5 bg-white/5 border border-white/10">
+                  <span class="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0" style="background:rgba(255,255,255,0.07);color:${tc.accent}"><span class="w-[18px] h-[18px]">${ICONS[b.ic]||ICONS.check}</span></span>
+                  <span class="text-xs text-white font-medium leading-snug">${b.t}</span>
+                </div>`).join('')}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="carousel-dots">${tierCards.map((tc,i) => `<span class="cd ${i===curIdx?'on':''}"></span>`).join('')}</div>
+    </div>
+    <div class="h-8"></div>
+  `;
+}
+
+/* Boot */
+route();
+</script>
+<!-- GF_MOBILE_GATE -->
+<style>
+#gfDesktopGate{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;
+  background:radial-gradient(120% 120% at 50% 0%,#0a2c47,#011827);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;padding:24px;}
+#gfDesktopGate .gfcard{max-width:420px;width:100%;text-align:center;color:#eaf1f6;}
+#gfDesktopGate .gfph{width:56px;height:56px;border-radius:16px;background:rgba(250,200,5,.14);display:grid;place-items:center;margin:0 auto 22px;}
+#gfDesktopGate .gfph svg{width:28px;height:28px;stroke:#FAC805;fill:none;stroke-width:1.6;}
+#gfDesktopGate h2{font-family:Georgia,"Times New Roman",serif;font-weight:400;font-size:28px;margin:0 0 12px;color:#fff;}
+#gfDesktopGate p{color:#9fb3c0;font-size:14.5px;line-height:1.6;margin:0 auto 24px;max-width:34ch;}
+#gfDesktopGate .gfqr{width:172px;height:172px;background:#fff;border-radius:14px;padding:10px;margin:0 auto 12px;box-shadow:0 20px 50px -20px rgba(0,0,0,.6);}
+#gfDesktopGate .gfqr img{width:100%;height:100%;display:block;}
+#gfDesktopGate .gfscan{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#FBEBA6;margin-bottom:26px;}
+#gfDesktopGate .gfbtn{background:transparent;border:1px solid rgba(255,255,255,.35);color:#eaf1f6;font-size:12px;letter-spacing:.06em;padding:12px 22px;border-radius:99px;cursor:pointer;transition:all .2s;}
+#gfDesktopGate .gfbtn:hover{border-color:#FAC805;color:#FAC805;}
+#gfDesktopGate .gflogo{font-family:Georgia,serif;letter-spacing:.16em;color:#FAC805;font-size:13px;margin-bottom:30px;text-transform:uppercase;}
+</style>
+<div id="gfDesktopGate"><div class="gfcard">
+  <div class="gflogo">Goldfinch · Member Portal</div>
+  <div class="gfph"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M11 18h2"/></svg></div>
+  <h2>Best on your phone</h2>
+  <p>The Goldfinch Member Portal is made for mobile. Open it on your phone or tablet for the full experience.</p>
+  <div class="gfqr"><img alt="Scan to open on your phone" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASgAAAEoCAIAAABkZftOAAAGKElEQVR4nO3dQY4rNRRAURpYCYtg/2MWwU6+ignTEjLy+9dOnzNOVyrpXHnw5PLX8zy/AD/Xr/UNwHckPAgIDwLCg4DwICA8CAgPAsKDgPAgIDwICA8CwoOA8CAgPAgIDwK/r/7Bb3/8OXEf2/34+6/R6+/6Ht7u81Ovv/p/+dTfmxUPAsKDgPAgIDwICA8CwoOA8CCwPMd7Mz03e7NrzrM6d9o1j5qep62+fvV+Vr+3XfO9239vVjwICA8CwoOA8CAgPAgIDwLCg8C2Od6bak71ZnpOteq0/WnVfG+X035vb6x4EBAeBIQHAeFBQHgQEB4EhAeB8Tne7abnddPPn9z1vrfP905jxYOA8CAgPAgIDwLCg4DwICA8CJjj/Yfp/V2nnS+3+vrp+/9UVjwICA8CwoOA8CAgPAgIDwLCg8D4HO+Wuc2u/Wa7rvNm+hy/1fc9bV53y+/NigcB4UFAeBAQHgSEBwHhQUB4ENg2x5s+t+00u/ah7Xr9m9vvZ/U6t7DiQUB4EBAeBIQHAeFBQHgQEB4Elud4t+x32qX6vKftc9t1P9Ovv4UVDwLCg4DwICA8CAgPAsKDgPAg8PU8z9IfTO/X2mV6/lN9D6edR1d9rmnT35sVDwLCg4DwICA8CAgPAsKDgPAgcM1+vF3PXdx1/6fN095Mz9lO+x5OO5/wjRUPAsKDgPAgIDwICA8CwoOA8CCwPMdbnYfsmttU+7Ju2ec2/T1P38+u6+/aJzn9f7fiQUB4EBAeBIQHAeFBQHgQEB4Elud4u6zOSabnQpXp53Oe9j2cNp+cft83VjwICA8CwoOA8CAgPAgIDwLCg8D4HG/X3Gl6/9Wb6jmQu16/ep1bzj+8/bxBKx4EhAcB4UFAeBAQHgSEBwHhQeDreZ4tF6rmb6fNlz513+Bp5xOe9ntwPh5cQHgQEB4EhAcB4UFAeBAQHgSW53inzcdumQdO7+t7s2ueVs3lVlVzwlVWPAgIDwLCg4DwICA8CAgPAsKDwLbnak7PT3bNVaaft3nac0Snnfac0tPmgW+seBAQHgSEBwHhQUB4EBAeBIQHgW3P1Vx12rl21fyn2i83/b67nHbO4a7vzYoHAeFBQHgQEB4EhAcB4UFAeBDYth9v1a59dKtOO8fvtLnZ9L7E6c972tzvjRUPAsKDgPAgIDwICA8CwoOA8CBw3Pl40+fUrb7vm+n9e7c8H7Jy+3zPigcB4UFAeBAQHgSEBwHhQUB4EPjY/XjT59RVVudRp80/39yyz3AXKx4EhAcB4UFAeBAQHgSEBwHhQWDb+XjOeft/bjlPb/U6u1T7FafnflY8CAgPAsKDgPAgIDwICA8CwoPAtudqTp8v96Y6b21V9ZzM7/a+03bNP614EBAeBIQHAeFBQHgQEB4EhAeB8edq7np+5upzI6fnP7ved/rz3vI97HLLc0SteBAQHgSEBwHhQUB4EBAeBIQHgfE53mn7waaf03jLHOm0/XK37PO0Hw8uJjwICA8CwoOA8CAgPAgIDwLjc7xp1TzqtHna9P7A1ffdZfX6p50f+MaKBwHhQUB4EBAeBIQHAeFBQHgQWJ7jVfOuXdef3ve1S7UP7c0t87HpuZ/9eHAx4UFAeBAQHgSEBwHhQUB4EFie403vv9pl9by42+dLq3bN/ar9eLef+2fFg4DwICA8CAgPAsKDgPAgIDwIfD3Ps/QH1VzlTbU/7c3t86VqTvvd7t+KBwHhQUB4EBAeBIQHAeFBQHgQGD8frzq/btf1p/enVefXre5X3HX9t9efNn+bvh8rHgSEBwHhQUB4EBAeBIQHAeFBYHyOd4vT9rntmgfe8hzRN7vmiqex4kFAeBAQHgSEBwHhQUB4EBAeBMzx/jU9v5qep03vA6zmftOfa/o6b6x4EBAeBIQHAeFBQHgQEB4EhAeB8TledW7em0+d1+16jmV1P7fvA1xlxYOA8CAgPAgIDwLCg4DwICA8CGyb493yPMPb93ftOs9t17l80+fdVf+v6XmjFQ8CwoOA8CAgPAgIDwLCg4DwIPD1PE99D/DtWPEgIDwICA8CwoOA8CAgPAgIDwLCg4DwICA8CAgPAsKDgPAgIDwICA8C/wANAvmh0KcZ0QAAAABJRU5ErkJggg=="></div>
+  <div class="gfscan">Scan to open on your phone</div>
+  <button class="gfbtn" id="gfContinueDesktop">Continue on desktop anyway</button>
+</div></div>
+<script>
+(function(){
+  var gate=document.getElementById('gfDesktopGate'); if(!gate) return;
+  var forced=false;
+  function mobileish(){
+    var w=Math.min(window.innerWidth, (screen&&screen.width)||window.innerWidth);
+    var touch=('ontouchstart' in window)||(navigator.maxTouchPoints>0);
+    var ua=/Android|iPhone|iPad|iPod|Mobile|Tablet|Silk|Kindle/i.test(navigator.userAgent||'');
+    return (w<=1024) || ua || touch;
+  }
+  function apply(){ gate.style.display = (forced||mobileish()) ? 'none' : 'flex'; }
+  var b=document.getElementById('gfContinueDesktop'); if(b) b.addEventListener('click',function(){forced=true;apply();});
+  window.addEventListener('resize',apply); apply();
+})();
+</script>
+<!-- /GF_MOBILE_GATE -->
+</body>
+</html>

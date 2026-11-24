@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Professor Savvy Courseware</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #111; overflow: hidden; }
+  #stage { position: fixed; inset: 0; background: #111; }
+  #stage ruffle-player { width: 100%; height: 100%; display: block; }
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+  window.RufflePlayer = window.RufflePlayer || {};
+  window.RufflePlayer.config = {
+    publicPath: "ruffle/",
+    autoplay: "on",
+    unmuteOverlay: "hidden",
+    splashScreen: false,
+    letterbox: "on",
+    scale: "showAll",
+    backgroundColor: "#111111",
+    contextMenu: "off",
+    warnOnUnsupportedContent: false,
+    openUrlMode: "deny"
+  };
+</script>
+<script src="ruffle/ruffle.js"></script>
+<script>
+  window.addEventListener("DOMContentLoaded", function () {
+    var ruffle = window.RufflePlayer.newest();
+    var player = ruffle.createPlayer();
+    document.getElementById("stage").appendChild(player);
+    window.__player = player;
+    player.ruffle().load({ url: "savvy.swf" }).catch(function (e) { console.error("Ruffle load failed", e); });
+  });
+</script>
+</body>
+</html>

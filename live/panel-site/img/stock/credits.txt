@@ -1,0 +1,29 @@
+Sample photos from Unsplash (free to use, https://unsplash.com/license). Not Shimlen projects; to be replaced after the photoshoot.
+
+wh-people.jpg  https://unsplash.com/photos/1586528116022-aeda1613c63d
+wh-racking.jpg  https://unsplash.com/photos/1714650601435-67a4d51a0798
+wh-panels.jpg  https://unsplash.com/photos/1689942010216-dc412bb1e7a9
+carpenter.jpg  https://unsplash.com/photos/1687422810663-c316494f725a
+cutting.jpg  https://unsplash.com/photos/1683115099860-5379ac101bce
+boards.jpg  https://unsplash.com/photos/1692313208941-4f1c9cdcc7c3
+veneer.jpg  https://unsplash.com/photos/1700973408133-b45276ec8feb
+swatches.jpg  https://unsplash.com/photos/1667400104764-a5fd01a919b0
+samples.jpg  https://unsplash.com/photos/1763076470404-23554ef26747
+lumber.jpg  https://unsplash.com/photos/1787422430123-344b233a0626
+Option 4 placeholder interior photos, Unsplash (free licence, https://unsplash.com/license). Replace with Shimlen project photos.
+plywood 1532588213355-52317771cce6 | use-mfc 1771888703722-ee7ad9143a67 | use-hpl 1610733374054-59454fe657cd | use-opaq 1600684388091-627109f3cd60
+sleek 1701422052139-e72ee5e67249 | use-edgeband 1784651859318-d9300849bf34 | use-envplas 1714860534425-7ce04e013dec | use-flexi 1719899913493-1e508c3833e8
+mfp 1752407828514-660d6945d392 | use-bedroom 1757344454333-cc666252e596 | use-office 1765371512992-843e6a92d7e6 | use-kitchen 1631048835473-73c7aaf86096
+tvwall 1633604712918-6ab1173d0ecd | use-island 1791493192271-b9544ac3c78b | use-hall 1751806524616-47dd4fabd68d
+(image URL: https://images.unsplash.com/photo-<id>)
+kitchen-dark.jpg  https://unsplash.com/photos/1759147960461-b74a7e9a75d4
+surface.jpg  https://unsplash.com/photos/1765371515651-faa86f08f0ae
+study.jpg  https://unsplash.com/photos/1766330977451-de1b64b5e641
+wh-aerial.jpg  https://unsplash.com/photos/1669003153363-6d7ba8e20c7e
+timber-yard.jpg  https://unsplash.com/photos/1473023914974-0d98f0798b51
+boards-sky.jpg  https://unsplash.com/photos/1568023905551-0f6247c134f3
+board-stack.jpg  https://unsplash.com/photos/1690768162582-342e1e9097a2
+ply-edge.jpg  https://unsplash.com/photos/1690768162439-7ca7a1813038
+aisle.jpg  https://unsplash.com/photos/1721937127582-ed331de95a04
+forklift.jpg  https://unsplash.com/photos/1787422429934-abada474f7d9
+fleet.jpg  https://unsplash.com/photos/1740733448722-82e16d3468bb

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shimlen · Index · Revamp 3</title>
+<meta name="description" content="The Shimlen product index: plywood, MFC, HPL, lacquered and acoustic panels, edgeband. Specifications, grades and an enquiry list.">
+<link rel="icon" href="../img/logo-mark.svg">
+<script>if(!matchMedia('(prefers-reduced-motion:reduce)').matches&&location.search.indexOf('shot')<0)document.documentElement.classList.add('rx-loading')</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/motion.css">
+<link rel="stylesheet" href="../shared/rx.css">
+<style>
+/* Revamp 3 · Studio — a catalogue for people who specify. One 12-column grid, hairlines, numbered sections, tight type.
+   The product index comes first: filter it, search it, add products to an enquiry list that fills in the form. */
+:root{--bg:#ECE9E4;--fg:#1E1B1B;--fg2:#4D4746;--mut:#6E6563;--line:rgba(30,27,27,.15);--acc:#867774;--stone:#A39996;--paper:#F7F5F2;--ink:#1E1B1B;
+  --hh:64px;--gut:clamp(12px,1.6vw,24px);--pad:clamp(80px,9vw,140px);--wrap:calc(100vw - 2*clamp(16px,2.6vw,34px));
+  --drawer-bg:#F7F5F2;--drawer-line:rgba(30,27,27,.15);--rxl-bg:#ECE9E4;--rxl-fg:#1E1B1B;--rxl-mut:#6E6563;--pre-bg:#1E1B1B;--pre-fg:#ECE9E4;--cur:#1E1B1B}
+body{font-family:"Inter Tight","Helvetica Neue",Helvetica,Arial,sans-serif;font-size:16px;letter-spacing:-.005em}
+.g{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:var(--gut)}
+.k{font-size:12px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.h2{font-weight:500;font-size:clamp(36px,4.6vw,72px);line-height:.98;letter-spacing:-.045em}
+.lead{font-size:17px;line-height:1.55;color:var(--fg2);max-width:46ch}
+section{position:relative;padding:var(--pad) 0}
+.paper{background:var(--paper)}
+.ink{background:var(--ink);color:#ECE9E4;--line:rgba(236,233,228,.16);--mut:rgba(236,233,228,.62);--fg2:rgba(236,233,228,.78)}
+.tel{border-bottom:1px solid currentColor;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:space-between;gap:28px;padding:15px 18px;font-size:14.5px;font-weight:500;border:1px solid var(--ink);transition:background .25s,color .25s}
+.btn .ic{width:16px;height:16px}
+.btn-ink{background:var(--ink);color:var(--paper)}.btn-ink:hover{background:var(--acc);border-color:var(--acc)}
+.btn-line:hover{background:var(--ink);color:var(--paper)}
+.ul{border-bottom:1px solid currentColor}
+
+/* header: a ruled bar that stays */
+#hdr{position:fixed;top:0;left:0;right:0;height:var(--hh);z-index:60;background:rgba(236,233,228,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line);--logo-a:#1E1B1B;--logo-b:#867774}
+#hdr.hide{transform:none}
+.nav{height:100%;align-items:center;grid-template-rows:100%}
+.nav>a,.nav-links,.nav-r{grid-row:1;align-self:center}
+.nav .logo{width:118px}
+.nav-links{grid-column:3/10;display:flex;gap:clamp(10px,1.3vw,22px);white-space:nowrap;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.nav-links a{color:var(--mut);transition:color .2s;padding:6px 0}
+.nav-links a:hover,.nav-links a.active{color:var(--ink)}
+.nav-links a.active{box-shadow:inset 0 -1px 0 var(--ink)}
+.nav-r{grid-column:10/13;justify-self:end;display:flex;gap:8px;align-items:center}
+.elist{display:inline-flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--line);font-size:13px;font-weight:500;transition:background .25s,color .25s,border-color .25s}
+.elist b{min-width:22px;height:22px;display:grid;place-items:center;background:var(--ink);color:var(--paper);font-size:12px;font-variant-numeric:tabular-nums}
+.elist:hover{border-color:var(--ink)}
+.elist.bump b{animation:bump .5s var(--ease)}
+@keyframes bump{40%{transform:scale(1.35)}}
+.burger{display:none;width:42px;height:42px;border:1px solid var(--line);place-items:center}
+.burger span{display:block;width:16px;height:1.5px;background:currentColor;margin:3px auto;transition:transform .3s}
+.menu{position:fixed;inset:var(--hh) 0 0 0;background:var(--bg);z-index:55;padding:20px clamp(16px,2.6vw,34px);display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+.menu a{display:flex;justify-content:space-between;font-size:30px;font-weight:500;letter-spacing:-.03em;padding:12px 0;border-bottom:1px solid var(--line)}
+.menu a span{font-size:12px;color:var(--mut);letter-spacing:.06em}
+body.menu-open .menu{opacity:1;visibility:visible}
+body.menu-open .burger span:nth-child(1){transform:translateY(4.5px) rotate(45deg)}
+body.menu-open .burger span:nth-child(2){opacity:0}
+body.menu-open .burger span:nth-child(3){transform:translateY(-4.5px) rotate(-45deg)}
+
+/* hero: a catalogue cover */
+.hero{padding:calc(var(--hh) + 18px) 0 0}
+.meta{border-bottom:1px solid var(--line);padding-bottom:14px}
+.meta span:nth-child(1){grid-column:1/5}.meta span:nth-child(2){grid-column:5/9}.meta span:nth-child(3){grid-column:9/13;text-align:right}
+.hero h1{font-weight:500;font-size:clamp(56px,9.6vw,168px);line-height:.88;letter-spacing:-.06em;margin:clamp(22px,3vw,40px) 0 clamp(26px,3vw,44px)}
+.hero h1 .ln{display:block;overflow:hidden;padding-bottom:.16em;margin-bottom:-.12em}
+.hero h1 .ln>span{display:block}
+.hero h1 .ln:nth-child(2){padding-left:calc((100% + var(--gut))/12*4)}
+.h-row{align-items:start}
+.h-txt{grid-column:1/5;display:flex;flex-direction:column;gap:26px}
+.h-txt .btns{display:flex;flex-direction:column;gap:8px;max-width:320px}
+.h-fig{grid-column:5/13;margin:0}
+.h-fig .frame{position:relative;aspect-ratio:16/9;background:#DAD5CE;overflow:hidden}
+.h-fig .reel{position:absolute;inset:0}
+.h-fig figcaption,.fig figcaption{display:flex;gap:14px;font-size:13px;color:var(--mut);padding-top:10px}
+.h-fig figcaption b,.fig figcaption b{color:var(--ink);font-weight:500;white-space:nowrap}
+.facts{margin-top:clamp(44px,5vw,80px);border-top:1px solid var(--ink)}
+.facts>div{grid-column:span 2;padding:16px 0 0;border-right:1px solid var(--line);padding-right:12px}
+.facts>div:last-child{border-right:0}
+.facts b{display:block;font-weight:500;font-size:clamp(26px,2.6vw,40px);letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.facts b small{font-size:.45em;letter-spacing:0;margin-left:3px;color:var(--mut)}
+.facts>div>span{font-size:13px;color:var(--mut);display:block;margin-top:8px}
+
+/* the range in one moving line of type, with pictures set into it */
+.band{overflow:hidden;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:clamp(26px,3vw,44px) 0;margin-top:clamp(50px,6vw,90px)}
+.bt{display:flex;align-items:center;gap:.28em;white-space:nowrap;font-weight:500;font-size:clamp(64px,10vw,176px);letter-spacing:-.06em;line-height:1;width:max-content;padding-left:clamp(16px,2.6vw,34px)}
+.bt .o{color:transparent;-webkit-text-stroke:1.4px var(--ink)}
+.bt figure{margin:0;width:1.5em;height:.9em;overflow:hidden;flex:none;position:relative}
+.bt figure img{width:100%;height:100%;object-fit:cover}
+.bt figure:nth-of-type(even){width:.9em;border-radius:50%}
+
+/* 02 · scale, on ink */
+.ink .sh{border-color:#ECE9E4}
+.ink .sh .no{color:#ECE9E4}
+.ink .h2{color:#F7F5F2}
+.scbig{align-items:end;margin-bottom:clamp(40px,5vw,80px)}
+.scbig .n{grid-column:1/9;font-weight:500;font-size:clamp(90px,17vw,300px);line-height:.8;letter-spacing:-.07em;color:#F7F5F2;font-variant-numeric:tabular-nums}
+.scbig .n small{font-size:.3em;letter-spacing:-.02em;margin-left:.08em;color:var(--stone)}
+.scbig .t{grid-column:9/13;padding-bottom:.6em}
+.scbig .t b{display:block;font-weight:500;font-size:clamp(20px,1.8vw,26px);letter-spacing:-.03em;line-height:1.2;color:#F7F5F2}
+.scbig .t p{font-size:15px;color:var(--fg2);margin-top:12px}
+.plates{row-gap:clamp(28px,3vw,44px);align-items:start}
+.pl{margin:0}
+.pl .im{position:relative;overflow:hidden;background:#2a2626}
+.pl .im img{width:100%;height:100%;object-fit:cover}
+.pl.a{grid-column:1/9}.pl.a .im{aspect-ratio:16/10}
+.pl.b{grid-column:9/13}.pl.b .im{aspect-ratio:3/4}
+.pl.c{grid-column:1/5}.pl.c .im{aspect-ratio:4/5}
+.pl.d{grid-column:5/13}.pl.d .im{aspect-ratio:16/10}
+.pl figcaption{display:flex;gap:14px;font-size:13px;color:var(--mut);padding-top:10px}
+.pl figcaption b{color:#F7F5F2;font-weight:500;white-space:nowrap}
+.pts{margin-top:clamp(40px,5vw,70px);border-top:1px solid rgba(236,233,228,.25)}
+.pts>div{grid-column:span 3;padding-top:16px;display:flex;flex-direction:column;gap:12px;font-size:15px;color:#ECE9E4}
+.pts .ic{width:24px;height:24px;color:var(--stone)}
+
+/* section heads */
+.sh{border-top:1px solid var(--ink);padding-top:14px;margin-bottom:clamp(36px,4vw,64px);row-gap:clamp(22px,2.4vw,34px);align-items:end}
+.sh .no,.sh .k,.sh .r{grid-row:1;align-self:start;line-height:1.4}
+.sh .no{grid-column:1/3;font-size:13px;font-weight:500;font-variant-numeric:tabular-nums}
+.sh .k{grid-column:3/9}
+.sh .r{grid-column:9/13;text-align:right}
+.sh h2{grid-column:3/11;grid-row:2;text-wrap:balance}
+.sh.has-side h2{grid-column:3/9}
+.sh .lead{grid-column:3/8}
+.sh .sideL{grid-column:9/13;grid-row:2;align-self:end;font-size:15px;line-height:1.5;color:var(--fg2);max-width:38ch;padding-bottom:.3em}
+
+/* 01 · the index */
+.tools{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
+.filters{display:flex;gap:6px;flex-wrap:wrap}
+.filters button{padding:9px 13px;border:1px solid var(--line);font-size:13.5px;font-weight:500;transition:background .25s,color .25s,border-color .25s}
+.filters button sup{font-size:10px;color:var(--mut);margin-left:3px}
+.filters button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.filters button.on sup{color:rgba(247,245,242,.65)}
+.search{display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--ink);padding:6px 2px;min-width:260px}
+.search input{border:0;background:none;outline:none;font-size:15px;flex:1;padding:4px 0}
+.idx{align-items:start}
+.tbl{grid-column:1/9}
+.thd,.row{display:grid;grid-template-columns:44px minmax(0,2.3fr) minmax(0,1.5fr) minmax(0,1.3fr) minmax(0,1.1fr) 44px;gap:14px;align-items:center}
+.thd{font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);padding:10px 0;border-bottom:1px solid var(--ink)}
+.row{padding:16px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:background .2s,padding .35s var(--ease);font-size:14.5px}
+.row:hover,.row.sel{background:var(--paper);padding-left:10px;padding-right:6px}
+.row .n{font-variant-numeric:tabular-nums;color:var(--mut);font-size:13px}
+.row .nm{font-weight:500;font-size:clamp(17px,1.4vw,21px);letter-spacing:-.02em;line-height:1.15}
+.row .nm i{display:inline-block;font-style:normal;font-size:10.5px;font-weight:600;letter-spacing:.06em;padding:3px 6px;border:1px solid var(--acc);color:var(--acc);margin-left:8px;vertical-align:3px}
+.row .c{color:var(--fg2)}
+.row .add{width:36px;height:36px;border:1px solid var(--line);display:grid;place-items:center;justify-self:end;transition:background .25s,color .25s,border-color .25s}
+.row .add .ic{width:16px;height:16px;transition:transform .3s var(--ease)}
+.row .add:hover{border-color:var(--ink)}
+.row .add.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.row .add.on .ic{transform:rotate(45deg)}
+.row.hid{display:none}
+.empty{padding:30px 0;color:var(--mut);display:none}
+.pv{grid-column:9/13;position:sticky;top:calc(var(--hh) + 20px)}
+.pv .ph{position:relative;aspect-ratio:4/5;background:#DAD5CE;overflow:hidden}
+.pv .ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .45s}
+.pv .ph .shot{position:absolute;left:12px;bottom:12px;width:34%;aspect-ratio:1;z-index:3;border:6px solid var(--paper);background:var(--paper)}
+.pv .ph .shot img{position:static;width:100%;height:100%;object-fit:cover}
+.pv h3{font-weight:500;font-size:26px;letter-spacing:-.035em;line-height:1.05;margin-top:16px}
+.pv .b{font-size:13px;color:var(--mut);margin-top:6px}
+.pv dl{display:grid;grid-template-columns:auto 1fr;margin-top:14px;border-top:1px solid var(--line);font-size:13.5px}
+.pv dt,.pv dd{padding:8px 0;border-bottom:1px solid var(--line)}
+.pv dt{color:var(--mut);padding-right:20px}
+.pv .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:16px}
+.pv .btns .btn{padding:12px 14px;gap:10px}
+.brandrow{margin-top:clamp(48px,5vw,80px);border-top:1px solid var(--line);padding-top:14px;align-items:center}
+.brandrow .k{grid-column:1/3}
+.brandrow .lg{grid-column:3/13;display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.brandrow .lg div{height:70px;background:var(--paper);display:grid;place-items:center;padding:12px}
+.brandrow img{max-height:34px;max-width:100%;width:auto;object-fit:contain;filter:grayscale(1) contrast(1.05);opacity:.85;transition:filter .3s,opacity .3s}
+.brandrow img.sm{max-height:24px}
+.brandrow div:hover img{filter:none;opacity:1}
+
+/* 02 · grades */
+.grades{align-items:start}
+.grades .l{grid-column:1/5}
+.grades .l .lead{margin-top:16px}
+.grades .e0{display:flex;gap:12px;align-items:center;font-size:14px;color:var(--fg2);margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.grades .e0 img{width:46px;background:#fff;padding:4px}
+.grades .t{grid-column:6/13}
+.mtbl{border-top:1px solid var(--ink)}
+.mtbl .r{display:grid;grid-template-columns:110px 1fr 120px;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);align-items:baseline;cursor:pointer}
+.mtbl .r .y{font-weight:500;font-size:28px;letter-spacing:-.04em;line-height:1}
+.mtbl .r p{font-size:15px;color:var(--fg2)}
+.mtbl .r .gr{font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase;text-align:right;color:var(--mut)}
+.mtbl .r.on .y{color:var(--ink)}
+.mtbl .r:not(.on){opacity:.4;transition:opacity .5s}
+.mtbl .r.on{opacity:1;transition:opacity .5s}
+.recbox{margin-top:28px;display:grid;grid-template-columns:110px 1fr;gap:20px;align-items:center;background:var(--paper);padding:20px}
+.recbox img{width:110px;box-shadow:0 8px 20px rgba(30,27,27,.15);cursor:zoom-in}
+.recbox .big{font-weight:500;font-size:clamp(46px,5vw,76px);letter-spacing:-.06em;line-height:.9}
+.recbox .big small{font-size:.26em;letter-spacing:0;color:var(--mut);margin-left:6px}
+.recbox p{font-size:13.5px;color:var(--fg2);margin-top:8px}
+
+/* 03 · data sheet */
+.ds{align-items:start}
+.ds .pic{grid-column:1/7;background:var(--paper);padding:clamp(20px,3vw,44px);position:relative}
+.ds .pic .lyr{width:100%;cursor:zoom-in}
+.ds .pic .use{position:absolute;right:clamp(14px,2vw,24px);top:clamp(14px,2vw,24px);width:30%;aspect-ratio:3/4;overflow:hidden}
+.ds .pic .use img{width:100%;height:100%;object-fit:cover}
+.ds .spec{grid-column:7/13}
+.ds .spec .logo2{height:36px;width:auto;margin-bottom:16px}
+.ds .spec .lead{margin:14px 0 26px}
+.srow{display:grid;grid-template-columns:64px 1fr;gap:14px;padding:16px 0;border-top:1px solid var(--line)}
+.srow .n{font-size:13px;font-weight:500;color:var(--mut);font-variant-numeric:tabular-nums}
+.srow b{font-weight:500;font-size:16px;display:block;margin-bottom:2px}
+.srow p{font-size:14.5px;color:var(--fg2)}
+.bar{display:flex;height:40px;margin-top:12px;font-weight:500;font-size:14px;color:#fff;background:#DAD5CE}
+.bar>div{display:flex;align-items:center;padding-left:12px;width:0;transition:width 1s var(--ease)}
+.bar>div:first-child{background:var(--ink)}.bar>div:last-child{background:var(--acc)}
+.bar.in>div:first-child{width:60%}.bar.in>div:last-child{width:40%}
+.legend{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px;font-size:13.5px;color:var(--fg2)}
+.legend b{font-size:13.5px;margin:0}
+.docs{list-style:none;border-top:1px solid var(--ink);margin-top:20px}
+.docs button{width:100%;display:grid;grid-template-columns:40px 1fr auto;gap:14px;align-items:center;text-align:left;padding:10px 0;border-bottom:1px solid var(--line);font-size:14px}
+.docs img{width:40px;height:52px;object-fit:cover;background:#fff}
+.docs span{color:var(--mut);font-size:12.5px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.docs button:hover{background:var(--paper)}
+
+/* 04 · applications */
+.apps{row-gap:clamp(30px,3vw,48px)}
+.fig{grid-column:span 4;margin:0}
+.fig .im{position:relative;aspect-ratio:3/4;overflow:hidden;background:#DAD5CE}
+.fig.s8{grid-column:span 8}.fig.s8 .im{aspect-ratio:3/2}
+.fig.s6{grid-column:span 6}.fig.s6 .im{aspect-ratio:4/3}
+.fig .im img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.fig:hover .im img{transform:scale(1.04)}
+.fig .used{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.fig .used button{font-size:12.5px;padding:5px 9px;border:1px solid var(--line);transition:background .2s,color .2s}
+.fig .used button:hover{background:var(--ink);color:var(--paper)}
+
+/* 05 · company */
+.co .col{grid-column:span 4;border-top:1px solid var(--line);padding-top:16px}
+.co .col .n{font-size:13px;font-weight:500;color:var(--mut)}
+.co .col h3{font-weight:500;font-size:22px;letter-spacing:-.03em;margin:8px 0 10px}
+.co .col p{font-size:15px;color:var(--fg2)}
+.wh{margin-top:clamp(60px,7vw,110px);align-items:start}
+.wh .ims{grid-column:1/9;display:grid;grid-template-columns:3fr 2fr;gap:var(--gut)}
+.wh .ims figure{margin:0;position:relative;overflow:hidden;background:#DAD5CE}
+.wh .ims figure:first-child{aspect-ratio:4/3}
+.wh .ims img{width:100%;height:100%;object-fit:cover;filter:saturate(.55) contrast(1.02)}
+.wh .sp{grid-column:9/13}
+.wh .sp h3{font-weight:500;font-size:clamp(26px,2.4vw,36px);letter-spacing:-.04em;line-height:1.02;margin:12px 0 14px}
+.wh .sp ul{list-style:none;border-top:1px solid var(--ink);margin-top:20px}
+.wh .sp li{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14.5px;align-items:center}
+.wh .sp li .ic{width:20px;height:20px;color:var(--acc)}
+
+.wide{margin:clamp(50px,6vw,90px) 0 0}
+.wide .im{position:relative;aspect-ratio:21/8;overflow:hidden;background:#DAD5CE}
+.wide .im img{width:100%;height:100%;object-fit:cover}
+.wide figcaption{display:flex;gap:14px;font-size:13px;color:var(--mut);padding-top:10px}
+.wide figcaption b{color:var(--ink);font-weight:500;white-space:nowrap}
+
+/* 06 · next */
+.views{row-gap:20px}
+.views figure{grid-column:span 3;margin:0}
+.views .im{position:relative;aspect-ratio:4/5;overflow:hidden;background:#DAD5CE}
+.views img{width:100%;height:100%;object-fit:cover}
+.views figcaption{display:flex;gap:10px;font-size:13px;padding-top:10px;border-top:1px solid var(--line);margin-top:10px}
+.views figcaption span{color:var(--mut);font-variant-numeric:tabular-nums}
+
+/* 07 · chronology */
+.chr{border-top:1px solid var(--ink)}
+.chr .r{padding:14px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.chr .r{align-items:center;transition:background .25s}
+.chr .r:hover{background:var(--paper)}
+.chr .y{grid-column:1/3;font-weight:500;font-size:clamp(22px,2vw,30px);letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.chr .th{grid-column:3/5;aspect-ratio:3/2;overflow:hidden;background:#DAD5CE;position:relative}
+.chr .th img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.chr .r:hover .th img{transform:scale(1.06)}
+.chr .th.logo,.chr .th.doc{background:#fff}
+.chr .th.logo img,.chr .th.doc img{object-fit:contain;padding:10%}
+.chr .th.archive img{filter:sepia(.35) saturate(.8)}
+.chr h3{grid-column:5/8;font-weight:500;font-size:17px;letter-spacing:-.02em;padding-left:6px}
+.chr p{grid-column:8/13;font-size:14.5px;color:var(--fg2)}
+
+/* 08 · certification + clients */
+.cl{border-top:1px solid var(--ink)}
+.cl button{width:100%;padding:16px 0;border-bottom:1px solid var(--line);align-items:center;text-align:left;transition:background .2s}
+.cl button:hover{background:var(--paper)}
+.cl .th{grid-column:1/2;width:44px;height:58px;object-fit:cover;background:#fff}
+.cl .y{grid-column:2/4;font-size:14px;color:var(--mut);font-variant-numeric:tabular-nums}
+.cl b{grid-column:4/8;font-weight:500;font-size:17px;letter-spacing:-.02em}
+.cl span{grid-column:8/12;font-size:14px;color:var(--fg2)}
+.cl .v{grid-column:12/13;justify-self:end;font-size:12px;font-weight:500;letter-spacing:.06em;text-transform:uppercase}
+.qs{margin-top:clamp(60px,7vw,110px)}
+.qs blockquote{grid-column:span 4;border-top:1px solid var(--line);padding-top:16px;font-size:18px;line-height:1.4;letter-spacing:-.015em}
+.qs cite{display:block;font-style:normal;font-size:13px;color:var(--mut);margin-top:14px}
+
+/* 09 · enquiry sheet */
+.sheet{align-items:start}
+.sheet .info{grid-column:1/5}
+.sheet .info dl{border-top:1px solid var(--line);margin-top:26px}
+.sheet .info dl>div{padding:14px 0;border-bottom:1px solid var(--line);font-size:15px}
+.sheet .info dt{font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.sheet .info .tels{display:flex;flex-wrap:wrap;gap:4px 14px}
+.links{display:flex;gap:16px;margin-top:6px;font-size:14px}
+.links a{border-bottom:1px solid currentColor}
+form{grid-column:6/13;display:grid;grid-template-columns:1fr 1fr;gap:0 var(--gut);border-top:1px solid var(--ink)}
+.picked{grid-column:1/-1;padding:14px 0;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:14px;color:var(--mut)}
+.picked button{display:inline-flex;gap:8px;align-items:center;padding:6px 10px;background:var(--ink);color:var(--paper);font-size:13px}
+.picked button .ic{width:12px;height:12px}
+.field{padding:14px 0 10px;border-bottom:1px solid var(--line)}
+.field label{font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.field input,.field select,.field textarea{border:0;background:none;padding:6px 0;outline:none;font-size:16px;border-radius:0}
+.field textarea{min-height:80px;resize:vertical}
+.full{grid-column:1/-1}
+.f-end{grid-column:1/-1;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;padding-top:18px}
+.f-end small{color:var(--mut);font-size:13px}
+.sent{grid-column:1/-1;background:var(--paper);padding:12px 14px;font-size:14px;margin-top:12px}
+.map{position:relative;height:380px;overflow:hidden;background:#DAD5CE;margin-top:clamp(50px,6vw,90px)}
+.map-ph{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:10px;color:var(--fg2);font-size:14px}
+.map-ph a{border-bottom:1px solid}
+
+/* footer */
+footer{background:var(--ink);color:#ECE9E4;padding:clamp(50px,6vw,80px) 0 0;overflow:hidden;--logo-a:#ECE9E4;--logo-b:#A39996}
+.f-g{row-gap:30px}
+.f-g>div:first-child{grid-column:1/5}.f-g>div{grid-column:span 2}.f-g>div:last-child{grid-column:11/13}
+footer .logo{width:150px}
+footer p{font-size:14px;color:rgba(236,233,228,.68);max-width:30ch;margin-top:14px}
+footer h5{font-size:11.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:rgba(236,233,228,.6);margin-bottom:12px}
+footer ul{list-style:none;display:grid;gap:7px;font-size:14px;color:rgba(236,233,228,.85)}
+.social{display:flex;gap:8px;margin-top:20px}
+.social a{width:38px;height:38px;border:1px solid rgba(236,233,228,.2);display:grid;place-items:center}
+.social .ic{width:17px;height:17px}
+.f-wm{color:#ECE9E4;margin-top:clamp(40px,6vw,80px)}
+.f-bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12.5px;color:rgba(236,233,228,.6);padding:16px 0 4px;border-top:1px solid rgba(236,233,228,.16);margin-top:14px}
+
+@media (max-width:1240px){.nav-links{display:none}.burger{display:grid}}
+@media (max-width:1080px){
+  .tbl{grid-column:1/-1}.pv{display:none}
+  .thd,.row{grid-template-columns:36px minmax(0,2.3fr) minmax(0,1.5fr) minmax(0,1.2fr) 40px}.thd .sz,.row .sz{display:none}
+  .grades .l,.grades .t,.ds .pic,.ds .spec,.sheet .info,form{grid-column:1/-1}
+  .ds .pic,.sheet .info{margin-bottom:36px}
+  .fig,.fig.s8,.fig.s6{grid-column:span 6}.fig .im,.fig.s8 .im,.fig.s6 .im{aspect-ratio:4/5}
+  .scbig .n{grid-column:1/-1}.scbig .t{grid-column:1/-1;padding-top:20px}
+  .pts>div{grid-column:span 6;margin-bottom:20px}
+  .views figure{grid-column:span 6}
+}
+@media (max-width:760px){
+  :root{--pad:clamp(64px,12vw,90px)}
+  .meta span:nth-child(2){display:none}.meta span:nth-child(1){grid-column:1/7}.meta span:nth-child(3){grid-column:7/13}
+  .hero h1 .ln:nth-child(2){padding-left:0}
+  .h-txt,.h-fig{grid-column:1/-1}.h-fig{margin-top:30px;order:-1}.h-txt{margin-top:24px}
+  .h-txt .btns{max-width:none}
+  .facts>div{grid-column:span 6;border-right:0;border-bottom:1px solid var(--line);padding-bottom:14px}
+  .sh .no{grid-column:1/3}.sh .k{grid-column:3/13}.sh .r{display:none}.sh h2,.sh.has-side h2,.sh .lead,.sh .sideL{grid-column:1/-1}.sh .sideL{grid-row:auto;padding-bottom:0}
+  .thd{display:none}
+  .row{grid-template-columns:minmax(0,1fr) 40px;gap:10px}.row .n,.row .c,.row .sz{display:none}.row .br{display:block;grid-column:1;grid-row:2;font-size:13px;color:var(--mut);margin-top:-6px}
+  .search{min-width:0;flex:1 1 100%}
+  .brandrow .k{grid-column:1/-1;margin-bottom:12px}.brandrow .lg{grid-column:1/-1;grid-template-columns:repeat(4,1fr)}
+  .mtbl .r{grid-template-columns:70px 1fr}.mtbl .r .gr{display:none}.mtbl .r .y{font-size:22px}
+  .recbox{grid-template-columns:72px 1fr}.recbox img{width:72px}
+  .ds .pic .use{display:none}
+  .fig,.fig.s8,.fig.s6,.views figure{grid-column:1/-1}.fig .im,.fig.s8 .im,.fig.s6 .im{aspect-ratio:4/3}
+  .pl.a,.pl.b,.pl.c,.pl.d{grid-column:1/-1}.pl.b .im,.pl.c .im{aspect-ratio:4/3}
+  .wide .im{aspect-ratio:4/3}
+  .co .col{grid-column:1/-1;margin-bottom:24px}
+  .chr .y{grid-column:1/4;font-size:20px;align-self:start}.chr .th{grid-column:10/13;grid-row:1/3;align-self:start}.chr h3{grid-column:4/10;padding-left:0}.chr p{grid-column:4/10;margin-top:4px}
+  .cl .th{display:none}.cl .y{grid-column:1/4}.cl b{grid-column:4/12}.cl span{grid-column:4/12;margin-top:4px}.cl .v{grid-column:12/13;grid-row:1}
+  .qs blockquote{grid-column:1/-1;margin-bottom:22px}
+  form{grid-template-columns:1fr}
+  .f-g>div,.f-g>div:first-child,.f-g>div:last-child{grid-column:1/-1}
+  .map{height:320px}
+}
+@media (max-width:560px){:root{--hh:60px}.elist span{display:none}.nav .logo{width:104px}.nav>a{grid-column:1/7!important}.nav-r{grid-column:7/13}}
+</style>
+</head>
+<body>
+<header id="hdr"><div class="wrap g nav">
+  <a href="#top" aria-label="Shimlen home" id="hLogo" style="grid-column:1/3"></a>
+  <nav class="nav-links" id="navLinks" aria-label="Sections"></nav>
+  <div class="nav-r"><a href="#contact" class="elist" id="elist"><span>Enquiry list</span><b id="ecount">0</b></a>
+    <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button></div>
+</div></header>
+<nav class="menu" id="menu" aria-label="Menu"></nav>
+<main id="app"></main>
+<footer id="foot"></footer>
+
+<script>window.ROOT='../'</script>
+<script src="../shared/data.js"></script>
+<script src="../shared/brand.js"></script>
+<script src="../shared/icons.js"></script>
+<script src="../shared/vendor/gsap.min.js"></script>
+<script src="../shared/vendor/ScrollTrigger.min.js"></script>
+<script src="../shared/vendor/lenis.min.js"></script>
+<script src="../shared/core.js"></script>
+<script src="../shared/motion.js"></script>
+<script src="../shared/rx.js"></script>
+<script>
+const {ic,R}=Core, S=SH, P=S.products.list, $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const NAV=[['Index','products'],['Scale','warehouse'],['Grades','low-formaldehyde'],['Data sheet','eucalli'],['Applications','rooms'],['Company','about'],['Chronology','story'],['Enquiry','contact']];
+$('#navLinks').innerHTML=RX.nav(NAV);
+$('#menu').innerHTML=NAV.map(([t,id],i)=>`<a href="#${id}">${t}<span>0${i+1}</span></a>`).join('');
+$('#hLogo').innerHTML=SHIMLEN_LOGO;
+const spec=(p,k)=>{const r=p.s.find(([a])=>a===k);return r?r[1]:'—'};
+const pad=n=>String(n).padStart(2,'0');
+const sh=(no,k,h,lead,side)=>`<div class="g sh${side?' has-side':''}"><span class="no">${no}</span><span class="k">${k}</span><span class="r k">Shimlen · ${new Date().getFullYear()}</span>
+  <h2 class="h2 split">${h}</h2>${lead?`<p class="lead">${lead}</p>`:''}${side?`<p class="sideL">${side}</p>`:''}</div>`;
+const FILT=[['all','All'],['board','Board'],['surface','Surface'],['edge','Edge'],['low','Low formaldehyde']];
+const count=f=>P.filter((_,i)=>f==='all'||(f==='low'?RX.LOWF.includes(i):RX.CAT[i]===f)).length;
+
+$('#app').innerHTML=`
+<section class="hero" id="top"><div class="wrap">
+  <div class="g meta k"><span>Product index · ${new Date().getFullYear()}</span><span>${P.length} materials · ${S.brands.length} brands</span><span>${S.hero.eyebrow}</span></div>
+  <h1><span class="ln"><span>Board, surface,</span></span><span class="ln"><span>edge. In stock.</span></span></h1>
+  <div class="g h-row">
+    <div class="h-txt"><p class="lead">${S.hero.h1} ${S.hero.lead}</p>
+      <div class="btns"><a class="btn btn-ink" href="#products">Browse the index ${ic('arrow')}</a><a class="btn btn-line" href="#eucalli">Read the E0 data sheet ${ic('arrow')}</a></div></div>
+    <figure class="h-fig"><div class="frame"><div class="reel" id="rReel"></div></div><figcaption><b>Fig. 01</b>Shimlen’s new building, Bandar Teknologi Kajang. Under construction.</figcaption></figure>
+  </div>
+  <div class="g facts">${[[10000,'m²','Warehouse floorspace'],[500,'+','HPL decors'],[400,'+','MFC decors'],[500,'+','Edgeband colours'],[24,'h*','Klang Valley delivery'],[S.lf.record.n,'','Record stockpile, 2025']].map(([n,u,l])=>`<div><b><span data-count="${n}">0</span><small>${u}</small></b><span>${l}</span></div>`).join('')}</div>
+</div>
+<div class="band" aria-hidden="true"><div class="bt" id="bt">${P.map((p,i)=>`<span class="${i%2?'o':''}">${p.n.replace('Melamine Faced ','MF ').replace('High Pressure Laminates','HPL').replace('Lacquered Laminate Panel','Lacquered').replace('Acoustic Fluted Panel','Fluted').replace('PVC Foam Board','PVC foam').replace('E0 Flexible Plywood','Flexi E0')}</span><figure data-notag><img src="${RX.use(i)}" alt="" loading="lazy"></figure>`).join('')}</div></div>
+</section>
+
+<section id="products"><div class="wrap">
+  ${sh('01','The index','Every material, specified.','',S.products.lead+' Add anything to your enquiry list as you go.')}
+  <div class="tools"><div class="filters" id="filt">${FILT.map(([k,t],i)=>`<button data-f="${k}" class="${i?'':'on'}">${t}<sup>${pad(count(k))}</sup></button>`).join('')}</div>
+    <label class="search"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg><input id="q" type="search" placeholder="Search name or brand" aria-label="Search products"></label></div>
+  <div class="g idx">
+    <div class="tbl"><div class="thd"><span>No.</span><span>Product</span><span>Brand</span><span>Thickness</span><span class="sz">Size</span><span></span></div>
+      <div id="rows">${P.map((p,i)=>`<div class="row" data-i="${i}" data-cat="${RX.CAT[i]}" data-low="${RX.LOWF.includes(i)?1:0}" tabindex="0" role="button" aria-label="${p.n}, details">
+        <span class="n">${pad(i+1)}</span><span class="nm">${p.n}${RX.LOWF.includes(i)?'<i>E0</i>':''}</span><span class="c br">${p.b}</span><span class="c">${spec(p,'Thickness')}</span><span class="c sz">${spec(p,'Size')}</span>
+        <button class="add" data-add="${i}" aria-label="Add ${p.n} to enquiry list">${ic('plus')}</button></div>`).join('')}</div>
+      <p class="empty" id="empty">Nothing matches. Try another name, or <a class="ul" href="#contact">ask us</a>.</p></div>
+    <aside class="pv" id="pv"><div class="ph"><img id="pvUse" src="${RX.use(8)}" alt=""><div class="shot" data-notag><img id="pvShot" src="${R}${P[8].img}" alt=""></div></div>
+      <h3 id="pvN">${P[8].n}</h3><div class="b" id="pvB">${P[8].b}</div><dl id="pvS"></dl>
+      <div class="btns"><button class="btn btn-ink" id="pvAdd">Add ${ic('plus')}</button><button class="btn btn-line" id="pvOpen">Details ${ic('arrow')}</button></div></aside>
+  </div>
+  <div class="g brandrow" id="brands"><span class="k">Brands carried</span><div class="lg">${S.brands.map(([img,n,c])=>`<div title="${n}"><img class="${c||''}" src="${R}img/${img}" alt="${n}" loading="lazy"></div>`).join('')}</div></div>
+</div></section>
+
+<section class="ink" id="warehouse"><div class="wrap">
+  ${sh('02','Scale',S.warehouse.h2)}
+  <div class="g scbig"><div class="n"><span data-count="10000">0</span><small>m²</small></div>
+    <div class="t"><b>${RX.SCALE.sqft.charAt(0).toUpperCase()+RX.SCALE.sqft.slice(1)}. ${RX.SCALE.pitch.charAt(0).toUpperCase()+RX.SCALE.pitch.slice(1)}.</b><p>${S.warehouse.lead}</p></div></div>
+  <div class="g plates">
+    <figure class="pl a"><div class="im"><img src="${RX.stock('wh-aerial.jpg')}" alt="A large warehouse seen from the air" loading="lazy"></div><figcaption><b>Fig. 02</b>A warehouse of this size, seen from the air.</figcaption></figure>
+    <figure class="pl b"><div class="im"><img src="${RX.stock('aisle.jpg')}" alt="Wrapped panels in a narrow warehouse aisle" loading="lazy"></div><figcaption><b>Fig. 03</b>Wrapped panels, picked by forklift.</figcaption></figure>
+    <figure class="pl c"><div class="im"><img src="${RX.stock('board-stack.jpg')}" alt="Boards stacked high in a warehouse" loading="lazy"></div><figcaption><b>Fig. 04</b>Stacked by thickness, ready to go.</figcaption></figure>
+    <figure class="pl d"><div class="im"><img src="${RX.stock('fleet.jpg')}" alt="Forklifts lined up in a large warehouse hall" loading="lazy"></div><figcaption><b>Fig. 05</b>A hall built for moving full sheets, fast.</figcaption></figure>
+  </div>
+  <div class="g pts">${S.warehouse.points.map(([i,t])=>`<div>${ic('i-'+i)}${t}</div>`).join('')}</div>
+</div></section>
+
+<section class="paper" id="low-formaldehyde"><div class="wrap">
+  ${sh('03','Grades',S.lf.h2)}
+  <div class="g grades">
+    <div class="l"><p class="lead">${S.lf.lead}</p><div class="e0"><img src="${R}img/b-e0.png" alt="E0">${S.lf.e0}</div></div>
+    <div class="t"><div class="mtbl" id="steps">${S.lf.steps.map(([y,p],i)=>`<div class="r step"><span class="y">${y}</span><p>${p}</p><span class="gr">${['E1','E1 · MFC','Super E0','Record'][i]}</span></div>`).join('')}</div>
+      <div class="recbox"><img src="${R}${S.lf.record.img}" alt="Malaysia Book of Records certificate" data-lb="rec" data-cap="The Malaysia Book of Records, 2025"><div><div class="big"><span data-count="${S.lf.record.n}">0</span><small>${S.lf.record.unit}</small></div><p>${S.lf.record.h}. ${S.lf.record.p}.</p></div></div></div>
+  </div>
+</div></section>
+
+<section id="eucalli"><div class="wrap">
+  ${sh('04','Data sheet · eucalli E0',S.eucalli.h2)}
+  <div class="g ds">
+    <figure class="pic" style="margin:0"><img class="lyr" src="${R}img/eucalli-layers.png" alt="eucalli E0: the layers of the board" data-lb="layers" data-cap="eucalli E0 · the layers"><div class="use"><img src="${RX.stock('mfp.jpg')}" alt="Wardrobe in melamine faced plywood" loading="lazy"></div></figure>
+    <div class="spec"><img class="logo2" src="${R}img/b-eucalli.png" alt="eucalli E0"><p class="lead">${S.eucalli.lead}</p>
+      <div class="srow"><span class="n">4.0</span><div><b>${S.eucalli.core.h}</b><p>${S.eucalli.core.sub}</p>
+        <div class="bar" id="coreBar">${S.eucalli.core.split.map(([n])=>`<div><span data-pct="${n}">0</span>%</div>`).join('')}</div>
+        <div class="legend">${S.eucalli.core.split.map(([,b,t])=>`<div><b>${b}</b>${t}</div>`).join('')}</div></div></div>
+      ${S.eucalli.feats.map(([b,p],i)=>`<div class="srow"><span class="n">4.${i+1}</span><div><b>${b}</b><p>${p}</p></div></div>`).join('')}
+      <ul class="docs">${S.eucalli.proof.map(([src,c],i)=>`<li><button data-lb="proof" data-src="${R}${src}" data-cap="${c}"><img src="${R}${src}" alt=""><b style="font-weight:500">${c}</b><span>View</span></button></li>`).join('')}</ul></div>
+  </div>
+</div></section>
+
+<section class="paper" id="rooms"><div class="wrap">
+  ${sh('05','Applications','Specified in rooms like these.','','Sample photographs, to show where each material goes. Select a material to see its specification.')}
+  <div class="g apps">${RX.ROOMS.map((r,i)=>`<figure class="fig ${['s8','','','s8','s6','s6'][i]}"><div class="im"><img src="${RX.stock(r.f)}" alt="${r.room}" loading="lazy"></div>
+    <figcaption><b>Fig. ${pad(i+6)}</b>${r.room}. ${r.line}</figcaption><div class="used">${r.p.map(p=>`<button data-p="${p}">${P[p].n}</button>`).join('')}</div></figure>`).join('')}</div>
+</div></section>
+
+<section id="about"><div class="wrap">
+  ${sh('06','Company',S.about.h2)}
+  <div class="g co">${S.about.tabs.map(([h,p],i)=>`<div class="col"><span class="n">6.${i+1}</span><h3>${h}</h3><p>${p}</p></div>`).join('')}</div>
+  <figure class="wide"><div class="im"><img src="${RX.stock('timber-yard.jpg')}" alt="A timber yard seen from the air" loading="lazy"></div><figcaption><b>Fig. 12</b>Where every board begins: timber, stacked and seasoning.</figcaption></figure>
+</div></section>
+
+<section class="paper" id="new-home"><div class="wrap">
+  ${sh('07','What comes next',RX.HOME.h,'',RX.HOME.p)}
+  <div class="g views">${[['new-front-dawn.jpg','Front, at dawn'],['new-corner-tropical.jpg','Corner, from the car park'],['new-front-dusk.jpg','Front, at dusk'],['new-night.jpg','Front, at night']].map(([f,c],i)=>`<figure><div class="im"><img src="${RX.render(f)}" alt="${c} (artist's impression)" loading="lazy"></div><figcaption><span>7.${i+1}</span>${c}</figcaption></figure>`).join('')}</div>
+</div></section>
+
+<section id="story"><div class="wrap">
+  ${sh('08','Chronology',S.story.h2,'',S.story.lead)}
+  <div class="chr">${S.story.years.map(([y,h,p,img,k])=>`<div class="g r"><span class="y">${y}</span><span class="th ${k||''}" data-notag><img src="${R}${img.replace('site-aerial','renders/new-corner')}" alt="" loading="lazy"></span><h3>${h}</h3><p>${p}</p></div>`).join('')}</div>
+</div></section>
+
+<section class="paper" id="recognition"><div class="wrap">
+  ${sh('09','Certification',S.certs.h2,'',S.certs.lead)}
+  <div class="cl">${S.certs.list.map(c=>`<button class="g" data-lb="certs" data-src="${R}${c.src}" data-cap="${c.h} · ${c.yr}"><img class="th" src="${R}${c.src}" alt="" loading="lazy"><span class="y">${c.yr}</span><b>${c.h}</b><span>${c.p}</span><span class="v">View</span></button>`).join('')}</div>
+  <div class="g qs">${S.quotes.list.map(([q,n,r])=>`<blockquote>“${q}”<cite>${n} · ${r}</cite></blockquote>`).join('')}</div>
+</div></section>
+
+<section id="contact"><div class="wrap">
+  ${sh('10','Enquiry sheet',S.contact.h2)}
+  <div class="g sheet">
+    <div class="info"><p class="lead">Send the list and a few details; our team replies within one working day with stock, prices and delivery.</p>
+      <dl><div><dt>Phone</dt><dd class="tels">${Core.tels()}</dd></div><div><dt>Email</dt><dd>${Core.mail()}</dd></div>
+        <div><dt>Address</dt><dd>${S.contact.address.join(' ')}<div class="links"><a href="${S.contact.gmaps}" target="_blank" rel="noopener">Google Maps</a><a href="${S.contact.waze}" target="_blank" rel="noopener">Waze</a></div></dd></div>
+        <div><dt>Hours</dt><dd>${S.contact.hours.join(' · ')}</dd></div></dl></div>
+    <form id="form" novalidate><div class="picked" id="picked"></div>${RX.form()}
+      <div class="f-end"><small>* Required</small><button class="btn btn-ink" type="submit">Send enquiry ${ic('arrow')}</button></div>
+      <div class="sent" id="sent">${S.contact.sent}</div></form>
+  </div>
+  <div class="map">${RX.map()}</div>
+</div></section>`;
+
+$('#foot').innerHTML=`<div class="wrap">
+  <div class="g f-g">
+    <div>${SHIMLEN_LOGO}<p>${S.footer.blurb}</p><div class="social"><a href="#" aria-label="Facebook">${ic('fb','fill')}</a><a href="#" aria-label="Instagram">${ic('ig','fill')}</a><a href="#" aria-label="Xiaohongshu">${ic('xhs','fill')}</a></div></div>
+    <div><h5>Index</h5><ul>${P.slice(0,5).map((p,i)=>`<li><a href="#products" data-open="${i}">${p.n}</a></li>`).join('')}</ul></div>
+    <div><h5>&nbsp;</h5><ul>${P.slice(5).map((p,i)=>`<li><a href="#products" data-open="${i+5}">${p.n}</a></li>`).join('')}</ul></div>
+    <div><h5>Sections</h5><ul>${NAV.map(([t,id],i)=>`<li><a href="#${id}">${pad(i+1)} ${t}</a></li>`).join('')}</ul></div>
+    <div><h5>Visit</h5><ul><li>Lot 30482, Jalan P4/8C</li><li>Bandar Teknologi Kajang</li><li>43500 Semenyih</li><li style="margin-top:8px">${Core.tels('</li><li>')}</li></ul></div>
+  </div>
+  <div class="f-wm">${SHIMLEN_WORDMARK}</div>
+  <div class="f-bot"><span>${S.footer.legal}</span><span>${S.footer.links}</span></div>
+  <p class="rx-note">${RX.note}</p>
+</div>`;
+
+RX.reel('rReel','still',['new-front-mist.jpg']);
+RX.tag();
+Core.init();
+
+/* ---- the index: filter, search, preview, enquiry list ---- */
+(function(){
+  const rows=$$('.row'),list=[];let f='all',cur=8;
+  const apply=()=>{const q=$('#q').value.trim().toLowerCase();let n=0;
+    rows.forEach(r=>{const i=+r.dataset.i,p=P[i],ok=(f==='all'||(f==='low'?r.dataset.low==='1':r.dataset.cat===f))&&(!q||(p.n+' '+p.b).toLowerCase().includes(q));r.classList.toggle('hid',!ok);if(ok)n++});
+    $('#empty').style.display=n?'none':'block';if(window.ScrollTrigger)ScrollTrigger.refresh()};
+  $$('#filt button').forEach(b=>b.onclick=()=>{f=b.dataset.f;$$('#filt button').forEach(x=>x.classList.toggle('on',x===b));apply()});
+  $('#q').addEventListener('input',apply);
+  const show=i=>{cur=i;const p=P[i];rows.forEach(r=>r.classList.toggle('sel',+r.dataset.i===i));
+    const u=$('#pvUse');u.style.opacity=0;setTimeout(()=>{u.src=RX.use(i);u.onload=()=>u.style.opacity=1},180);
+    $('#pvShot').src=R+p.img;$('#pvN').textContent=p.n;$('#pvB').textContent=p.b;$('#pvS').innerHTML=p.s.map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('');syncAdd()};
+  const syncAdd=()=>{const on=list.includes(cur);$('#pvAdd').innerHTML=(on?'Added ':'Add ')+ic(on?'x':'plus');
+    $$('.add').forEach(b=>b.classList.toggle('on',list.includes(+b.dataset.add)));
+    $('#ecount').textContent=list.length;
+    $('#picked').innerHTML=list.length?`<span>On your list:</span>`+list.map(i=>`<button type="button" data-rm="${i}">${P[i].n} ${ic('x')}</button>`).join(''):`<span>Your enquiry list is empty. Add products from the <a class="ul" href="#products">index</a>, or just write to us.</span>`;
+    $$('[data-rm]').forEach(b=>b.onclick=()=>toggle(+b.dataset.rm));
+    const sel=$('#prodSelect');if(sel&&list.length)sel.value=P[list[0]].n;
+    const m=$('#fMsg');if(m&&(!m.value||m.dataset.auto)){m.value=list.length?'Enquiry list: '+list.map(i=>P[i].n).join(', ')+'. ':'';m.dataset.auto=list.length?1:''}};
+  const toggle=i=>{const k=list.indexOf(i);if(k>-1)list.splice(k,1);else{list.push(i);Core.toast(`${P[i].n} added to your enquiry list`)}
+    const e=$('#elist');e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump');syncAdd()};
+  rows.forEach(r=>{const i=+r.dataset.i;
+    r.addEventListener('pointerenter',()=>{if(matchMedia('(hover:hover)').matches)show(i)});
+    r.addEventListener('click',e=>{if(e.target.closest('.add')){e.stopPropagation();toggle(i);return}Core.open(i)});
+    r.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target===r)Core.open(i)})});
+  $('#pvAdd').onclick=()=>toggle(cur);$('#pvOpen').onclick=()=>Core.open(cur);
+  show(8)})();
+
+/* ---- motion: Studio is fixed and exact. Lines rise in step; frames open in straight cuts; nothing floats ---- */
+$$('.row').forEach(e=>e.dataset.cursor='Specs');$$('.cl button,.docs button,.recbox img,.ds .lyr').forEach(e=>e.dataset.cursor='View');
+$$('.ink,footer').forEach(e=>e.setAttribute('data-cur-dark',''));
+if(Motion.ok){gsap.set('.hero h1 .ln>span',{yPercent:110});gsap.set('.meta span,.h-txt>*,.facts>div',{opacity:0,y:16});gsap.set('.h-fig .frame',{clipPath:'inset(0% 0% 100% 0%)'});gsap.set('.h-fig figcaption',{opacity:0})}
+RX.loader('index',{preload:['img/renders/new-front-mist.jpg'],min:2200,done(){if(!Motion.ok)return;
+  const tl=gsap.timeline({defaults:{ease:'expo.out'}});
+  tl.to('.meta span',{opacity:1,y:0,duration:.8,stagger:.06})
+    .to('.hero h1 .ln>span',{yPercent:0,duration:1.2,stagger:.1},'<.05')
+    .to('.h-fig .frame',{clipPath:'inset(0% 0% 0% 0%)',duration:1.3,ease:'expo.inOut'},'<.25')
+    .to('.h-fig figcaption',{opacity:1,duration:.6},'-=.5')
+    .to('.h-txt>*',{opacity:1,y:0,duration:.9,stagger:.08},'<-.6')
+    .to('.facts>div',{opacity:1,y:0,duration:.8,stagger:.05},'<.1')}});
+Motion.init({intro:'none',magnetic:false});
+Motion.chars('.split');
+Motion.rows('.co,.views,.qs');
+Motion.cascade('.scbig .t,.pts>div,.pl figcaption,.wide figcaption,.sh .k,.sh .lead,.sh .sideL,.tools,.thd,.row,.brandrow,.mtbl .r,.recbox,.grades .l>*,.srow,.docs li,.fig figcaption,.fig .used,.wh .sp>*,.chr .r,.cl button,.sheet .info>*,.picked,.field,.f-end');
+/* frames open with a straight cut from the top */
+if(Motion.ok)$$('.fig .im,.ds .pic,.pl .im,.wide .im,.views .im,.pv .ph,.map').forEach(el=>gsap.fromTo(el,{clipPath:'inset(0% 0% 100% 0%)'},{clipPath:'inset(0% 0% 0% 0%)',duration:1.1,ease:'expo.inOut',scrollTrigger:{trigger:el,start:'top 88%',toggleActions:'play none none reverse'}}));
+/* the line of products slides as the page scrolls */
+if(Motion.ok){const bt=$('#bt');gsap.fromTo(bt,{x:0},{x:()=>-(bt.scrollWidth-innerWidth)*.7,ease:'none',scrollTrigger:{trigger:'.band',start:'top bottom',end:'bottom top',scrub:.5,invalidateOnRefresh:true}});
+  gsap.fromTo('.scbig .n',{yPercent:30,opacity:0},{yPercent:0,opacity:1,ease:'none',scrollTrigger:{trigger:'.scbig',start:'top 95%',end:'top 55%',scrub:.4}})}
+Motion.parallax('.wide .im img,.pl.a .im img,.pl.d .im img',7);
+Motion.wordRise('.f-wm');
+</script>
+</body>
+</html>

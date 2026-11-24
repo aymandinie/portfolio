@@ -1,0 +1,1137 @@
+/* Goldfinch Platform — Design System (revamp)
+   CRM  = light, Tesla-website spirit (white canvas, gold sacred)
+   Portal = dark, Tesla-app spirit (deep navy canvas)
+   Base rules target the CRM; `.pwa-shell …` overrides scope the Portal. */
+
+/* Always reserve the scrollbar gutter so switching between a tall page (scrollbar shown)
+   and a short one (no scrollbar) never shifts the sticky header / content sideways.
+   `overflow-y:scroll` is the universal belt-and-suspenders — it forces the vertical
+   scrollbar track to always be present, so the fix holds in browsers that don't yet
+   honour `scrollbar-gutter` (older Safari). On overlay-scrollbar systems neither shows a
+   track, and neither shifts. This matters most for the centred member portal (.pwa-shell
+   is margin:0 auto, so a vanishing scrollbar would slide the whole app sideways). */
+html { scrollbar-gutter: stable; overflow-y: scroll; }
+
+:root {
+  /* Locked brand palette (goldfinchjewelry.com) */
+  --navy:        #022135;  /* brand navy — Portal canvas / CRM primary text */
+  --navy-deep:   #011827;  /* hero membership card (deepest) */
+  --navy-card:   #0A3A57;  /* Portal general cards (clearly lighter than canvas) */
+  --navy-raised: #114A66;  /* Portal hover / raised surface */
+  --navy-line:   #23536E;  /* Portal borders (cool blue-grey, visible) */
+  --gold:        #F2C21A;  /* brand gold accent (slightly deepened so it reads gold, not neon-yellow) */
+  --gold-soft:   #FBD33A;  /* gold hover */
+  --gold-deep:   #C2900E;  /* deep edge of the metallic gold gradient */
+  --gold-hi:     #FBEBA6;  /* champagne highlight */
+  --gold-bronze: #9A6E15;  /* bronze shadow */
+  /* Metallic gold: highlight -> gold -> bronze. This is what reads as real gold (vs a flat yellow). */
+  --gold-grad:   linear-gradient(140deg, var(--gold-hi) 0%, #F4C81C 30%, var(--gold) 52%, var(--gold-deep) 76%, var(--gold-bronze) 100%);
+  --brass:       #BFA46F;  /* muted gold — membership-card border / tier outline */
+  --cream:       #ECDCC8;  /* highlight banners ONLY, never the canvas */
+
+  /* CRM (light) neutrals */
+  --app-bg:  #F5F6F7;   /* soft off-white page canvas (white cards lift off it) */
+  --canvas:  #FFFFFF;   /* card surface */
+  --surface: #FAFAFA;   /* nested stat-tile background */
+  --line:    #E9E9E9;   /* hairline borders */
+  --text:    #022135;   /* primary text */
+  --text-2:  #6B7480;   /* AA-safe secondary text */
+
+  /* Portal (dark) text */
+  --text-inv:     #FFFFFF;   /* primary on navy */
+  --text-inv-2:   #7E97AA;   /* secondary on navy */
+  --icon-inactive:#4E6D80;   /* inactive icons / tab */
+
+  --r-sm:8px; --r-md:12px; --r-lg:18px; --r-pill:999px;
+
+  /* §7.2 Semantic status tokens — the ONE source for pos/neg/warn/info/neutral.
+     Markup uses .text-pos / .bg-neg-soft etc.; never raw Tailwind palette. */
+  --pos:     #1B7A3D;  --pos-bg:  #E7F6EC;  --pos-line:  #B7E0C4;
+  --neg:     #B42318;  --neg-bg:  #FDEAEA;  --neg-line:  #F3C0BC;
+  --warn:    #B25E09;  --warn-bg: #FEF4E0;  --warn-line: #F1D9A6;
+  --info:    #2F4DA0;  --info-bg: #E8EDF9;  --info-line: #C0CCEC;
+  --neutral: #616D78;  --neutral-bg: #EEF0F2; --neutral-line: #D7DCE0;
+  --focus:   #F2C21A;
+  /* Quarantined third-party brand marks — chrome only, never UI semantics */
+  --brand-whatsapp: #25D366;  --brand-whatsapp-dark: #075E54;
+  --brand-twilio:   #F22F46;
+}
+
+html { font-size: 16px; }
+
+/* C8 — no native system-blue anywhere: checkboxes, radios, range, date-picker parts
+   all take the brand gold. Date inputs keep a light colour-scheme + gold indicator. */
+input, select, textarea { accent-color: var(--gold); }
+/* Safari/WebKit paints date-field digits with the system tint (blue). `color` alone is
+   NOT enough — WebKit uses -webkit-text-fill-color for the editable sub-fields, and each
+   field (day/month/year) is its own pseudo-element. Pin ALL of them to brand navy, with
+   text-fill-color + !important, so a date input can never read blue anywhere. */
+input[type="date"], input[type="datetime-local"], input[type="time"], input[type="month"] {
+  color-scheme: light;
+  color: var(--navy, #022135) !important;
+  -webkit-text-fill-color: var(--navy, #022135) !important;
+  caret-color: var(--navy, #022135);
+  font-family: inherit; font-variant-numeric: tabular-nums;
+}
+input[type="date"]::-webkit-datetime-edit,
+input[type="datetime-local"]::-webkit-datetime-edit,
+input[type="time"]::-webkit-datetime-edit,
+input[type="month"]::-webkit-datetime-edit,
+input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+input[type="datetime-local"]::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-year-field,
+input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
+input[type="time"]::-webkit-datetime-edit-hour-field,
+input[type="time"]::-webkit-datetime-edit-minute-field,
+input[type="month"]::-webkit-datetime-edit-month-field,
+input[type="month"]::-webkit-datetime-edit-year-field {
+  color: var(--navy, #022135) !important;
+  -webkit-text-fill-color: var(--navy, #022135) !important;
+}
+/* Separators ("/") and any placeholder text sit a shade lighter, but still not blue. */
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="datetime-local"]::-webkit-datetime-edit-text,
+input[type="time"]::-webkit-datetime-edit-text {
+  color: var(--text-2, #6B7480) !important;
+  -webkit-text-fill-color: var(--text-2, #6B7480) !important;
+}
+/* Highlighted (focused) sub-field: brand gold wash, never the OS blue. */
+input[type="date"]::-webkit-datetime-edit-day-field:focus,
+input[type="date"]::-webkit-datetime-edit-month-field:focus,
+input[type="date"]::-webkit-datetime-edit-year-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-day-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-month-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-year-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-hour-field:focus,
+input[type="datetime-local"]::-webkit-datetime-edit-minute-field:focus {
+  background: var(--gold-100, #FBF1D9);
+  color: var(--navy, #022135) !important;
+  -webkit-text-fill-color: var(--navy, #022135) !important;
+  outline: none;
+}
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: .65; }
+input[type="date"]:focus, input[type="datetime-local"]:focus { outline-color: var(--gold); }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--app-bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------------------------------------------------------------
+   Typography — one geometric sans, weights 300 / 400 / 500 only.
+   Hierarchy reads through SIZE + COLOUR; headings stay the heaviest
+   thing on screen so a title is never out-weighed by small labels.
+   Emphasis reads at weight 500 (.font-medium) — the heaviest we use. Markup
+   uses .font-medium honestly; the old .font-bold/.font-semibold !important cap
+   (a lie: it forced 500 while claiming 700) is gone.
+---------------------------------------------------------------- */
+
+/* Body / data text — regular weight */
+.serif, .font-serif { font-family: 'Inter', -apple-system, sans-serif; font-weight: 400; letter-spacing: -0.01em; }
+/* Headings — medium; the strongest weight in the hierarchy */
+h1.serif, h2.serif, h3.serif { font-weight: 500; letter-spacing: -0.02em; }
+/* Big light hero numbers (Portal points balance) — Tesla-app style */
+.display { font-weight: 300; letter-spacing: -0.02em; line-height: 1; }
+.brand-serif { font-family: 'Inter', sans-serif; font-weight: 300; letter-spacing: 0.06em; }
+
+.font-mono-tight { font-family: 'JetBrains Mono', 'SF Mono', Menlo, monospace; letter-spacing: -0.02em; }
+
+/* Neutralise the old gold gradient text — gold is no longer a text colour */
+.text-gradient-gold {
+  background: none; -webkit-text-fill-color: currentColor; color: var(--navy);
+}
+
+/* Section eyebrow / label — secondary grey, NOT gold (keep gold sacred) */
+.section-eyebrow {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--text-2);
+}
+
+/* ⌘K-style keycap hint */
+.kbd {
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 500;
+  color: var(--text-2); border: 1px solid var(--line); border-radius: 6px;
+  padding: 2px 6px; background: var(--surface); line-height: 1;
+}
+
+/* ---------------------------------------------------------------
+   CRM sidebar nav — light, navy text, small gold dot for active
+---------------------------------------------------------------- */
+.nav-item {
+  position: relative;
+  display: flex; align-items: center; gap: 12px;
+  padding: 9px 16px 9px 30px;
+  color: var(--text-2);
+  font-size: 14px; font-weight: 400;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.nav-item::before {                 /* gold active indicator dot */
+  content: ''; position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+  width: 6px; height: 6px; border-radius: 50%;
+  background: transparent; transition: background 0.15s ease;
+}
+.nav-item:hover { color: var(--text); background: var(--surface); }
+.nav-item.active { color: var(--text); font-weight: 500; }
+.nav-item.active::before { background: var(--gold); }
+.nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+.nav-item .nav-label { flex: 1; }
+
+.nav-chevron {
+  width: 22px; height: 22px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border-radius: 4px; color: var(--text-2); background: transparent;
+  border: none; padding: 0; cursor: pointer;
+}
+.nav-chevron:hover { background: var(--surface); color: var(--text); }
+.nav-chevron svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+/* Sub-nav (children) — tinted, rounded group; rows indented under the parent, each with its own icon */
+.nav-subgroup {
+  background: #F3F4F6; border: 1px solid #ECECEC;
+  margin: 2px 12px 8px 30px; border-radius: 10px; padding: 4px 0; overflow: hidden;
+}
+.nav-subitem {
+  position: relative; display: flex; align-items: center; gap: 10px;
+  padding: 8px 14px 8px 16px;
+  color: var(--text-2); font-size: 13px; font-weight: 400;
+  transition: color 0.15s, background 0.15s;
+}
+.nav-subicon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; color: inherit; }
+.nav-subicon svg { width: 15px; height: 15px; }
+.nav-subitem:hover { color: var(--text); background: #FFFFFF; }
+.nav-subitem.active { color: var(--text); font-weight: 500; background: #FFFFFF; box-shadow: inset 2px 0 0 var(--gold); }
+.nav-subitem.active .nav-subicon { color: var(--gold-deep); }
+
+/* Collapsed (icon-only) sidebar — power-user mode */
+.sidebar-collapsed .nav-label,
+.sidebar-collapsed .nav-chevron,
+.sidebar-collapsed .brand-text,
+.sidebar-collapsed .nav-foot-text,
+.sidebar-collapsed .nav-subgroup { display: none; }
+.sidebar-collapsed .nav-item { justify-content: center; padding-left: 0; padding-right: 0; }
+.sidebar-collapsed .nav-item::before { left: 7px; }
+/* brand mark: full lockup when expanded, bird-only when collapsed */
+.brand-icon { display: none; }
+.sidebar-collapsed .brand-icon { display: block; }
+.sidebar-collapsed #collapseChevron { transform: rotate(180deg); }
+.sidebar-collapsed .nav-header { justify-content: center; }
+
+/* ---------------------------------------------------------------
+   Portal bottom tab nav — gold active, muted blue-grey inactive
+---------------------------------------------------------------- */
+.bottom-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 12px;
+  color: var(--icon-inactive);
+  font-size: 11px; font-weight: 500;
+  cursor: pointer; transition: color 0.15s;
+}
+.bottom-nav-item.active { color: var(--gold); }
+.bottom-nav-item svg { width: 22px; height: 22px; }
+
+/* ---------------------------------------------------------------
+   Cards & surfaces — no shadows, hairline borders
+---------------------------------------------------------------- */
+.card {
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 24px;
+  box-shadow: 0 1px 2px rgba(2,33,53,0.04);  /* whisper lift off the soft canvas */
+}
+/* Fluid MICRO-interactions only — no page-level transition on route change.
+   The goal is to soften hovers/clicks/toggles so nothing feels choppy or harsh. */
+.card-lift { transition: transform 0.18s cubic-bezier(.2,.7,.3,1), box-shadow 0.18s ease, border-color 0.18s ease; }
+.card-lift:hover { transform: translateY(-3px); box-shadow: 0 14px 30px -18px rgba(2,33,53,0.28); border-color: #E2E2E2; }
+/* Everything interactive eases its state changes (bg / colour / border / transform). */
+button, a, .btn-primary, .btn-gold, .btn-ghost, select, input,
+.tier-card, .loyalty-card, .nav-item {
+  transition: transform .12s cubic-bezier(.2,.7,.3,1), box-shadow .12s ease, background .12s ease, border-color .12s ease, color .12s ease, filter .12s ease;
+}
+/* §7.4 Press feedback — bound to classes, 100ms scale(.98) */
+.btn-primary:active, .btn-gold:active, .btn-ghost:active, .btn-danger:active, .nav-item:active,
+button.press:active { transform: scale(.98); transition-duration: .1s; }
+
+/* §7.4 Motion on CLASSES, not IDs. Enter 200ms, exit 150ms. Every open has a
+   matching close so no dialog hard-cuts shut. */
+@keyframes overlayIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes overlayOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes sheetIn    { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes sheetOut   { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(6px) scale(.99); } }
+.overlay-enter { animation: overlayIn 200ms cubic-bezier(.2,.7,.3,1) both; }
+.overlay-exit  { animation: overlayOut 150ms cubic-bezier(.4,0,1,1) both; }
+.sheet-enter   { animation: sheetIn 200ms cubic-bezier(.2,.7,.3,1) both; }
+.sheet-exit    { animation: sheetOut 150ms cubic-bezier(.4,0,1,1) both; }
+/* Legacy modal shells still settle in via the same curve. */
+@keyframes modalIn { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
+#planModal:not(.hidden) > *, #purchaseModal:not(.hidden) > *,
+#triggerModal:not(.hidden) > *, #voucherModal:not(.hidden) > * { animation: modalIn .2s cubic-bezier(.2,.7,.3,1) both; }
+
+/* Apple-style page transition — content fades + rises gently on every route change (both
+   the CRM #pageContent and the portal #pwaContent). Subtle enough to never feel like a wipe. */
+/* Page transition — a soft fade + micro-scale "settle" (no vertical rise, which read as jumpy).
+   To REVERT to no page transition: delete these two lines. */
+@keyframes gfPageIn { from { opacity: 0; transform: scale(.994); } to { opacity: 1; transform: none; } }
+#pageContent > *, #pwaContent > * { animation: gfPageIn .34s cubic-bezier(.33,1,.68,1) both; }
+/* Primary/gold buttons get a soft hover lift + shadow; press settles it back down (spring). */
+.btn-primary:hover, .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 9px 22px -12px rgba(2,33,53,.5); }
+.btn-primary:active, .btn-gold:active { transform: scale(.97); box-shadow: none; }
+/* Clickable data rows lift a hair on hover — the "this responds to me" cue. */
+.gf-table tbody tr.gf-row-click:hover, .gf-table tbody tr[onclick]:hover { box-shadow: inset 3px 0 0 var(--gold, #FAC805); }
+
+@media (prefers-reduced-motion: reduce) {
+  .card-lift:hover { transform: none; }
+  .btn-primary:hover, .btn-gold:hover { transform: none; box-shadow: none; }
+  #pageContent > *, #pwaContent > * { animation: none; }
+  .overlay-enter, .overlay-exit, .sheet-enter, .sheet-exit,
+  #planModal > *, #purchaseModal > *, #triggerModal > *, #voucherModal > * { animation: none; }
+}
+
+/* §7.5 Global keyboard focus ring — the app had zero focus-visible rules. */
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+a:focus-visible, button:focus-visible, [role="button"]:focus-visible,
+select:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex]:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+/* Mouse users keep a clean surface; only keyboard nav shows the ring. */
+:focus:not(:focus-visible) { outline: none; }
+
+/* F5 — one switch component, ON = gold track + knob right, OFF = grey + left.
+   data-state drives colour (never inline style); shared by CRM and portal. */
+.gf-switch {
+  position: relative; display: inline-block; width: 40px; height: 22px; flex: none;
+  border: 0; padding: 0; border-radius: 999px; cursor: pointer; vertical-align: middle;
+  background: #D4D8DC; transition: background .12s ease;
+}
+.gf-switch::after {
+  content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+  border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(2,33,53,.25);
+  transition: left .12s ease;
+}
+.gf-switch[data-state="on"] { background: var(--gold); }
+.gf-switch[data-state="on"]::after { left: 20px; }
+.gf-switch:disabled { opacity: .5; cursor: not-allowed; }
+/* Same component on the dark portal — only the OFF track darkens; ON stays gold. */
+.pwa-shell .gf-switch { background: #2A4A63; }
+.pwa-shell.theme-light .gf-switch { background: #CBD5DC; }
+.pwa-shell .gf-switch[data-state="on"] { background: var(--gold); }
+
+/* §7.3 Profile-menu icon tiles — ONE neutral treatment, not seven random hues.
+   Gold is reserved for the active/selected state (.menu-tile.is-active). */
+.menu-tile { background: var(--navy-raised, #114A66); color: #A8B4BD; }
+.menu-tile.is-active { background: var(--gold); color: var(--navy); }
+.pwa-shell.theme-light .menu-tile { background: #EEF1F3; color: #5A6672; }
+
+/* Portal is dark — the same semantic tokens brighten so status reads on navy. */
+.pwa-shell {
+  --pos:  #34D399;  --pos-bg:  rgba(52,211,153,.14);  --pos-line:  rgba(52,211,153,.4);
+  --neg:  #FB7185;  --neg-bg:  rgba(251,113,133,.14); --neg-line:  rgba(251,113,133,.4);
+  --warn: #FBBF24;  --warn-bg: rgba(251,191,36,.14);  --warn-line: rgba(251,191,36,.4);
+  --info: #93B4F6;  --info-bg: rgba(147,180,246,.14); --info-line: rgba(147,180,246,.4);
+  --neutral: #94A3B8; --neutral-bg: rgba(148,163,184,.14); --neutral-line: rgba(148,163,184,.4);
+}
+
+/* §7.2/§7.3 Semantic status utilities — replace raw Tailwind palette classes.
+   Five families only: pos / neg / warn / info / neutral. */
+.text-pos { color: var(--pos); }   .bg-pos-soft { background: var(--pos-bg); }   .bg-pos { background: var(--pos); color:#fff; }   .border-pos { border-color: var(--pos-line); }
+.text-neg { color: var(--neg); }   .bg-neg-soft { background: var(--neg-bg); }   .bg-neg { background: var(--neg); color:#fff; }   .border-neg { border-color: var(--neg-line); }
+.text-warn { color: var(--warn); } .bg-warn-soft { background: var(--warn-bg); }  .bg-warn { background: var(--warn); color:#fff; }  .border-warn { border-color: var(--warn-line); }
+.text-info { color: var(--info); } .bg-info-soft { background: var(--info-bg); }  .bg-info { background: var(--info); color:#fff; }  .border-info { border-color: var(--info-line); }
+.text-neutral2 { color: var(--neutral); } .bg-neutral-soft { background: var(--neutral-bg); } .border-neutral2 { border-color: var(--neutral-line); }
+/* Quarantined brand chrome (WhatsApp / Twilio) — never UI semantics. */
+.bg-brand-whatsapp { background: var(--brand-whatsapp); }
+.text-brand-whatsapp { color: var(--brand-whatsapp); }
+.bg-brand-whatsapp-dark { background: var(--brand-whatsapp-dark); }
+.text-brand-twilio { color: var(--brand-twilio); }
+.card-soft {                         /* soft grey stat-tile */
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 20px;
+}
+.tile { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); }
+
+.card-navy {
+  background: var(--navy-card); color: #fff;
+  border: 1px solid var(--navy-line);
+  border-radius: var(--r-md); padding: 24px;
+}
+
+/* Portal scoping: cards become navy surfaces */
+.pwa-shell .card { background: var(--navy-card); color: #fff; border-color: var(--navy-line); }
+.pwa-shell .card-soft { background: var(--navy-raised); border-color: var(--navy-line); color: #fff; }
+
+/* ---------------------------------------------------------------
+   Buttons
+---------------------------------------------------------------- */
+.btn-primary {
+  background: var(--navy); color: #fff;
+  padding: 10px 18px; border-radius: var(--r-sm);
+  font-weight: 500; font-size: 14px; line-height: 1.2;
+  transition: all 0.15s; display: inline-flex; align-items: center; gap: 8px;
+  border: none; cursor: pointer;
+}
+.btn-primary:hover { background: var(--navy-raised); }
+
+/* Metallic "goldfinch gold" — champagne→gold→bronze gradient + inner highlights so it reads as polished gold, not flat yellow */
+.btn-gold {
+  background: var(--gold-grad);
+  color: #3D2C05;
+  padding: 10px 18px; border-radius: var(--r-sm);
+  font-weight: 500; font-size: 14px; line-height: 1.2;
+  transition: filter 0.15s; border: none; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 8px; justify-content: center;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -1px 0 rgba(120,85,10,0.35);
+}
+.btn-gold:hover { filter: brightness(1.05) saturate(1.05); }
+
+/* Metallic gold text + a brushed-metal tier disc */
+.text-gold-metallic {
+  background: var(--gold-grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: var(--gold);
+}
+.tier-disc {
+  border-radius: 50%;
+  background: conic-gradient(from 215deg, #9A6E15, #FBEBA6, #F2C21A, #9A6E15, #FBEBA6, #D6A21C, #9A6E15);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.22), inset 0 2px 6px rgba(255,255,255,0.45),
+              inset 0 -3px 7px rgba(110,78,12,0.5), 0 3px 8px rgba(0,0,0,0.35);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #5A3E0A; flex-shrink: 0;
+}
+
+.btn-ghost {
+  background: var(--canvas); color: var(--navy);
+  padding: 10px 18px; border-radius: var(--r-sm);
+  font-weight: 500; font-size: 14px; line-height: 1.2;
+  border: 1px solid var(--line); transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+}
+.btn-ghost:hover { background: var(--surface); border-color: #E2E2E2; }
+.pwa-shell .btn-ghost { background: transparent; color: #fff; border-color: var(--navy-line); }
+.pwa-shell .btn-ghost:hover { background: var(--navy-raised); }
+
+.btn-primary svg, .btn-gold svg, .btn-ghost svg { width: 15px; height: 15px; }
+.btn-xs { padding: 6px 12px; font-size: 12.5px; border-radius: 6px; }
+.btn-xs svg { width: 13px; height: 13px; }
+
+/* ---------------------------------------------------------------
+   Tables — rounded container (via .card wrapper), no zebra, airy
+---------------------------------------------------------------- */
+.gf-table { width: 100%; border-collapse: collapse; }
+/* Client preference: EVERY table cell reads left-aligned — override any legacy
+   text-right on headers, cells, and inner wrappers so numbers line up on the left. */
+.gf-table th, .gf-table td { text-align: left; }
+.gf-table th .text-right, .gf-table td .text-right,
+.gf-table th [style*="text-align:right"], .gf-table td [style*="text-align:right"] { text-align: left; }
+.gf-table th.text-right > *, .gf-table td.text-right > * { margin-left: 0; margin-right: auto; }
+/* Columns that opt into align:'right' (numbers, action buttons) — flex right, so the global
+   left-align above can't cancel it, and the button hugs the right margin. */
+.gf-cell-r { display: flex; justify-content: flex-end; align-items: center; gap: 6px; }
+.gf-table thead th.gf-th-r { text-align: right; }
+.gf-table thead th.gf-th-r .gf-th-label { overflow: visible; }
+.gf-table thead th {
+  text-align: left; font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+  color: var(--text-2); text-transform: uppercase;
+  padding: 13px 16px; border-bottom: 1px solid var(--line); background: var(--canvas);
+}
+.gf-table tbody td {
+  padding: 16px; font-size: 14px; border-bottom: 1px solid var(--line);
+  vertical-align: middle; color: var(--text);
+}
+.gf-table tbody tr:last-child td { border-bottom: none; }
+.gf-table tbody tr { transition: background 0.1s; }
+.gf-table tbody tr:hover { background: var(--surface); cursor: pointer; }
+/* Spacer rows keep a table's height constant across pages (polished, no jump) */
+.gf-table tbody tr.pad-row td { height: 53px; border-bottom-color: var(--line); }
+.gf-table tbody tr.pad-row:hover { background: transparent; cursor: default; }
+.gf-table tbody tr.pad-row:last-child td { border-bottom: none; }
+/* Wide data tables scroll horizontally instead of clipping. */
+.gf-table-scroll { overflow-x: auto; }
+/* Uniform row height for the paginated DataTables so spacer rows match data rows exactly
+   → every page is the same height and the pager never shifts. */
+.gf-table-fixed tbody td { height: 64px; padding-top: 12px; padding-bottom: 12px; }
+.gf-table-fixed tbody tr.pad-row td { height: 64px; }
+
+/* ---------------------------------------------------------------
+   Status pills — coloured dot + soft tinted background, fully round
+---------------------------------------------------------------- */
+/* §4.2.1 — the coloured status pills + their ::before dots are deleted. BNPL
+   status is muted text, and any remaining status label uses a neutral token. */
+.status-neutral {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: var(--r-pill);
+  font-size: 11px; font-weight: 500; white-space: nowrap;
+  background: var(--neutral-bg, #EEF0F2); color: var(--neutral, #616D78);
+}
+
+/* ---------------------------------------------------------------
+   Tier badges — each tier visually distinct chip, bordered, no dot
+---------------------------------------------------------------- */
+.tier-entry, .tier-bronze, .tier-silver, .tier-gold {
+  display: inline-flex; align-items: center; font-weight: 600;
+  border: 1px solid transparent; letter-spacing: 0.02em;
+}
+/* Entry — plain flat neutral */
+.tier-entry  { background: #EEF0F2; color: #616D78; border-color: #DFE4E8; }
+/* Bronze — warm tan / copper */
+.tier-bronze { background: linear-gradient(180deg,#F7ECDD,#F1E1CB); color: #86541F; border-color: #E2C398; }
+/* Silver — cool blue-grey with a metallic sheen (clearly ≠ Entry) */
+.tier-silver { background: linear-gradient(180deg,#EDF2F7,#DEE7EF); color: #3F5064; border-color: #C2D0DD; }
+/* Gold — warm gold */
+.tier-gold   { background: linear-gradient(180deg,#FCF4D4,#F7E9AE); color: #7A5E00; border-color: #E6CE7A; }
+
+/* Portal tier capsule — OUTLINED muted-gold pill, metallic-gold text */
+.tier-capsule {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: var(--r-pill);
+  border: 1px solid var(--brass);
+  font-size: 11px; font-weight: 500; letter-spacing: 0.06em;
+  background: var(--gold-grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: var(--gold);
+}
+
+/* ---------------------------------------------------------------
+   Progress — navy fill in CRM, gold fill in Portal (sanctioned)
+---------------------------------------------------------------- */
+/* D10 — stronger track contrast; render supplies a visible minimum so 1/12 reads. */
+.progress-track { height: 8px; background: #CBD3DA; border-radius: 999px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(2,33,53,0.06); }
+.progress-fill { height: 100%; background: var(--navy); border-radius: 999px; transition: width 0.6s ease; }
+.pwa-shell .progress-track { background: rgba(255,255,255,0.12); }
+.pwa-shell .progress-fill { background: var(--gold-grad); }
+
+/* ---------------------------------------------------------------
+   Membership wallet card — the Portal hero (navy leather + gold edge)
+---------------------------------------------------------------- */
+.wallet-card {
+  background: linear-gradient(160deg, #022135 0%, #011827 72%);
+  border: 1px solid var(--brass);
+  border-radius: var(--r-lg);
+  padding: 22px; color: #fff;
+  position: relative; overflow: hidden;
+}
+/* (removed decorative gold accent strip — cleaner card face) */
+.wallet-card::after {                 /* actual Goldfinch brand bird (real gold logo) — vertically centred watermark */
+  content: ''; position: absolute; top: 50%; transform: translateY(-50%); right: 8px;
+  width: 150px; height: 150px;
+  background: url('goldfinch-logo-2.png') no-repeat center center;
+  background-size: contain;
+  opacity: 0.10; pointer-events: none; z-index: 0;
+}
+/* Bird-only mark — the actual brand logo bird (collapsed sidebar, watermarks, etc.) */
+.gf-bird { background: url('goldfinch-logo-2.png') no-repeat center center; background-size: contain; }
+
+/* ---------------------------------------------------------------
+   Charts — navy/grey series, one gold highlight, no grid backgrounds
+---------------------------------------------------------------- */
+.minibar, .bar { display: inline-block; height: 16px; background: var(--navy); border-radius: 3px; vertical-align: middle; }
+.bar-gold { background: var(--gold); }            /* the single highlighted bar */
+.area-chart-bg { background: linear-gradient(180deg, rgba(2,33,53,0.06) 0%, rgba(2,33,53,0) 100%); }
+.guide-line { stroke: var(--line); stroke-width: 1; }   /* subtle horizontal guides */
+
+/* ---------------------------------------------------------------
+   Phone frame (admin previews the portal)
+---------------------------------------------------------------- */
+.phone-frame {
+  width: 320px; border-radius: 42px; background: var(--navy-deep);
+  padding: 14px; position: relative;
+  box-shadow: 0 30px 60px -15px rgba(2,33,53,0.35), 0 0 0 1px rgba(255,255,255,0.05);
+}
+.phone-screen { border-radius: 30px; overflow: hidden; background: var(--navy); min-height: 600px; position: relative; }
+.phone-notch { position: absolute; top: 24px; left: 50%; transform: translateX(-50%); width: 90px; height: 22px; background: #000; border-radius: 999px; z-index: 10; }
+.phone-status { display: flex; justify-content: space-between; align-items: center; padding: 14px 24px 4px; font-size: 12px; font-weight: 500; color: #fff; }
+
+/* ---------------------------------------------------------------
+   Toast
+---------------------------------------------------------------- */
+.toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--navy); color: #fff;
+  padding: 14px 20px; border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  display: flex; align-items: center; gap: 10px;
+  z-index: 9999; font-size: 14px; font-weight: 400;
+  animation: slideUp 0.3s ease;
+}
+.toast.success { border-left: 3px solid #22C55E; }
+.toast.warn { border-left: 3px solid #F59E0B; }
+@keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes fadeOut { to { opacity: 0; transform: translateY(20px); } }
+
+.fade-in { animation: fadeIn 0.3s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ---------------------------------------------------------------
+   Quote flourish
+---------------------------------------------------------------- */
+.gf-quote { font-family: 'Inter', sans-serif; font-style: italic; color: var(--navy); font-size: 18px; font-weight: 300; }
+.gf-quote::before { content: '“'; color: var(--brass); margin-right: 4px; font-size: 24px; }
+
+/* QR placeholder */
+.qr-placeholder {
+  background-image:
+    linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%),
+    linear-gradient(45deg, #000 25%, transparent 25%, transparent 75%, #000 75%);
+  background-size: 12px 12px; background-position: 0 0, 6px 6px; background-color: white;
+}
+
+/* Loyalty tier ladder dots */
+.tier-dot { width: 14px; height: 14px; border-radius: 50%; background: #D1D5DB; border: 2px solid white; box-shadow: 0 0 0 1px #D1D5DB; }
+.tier-dot.current { width: 22px; height: 22px; background: var(--gold-grad); box-shadow: 0 0 0 4px rgba(242,194,26,0.22); border-color: transparent; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(2,33,53,0.18); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(2,33,53,0.3); }
+
+/* Responsive helpers */
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+  .sidebar-mobile-hidden { transform: translateX(-100%); }
+  .sidebar-mobile-shown { transform: translateX(0); }
+}
+@media (min-width: 769px) { .mobile-only { display: none !important; } }
+
+.sidebar-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 40; display: none; }
+.sidebar-overlay.show { display: block; }
+
+/* Standard in-page search field — soft beige (cream) */
+.gf-search {
+  background: #FBF6EE; border: 1px solid #ECDCC8; color: var(--text);
+  font-weight: 500; border-radius: 10px;
+}
+.gf-search::placeholder { color: #A2937B; }
+.gf-search:focus { outline: none; border-color: var(--gold); background: #fff; }
+
+/* Solid gold — no animated shimmer (kept static/professional) */
+.gold-lux {
+  background: var(--gold-grad);
+}
+.text-gold-lux {
+  background: var(--gold-grad);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: var(--gold);
+}
+
+/* ---------------------------------------------------------------
+   Tier medallion — dark disc carrying the REAL logo bird, tier-coloured ring.
+   Used in CRM loyalty card + Portal tiers. More elaborate as tier rises.
+---------------------------------------------------------------- */
+.tier-medal {
+  border-radius: 50%; background: radial-gradient(circle at 50% 35%, #011827, #011827);
+  display: inline-flex; align-items: center; justify-content: center;
+  position: relative; flex-shrink: 0;
+}
+.tier-medal .medal-bird { width: 82%; height: 82%; display: inline-flex; align-items: center; justify-content: center; }
+.tier-medal .medal-bird svg, .tier-medal .medal-bird img { width: 100%; height: 100%; object-fit: contain; }
+/* Tier ring + recolour the gold logo bird per tier (PNG is gold by default → tint via filter) */
+.tier-medal.entry  { box-shadow: 0 0 0 2px #8A98A4; }
+.tier-medal.entry  .medal-bird { color: #AEB8C0; }
+.tier-medal.entry  .medal-bird img { filter: grayscale(1) brightness(1.08) contrast(0.95); }
+.tier-medal.bronze { box-shadow: 0 0 0 2px #C49A66, inset 0 0 12px rgba(196,154,102,0.3); }
+.tier-medal.bronze .medal-bird { color: #D98A4A; }
+.tier-medal.bronze .medal-bird img { filter: sepia(0.6) saturate(1.5) hue-rotate(-12deg) brightness(0.82); }
+.tier-medal.silver { box-shadow: 0 0 0 2px #DDE3E8, inset 0 0 12px rgba(221,227,232,0.30); }
+.tier-medal.silver .medal-bird { color: #EAF0F4; }
+.tier-medal.silver .medal-bird img { filter: grayscale(1) brightness(1.32) contrast(1.05); }
+.tier-medal.gold   { box-shadow: 0 0 0 2px var(--gold), inset 0 0 12px rgba(242,194,26,0.30); }
+.tier-medal.gold   .medal-bird { color: #F7CE2E; }
+/* gold = the PNG's native colour, no filter */
+
+/* ---------------------------------------------------------------
+   Tier-themed loyalty/membership card — shared by CRM detail + Portal.
+   Each tier gets a richer treatment; gold is the most elaborate.
+---------------------------------------------------------------- */
+.loyalty-card { position: relative; overflow: hidden; border-radius: 18px; color: #fff; }
+.loyalty-card .lc-bird {
+  position: absolute; top: 50%; right: 10px; transform: translateY(-50%);
+  width: 150px; height: 150px; opacity: 0.10; pointer-events: none; z-index: 0;
+}
+.loyalty-card .lc-accent { display: none; }
+/* tint the watermark bird to match the tier (gold PNG → per-tier filter) */
+.loyalty-card.entry  .lc-bird { filter: grayscale(1) brightness(1.1); }
+.loyalty-card.bronze .lc-bird { filter: sepia(0.6) saturate(1.5) hue-rotate(-12deg) brightness(0.82); }
+.loyalty-card.silver .lc-bird { filter: grayscale(1) brightness(1.3); }
+/* Distinctly shaded per tier — each a clearly different HUE + finish so no two
+   read alike. Entry = flat neutral graphite (matte, no shine). Bronze = warm
+   copper. Silver = cool metallic platinum (luxurious, brighter, with sheen).
+   Gold = richest, warm brass with glow. Mirrors the CRM tier-header palette. */
+.loyalty-card.entry  { background: linear-gradient(135deg, #33383D 0%, #191C1F 64%); border: 1px solid #40464C; }
+.loyalty-card.entry  .lc-accent { background: #8A98A4; }
+.loyalty-card.bronze { background: linear-gradient(135deg, #7A5228 0%, #2A1B0C 66%); border: 1px solid #A56A32; box-shadow: 0 14px 32px -24px rgba(122,82,40,0.55); }
+.loyalty-card.bronze .lc-accent { background: linear-gradient(90deg, #6E4D27, #E6C49B, #6E4D27); }
+.loyalty-card.silver { background: linear-gradient(135deg, #6C7A88 0%, #414C57 40%, #232A31 100%); border: 1px solid #C7CDD3; box-shadow: 0 16px 36px -24px rgba(120,132,146,0.5); }
+.loyalty-card.silver .lc-accent { background: linear-gradient(90deg, #6B7480, #F2F4F6, #6B7480); }
+.loyalty-card.gold   { background: linear-gradient(135deg, #8A6E24 0%, #2A2205 66%); border: 1px solid var(--brass); box-shadow: 0 16px 36px -22px rgba(242,194,26,0.28); }
+.loyalty-card.gold   .lc-accent { background: var(--gold-grad); }
+
+/* ---------------------------------------------------------------
+   Tier discs per tier — brushed metal (entry=plain steel, bronze, silver, gold)
+---------------------------------------------------------------- */
+/* Entry = deliberately plain/cheap: flat brushed grey, no shine */
+.tier-disc.entry {
+  background: linear-gradient(160deg, #DDE2E6 0%, #C2C9CF 55%, #AAB2B9 100%);
+  color: #7A848C;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35), inset 0 -2px 4px rgba(0,0,0,0.10);
+}
+.tier-disc.bronze {
+  background: conic-gradient(from 215deg, #7A4F22, #F0D2A6, #C49A66, #7A4F22, #EBC79B, #9A6E3C, #7A4F22);
+  color: #4A3115;
+}
+.tier-disc.silver {
+  background: conic-gradient(from 215deg, #7C8893, #F4F7FA, #C7CDD3, #7C8893, #EAEEF1, #9AA4AE, #7C8893);
+  color: #36404A;
+}
+
+/* ---------------------------------------------------------------
+   Chagee-style horizontally swipeable tier carousel (Portal)
+---------------------------------------------------------------- */
+.tier-carousel {
+  display: flex; gap: 14px; overflow-x: auto;
+  scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+  padding: 4px 20px 6px; scrollbar-width: none;
+}
+.tier-carousel::-webkit-scrollbar { display: none; }
+.tier-card {
+  scroll-snap-align: center; flex: 0 0 88%; max-width: 360px;
+  border-radius: 22px; padding: 24px 22px; position: relative; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.10);
+}
+.tier-card.is-current { box-shadow: 0 0 0 2px var(--brass), 0 18px 40px -18px rgba(0,0,0,0.6); }
+/* Metallic sheen — only the premium tiers (silver + gold) catch the light,
+   reinforcing the luxury hierarchy. Entry/bronze stay matte. */
+.tier-card .tier-card-sheen { display: none; }
+.tier-card.silver .tier-card-sheen,
+.tier-card.gold   .tier-card-sheen {
+  display: block; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background: linear-gradient(122deg, transparent 32%, rgba(255,255,255,0.16) 47%, rgba(255,255,255,0.03) 53%, transparent 62%);
+}
+.tier-card.gold .tier-card-sheen {
+  background: linear-gradient(122deg, transparent 32%, rgba(255,239,190,0.22) 47%, rgba(255,239,190,0.04) 53%, transparent 62%);
+}
+.carousel-dots { display: flex; justify-content: center; gap: 6px; margin-top: 12px; }
+.carousel-dots .cd { width: 6px; height: 6px; border-radius: 999px; background: rgba(255,255,255,0.25); }
+.carousel-dots .cd.on { width: 18px; background: var(--gold-grad); }
+
+/* ---------------------------------------------------------------
+   Marketing-material placeholders (Portal) — fixed promo slots
+---------------------------------------------------------------- */
+.mkt-banner {
+  border-radius: 18px; overflow: hidden; position: relative;
+  background: linear-gradient(135deg, #0A3A57 0%, #022135 60%, #011827 100%);
+}
+.mkt-banner .mkt-tag {
+  position: absolute; top: 10px; left: 10px; z-index: 2;
+  font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--brass); border: 1px solid rgba(191,164,111,0.5);
+  padding: 2px 8px; border-radius: 999px;
+}
+.mkt-rail { display: flex; gap: 12px; overflow-x: auto; padding: 0 20px 4px; scroll-snap-type: x mandatory; scroll-padding-left: 20px; scrollbar-width: none; }
+.mkt-rail::-webkit-scrollbar { display: none; }
+.mkt-rail > * { scroll-snap-align: start; }
+
+/* Sign-in screen input — theme-aware (dark portal + light variant) */
+.signin-input {
+  background: rgba(255,255,255,0.06); border: 1px solid #1A3F58; color: #fff;
+  transition: border-color .15s ease, background .15s ease;
+}
+.signin-input::placeholder { color: #5E7686; }
+.signin-input:focus { outline: none; border-color: var(--brass); background: rgba(255,255,255,0.10); }
+.pwa-shell.theme-light .signin-input { background: #FFFFFF; border-color: #DCE3E8; color: #011827; }
+.pwa-shell.theme-light .signin-input:focus { border-color: var(--brass); background: #FFFFFF; }
+
+/* Portal sign-in backdrop — the brand gold texture under a dark wash (matches the CRM login),
+   so the whitened logo + gold accents pop and the screen feels premium, not a plain panel. */
+/* Portal sign-in — the dark premium gold-texture screen (the phone). The frame/sides AROUND
+   the shell are lightened separately (see html.signin-frame below). */
+#pwaContent.signin-bg { background: #0a0805; position: relative; overflow: hidden; }  /* clip texture to the shell */
+#pwaContent.signin-bg::before {
+  content: ''; position: absolute; inset: -8px; z-index: 0;
+  background: url('loginbgfin.jpg') center/cover no-repeat;
+  filter: blur(3px);
+}
+#pwaContent.signin-bg::after {
+  content: ''; position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(180deg, rgba(6,4,2,0.68) 0%, rgba(6,4,2,0.46) 44%, rgba(6,4,2,0.84) 100%);
+}
+#pwaContent.signin-bg > * { position: relative; z-index: 2; }
+/* The out-of-frame area (sides around the phone) — a HEAVILY blurred copy of the same gold
+   texture (behind a dark wash) so it reads as a soft extension of the phone, not a flat panel. */
+html.signin-frame { background: #0a0805 !important; }
+html.signin-frame body { background: transparent !important; }
+html.signin-frame::before {
+  content: ''; position: fixed; inset: 0; z-index: -1;
+  background: linear-gradient(rgba(6,4,2,0.52), rgba(6,4,2,0.66)), url('loginbgfin.jpg') center/cover no-repeat;
+  filter: blur(36px); transform: scale(1.22);
+}
+/* Portal dust — a narrow band clustered around the logo (upper-centre), not the full width. */
+.gf-signin-dust { position: absolute; left: 50%; transform: translateX(-50%); width: 220px; top: 14%; height: 26%; z-index: 0; pointer-events: none; overflow: visible; }
+.gf-signin-dust i { position: absolute; bottom: 10%; border-radius: 50%; background: radial-gradient(circle, #FDE08A, #FAC805);
+  box-shadow: 0 0 6px 1px rgba(250,200,5,.6); animation-name: gfDust; animation-timing-function: ease-in; animation-iteration-count: infinite; }
+@media (prefers-reduced-motion: reduce) { .gf-signin-dust { display: none; } }
+
+/* ---------------------------------------------------------------
+   PORTAL LIGHT THEME  (.pwa-shell.theme-light)
+   Overrides the dark utility classes used in member.html. Premium
+   "feature" cards (.wallet-card, .keep-dark) intentionally stay dark.
+---------------------------------------------------------------- */
+.pwa-shell.theme-light { background: #EEF1F4; color: #011827; }
+html:has(.pwa-shell.theme-light), body:has(.pwa-shell.theme-light) { background: #DfE4E9; }
+.pwa-shell.theme-light .pwa-header { color: #011827; }
+
+/* surfaces → white / pale */
+.pwa-shell.theme-light .bg-navy-800 { background: #FFFFFF !important; }
+.pwa-shell.theme-light .bg-navy-700 { background: #EAEFF3 !important; }
+.pwa-shell.theme-light .hover\:bg-navy-700:hover { background: #E3EAEF !important; }
+.pwa-shell.theme-light .bg-navy-950\/60 { background: #E4EAEE !important; }
+.pwa-shell.theme-light .border-navy-600 { border-color: #E2E8EC !important; }
+.pwa-shell.theme-light .divide-navy-600 > * { border-color: #E8EDF0 !important; }
+
+/* text → dark on light */
+.pwa-shell.theme-light .text-white  { color: #011827 !important; }
+.pwa-shell.theme-light .text-slate-300 { color: #5E7686 !important; }
+.pwa-shell.theme-light .text-slate-500 { color: #93A2AE !important; }
+
+/* bottom nav */
+.pwa-shell.theme-light .pwa-bottom-nav { background: #FFFFFF; border-top-color: #E2E8EC; }
+.pwa-shell.theme-light .bottom-nav-item { color: #9AA8B2; }
+.pwa-shell.theme-light .bottom-nav-item.active { color: #B07D0A; }
+
+/* progress track contrast on light */
+.pwa-shell.theme-light .progress-track { background: rgba(2,33,53,0.10); }
+
+/* keep the premium dark cards dark, re-assert their light text */
+.pwa-shell.theme-light .wallet-card .text-white,
+.pwa-shell.theme-light .keep-dark .text-white { color: #FFFFFF !important; }
+.pwa-shell.theme-light .wallet-card .text-slate-300,
+.pwa-shell.theme-light .keep-dark .text-slate-300 { color: #9DB4C4 !important; }
+.pwa-shell.theme-light .wallet-card .text-slate-500,
+.pwa-shell.theme-light .keep-dark .text-slate-500 { color: #6E8696 !important; }
+.pwa-shell.theme-light .keep-dark .bg-navy-800 { background: rgba(255,255,255,0.07) !important; }
+.pwa-shell.theme-light .keep-dark .border-navy-600 { border-color: rgba(255,255,255,0.14) !important; }
+.pwa-shell.theme-light .keep-dark .progress-track { background: rgba(255,255,255,0.14); }
+
+/* Membership-card wordmark → rendered white so it's legible on the dark navy card */
+.wallet-card img { filter: brightness(0) invert(1); }
+
+/* gold text/icons must darken on light surfaces (low contrast otherwise) — but stay bright on dark feature cards */
+.pwa-shell.theme-light .text-gold-500 { color: #9A7A00 !important; }
+.pwa-shell.theme-light .wallet-card .text-gold-500,
+.pwa-shell.theme-light .keep-dark .text-gold-500 { color: #FBD33A !important; }
+.pwa-shell.theme-light .bottom-nav-item.active { color: #9A7A00; }
+
+/* ---------------------------------------------------------------
+   Coupon / voucher ticket (Portal rewards) — perforated edge + punched notches
+---------------------------------------------------------------- */
+.pwa-shell { --page-bg: #022135; }
+.pwa-shell.theme-light { --page-bg: #EEF1F4; }
+/* Apple Wallet button — always white text/icon on black (beats the light-theme text override) */
+.apple-wallet, .apple-wallet * { color: #fff !important; }
+/* Any element sitting on a solid colour keeps white icon/text in light mode (e.g. profile menu icon tiles) */
+.pwa-shell.theme-light .on-color, .pwa-shell.theme-light .on-color * { color: #fff !important; }
+
+/* Profile brand sign-off — white line on dark, dark line on light */
+.profile-logo { filter: brightness(0) invert(1); opacity: 0.5; }
+.pwa-shell.theme-light .profile-logo { filter: brightness(0); opacity: 0.38; }
+
+.coupon { position: relative; border-radius: 16px; box-shadow: 0 14px 30px -20px rgba(0,0,0,0.75); }
+/* Coupon body — tinted, never plain white */
+.coupon-body { background: #0A3A57; }
+.pwa-shell.theme-light .coupon-body { background: #FBF6EE !important; }
+.coupon-perf { position: absolute; top: 6px; bottom: 6px; width: 0; border-left: 2px dashed rgba(255,255,255,0.30); z-index: 3; }
+.coupon-notch { position: absolute; width: 16px; height: 16px; border-radius: 50%; background: var(--page-bg); z-index: 4; }
+.coupon-notch.top { top: -8px; transform: translateX(-50%); }
+.coupon-notch.bot { bottom: -8px; transform: translateX(-50%); }
+.pwa-shell.theme-light .coupon-perf { border-left-color: rgba(2,33,53,0.20); }
+
+/* ==================================================================
+   §3 Components — Dialog, Pager (assets/components.js)
+================================================================== */
+/* Dialog (§7.6) */
+.gf-dialog-backdrop {
+  position: fixed; inset: 0; z-index: 200; padding: 16px;
+  /* Match the house modals (#planModal / #purchaseModal use bg-black/50): a NEUTRAL
+     black scrim, not the navy rgba(2,33,53,.5) which read as a blue tint behind. */
+  background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center;
+}
+.gf-dialog {
+  /* Same surface as .card (the house modal body) — canvas fill, --r-md radius, hairline. */
+  background: var(--canvas, #fff); border: 1px solid var(--line, #E9E9E9);
+  border-radius: var(--r-md, 12px);
+  width: 100%; max-width: 32rem; max-height: 90vh; overflow-y: auto;
+  padding: 20px 22px; box-shadow: 0 24px 64px -24px rgba(2,33,53,0.45);
+}
+.gf-dialog.gf-dialog-search { max-width: 40rem; }
+.gf-dialog-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+/* Match the house modal titles (which use the app's .serif == Inter, weight 500) — NOT
+   Fraunces/Georgia, which made the "Custom range" title read in a different font. */
+.gf-dialog-title { font-size: 1.35rem; font-weight: 500; color: var(--navy, #022135); font-family: 'Inter', -apple-system, sans-serif; letter-spacing: -0.02em; line-height: 1.2; }
+.gf-dialog-x { font-size: 1.8rem; line-height: 1; color: #9AA8B2; background: none; border: 0; cursor: pointer; }
+.gf-dialog-x:hover { color: #55636E; }
+.gf-dialog-text { font-size: 0.9rem; color: #55636E; line-height: 1.55; }
+.gf-dialog-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 18px; }
+.gf-field { display: block; margin-bottom: 12px; }
+.gf-field > span { display: block; font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: #7A848C; margin-bottom: 4px; }
+.gf-field input { width: 100%; padding: 9px 12px; border: 1px solid #DCE3E8; border-radius: 8px; font-size: 0.9rem; }
+.btn-danger { background: var(--neg, #B42318); color: #fff; border: 0; border-radius: 10px; padding: 9px 16px; font-weight: 600; font-size: 0.85rem; cursor: pointer; }
+.btn-danger:hover { filter: brightness(1.06); }
+
+/* §7.4 motion — bound to classes, enter + exit. */
+@keyframes gfOverlayIn  { from { opacity: 0; } to { opacity: 1; } }
+@keyframes gfOverlayOut { from { opacity: 1; } to { opacity: 0; } }
+@keyframes gfSheetIn    { from { opacity: 0; transform: translateY(8px) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes gfSheetOut   { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateY(6px) scale(.99); } }
+.overlay-enter { animation: gfOverlayIn 200ms cubic-bezier(.2,.7,.3,1) both; }
+.overlay-exit  { animation: gfOverlayOut 150ms cubic-bezier(.4,0,1,1) both; }
+.sheet-enter   { animation: gfSheetIn 200ms cubic-bezier(.2,.7,.3,1) both; }
+.sheet-exit    { animation: gfSheetOut 150ms cubic-bezier(.4,0,1,1) both; }
+
+/* Pager (§3.2) — constant width per table, so nothing reflows or drifts.
+   Prev / Next are labelled pills; page numbers are circular chips. */
+.gf-pager { display: inline-flex; align-items: center; gap: 8px; }
+.gf-pg-nums { display: inline-flex; align-items: center; gap: 6px; }
+/* Circular page chip. */
+.gf-pg {
+  min-width: 34px; height: 34px; padding: 0 4px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.82rem; font-weight: 600; color: var(--navy, #022135);
+  background: #F1F3F5; border: 1px solid transparent; cursor: pointer;
+  transition: background .12s ease, color .12s ease;
+}
+.gf-pg:hover:not(:disabled):not(.gf-pg-ell):not(.is-active) { background: #E3E7EB; }
+.gf-pg.is-active { background: var(--navy, #022135); color: #fff; border-color: var(--navy, #022135); }
+.gf-pg-ell { background: none; cursor: default; color: #9AA8B2; min-width: 22px; }
+/* Prev / Next pills — filled, brand navy, with an arrow glyph. */
+.gf-pg-nav {
+  width: auto; padding: 0 14px; border-radius: 999px; gap: 4px;
+  background: var(--navy, #022135); color: #fff; font-weight: 600;
+}
+.gf-pg-nav:hover:not(:disabled) { background: #0A2E45; }
+.gf-pg-ch { font-size: 1.05em; line-height: 1; font-weight: 700; }
+.gf-pg-nav.is-disabled, .gf-pg-nav:disabled { background: #E4E7EA; color: #9AA8B2; cursor: default; }
+/* THREE-column grid: count | pager | page-size. The pager sits in the centre column,
+   flanked by two equal (minmax 0,1fr) columns, so its position NEVER depends on the
+   width of the "1–25 of 442" summary — it stays put no matter which page is active. */
+.gf-pagerbar { display: grid; grid-template-columns: minmax(0,1fr) auto minmax(0,1fr);
+  align-items: center; gap: 14px; }
+.gf-pagerbar > .gf-pager-count { justify-self: start; }
+.gf-pagerbar > .gf-pager { justify-self: center; }
+.gf-pagerbar > .gf-pager-size { justify-self: end; }
+.gf-pager-count { font-size: 0.78rem; color: #7A848C; font-weight: 500; white-space: nowrap; }
+.gf-pager-size { padding: 6px 10px; border: 1px solid #E4E7EA; border-radius: 8px; font-size: 0.78rem; }
+@media (max-width: 640px) {
+  .gf-pagerbar { grid-template-columns: 1fr; justify-items: center; gap: 10px; }
+  .gf-pagerbar > .gf-pager-count, .gf-pagerbar > .gf-pager, .gf-pagerbar > .gf-pager-size { justify-self: center; }
+}
+/* Mini coupon visual for the CRM voucher pool — a rounded, tinted stub with a
+   perforated right edge so a table row reads unmistakably as a voucher. */
+.gf-voucher-chip { position: relative; flex-shrink: 0; width: 58px; height: 46px; border-radius: 10px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  box-shadow: inset 0 0 0 1px rgba(2,33,53,0.06); }
+.gf-voucher-chip::after { content: ''; position: absolute; right: -1px; top: 8px; bottom: 8px; width: 2px;
+  background-image: radial-gradient(circle, rgba(2,33,53,0.18) 0.8px, transparent 1px); background-size: 2px 5px; }
+.gf-voucher-chip.is-dim { filter: grayscale(0.55); opacity: 0.7; }
+.gf-voucher-chip-i { width: 15px; height: 15px; display: inline-flex; }
+.gf-voucher-chip-i svg { width: 100%; height: 100%; }
+.gf-voucher-chip-v { font-size: 10px; font-weight: 700; letter-spacing: 0.01em; line-height: 1; white-space: nowrap; }
+/* Voucher modal pickers — colour swatches + icon chips the admin chooses from. */
+.vf-swatch { width: 34px; height: 34px; border-radius: 9px; display: inline-flex; align-items: center;
+  justify-content: center; border: 2px solid transparent; cursor: pointer; }
+.vf-swatch > span { opacity: 0; transition: opacity .1s ease; }
+.vf-swatch.is-sel { border-color: var(--navy, #022135); box-shadow: 0 0 0 2px #fff inset; }
+.vf-swatch.is-sel > span { opacity: 1; }
+.vf-iconpick { width: 38px; height: 34px; border-radius: 9px; display: inline-flex; align-items: center;
+  justify-content: center; border: 1px solid #E4E7EA; background: #fff; color: var(--navy, #022135); cursor: pointer; }
+.vf-iconpick:hover { border-color: #C7CDD3; background: #FAFBFC; }
+.vf-iconpick.is-sel { border-color: var(--navy, #022135); background: var(--navy, #022135); color: #fff; }
+.gf-empty { text-align: center; padding: 44px 16px; color: #9AA8B2; }
+.gf-empty-title { font-weight: 700; color: var(--navy, #022135); font-size: 0.95rem; }
+.gf-empty-body { font-size: 0.82rem; margin-top: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay-enter, .overlay-exit, .sheet-enter, .sheet-exit { animation: none; }
+}
+
+/* ==================================================================
+   §3.1 DataTable + §3.3 DateRange (assets/components.js)
+================================================================== */
+.gf-datatable { display: flex; flex-direction: column; }
+.gf-dt-toolbar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; padding: 4px 0 14px; }
+.gf-dt-search { position: relative; flex: 1; min-width: 220px; }
+.gf-dt-search-i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; color: #9AA8B2; }
+.gf-dt-search input { width: 100%; padding: 9px 12px 9px 34px; border: 1px solid var(--line, #E9E9E9); border-radius: 9px; font-size: 0.9rem; background: var(--surface, #FAFAFA); }
+.gf-dt-search input:focus { outline: none; border-color: var(--gold, #F2C21A); background: #fff; }
+.gf-dt-addwrap, .gf-dt-sub { position: relative; }
+.gf-dt-add { display: inline-flex; align-items: center; gap: 5px; padding: 8px 12px; border: 1px dashed #C7CDD3; border-radius: 9px; font-size: 0.82rem; font-weight: 600; color: var(--navy, #022135); cursor: pointer; list-style: none; }
+.gf-dt-add svg { width: 14px; height: 14px; }
+.gf-dt-addwrap[open] > .gf-dt-add { border-style: solid; border-color: var(--navy, #022135); }
+summary::-webkit-details-marker { display: none; }
+/* Anchor to the button's RIGHT edge (the filter button sits on the right of the toolbar),
+   so the menu opens inward and is never clipped by a card's overflow:hidden. */
+.gf-dt-menu { position: absolute; z-index: 40; top: calc(100% + 6px); right: 0; left: auto; min-width: 288px; max-width: 380px; background: #fff; border: 1px solid var(--line, #E9E9E9); border-radius: 12px; box-shadow: 0 16px 40px -18px rgba(2,33,53,0.32); padding: 8px; }
+.gf-dt-menu-item, .gf-dt-sub > summary { display: flex; align-items: center; gap: 6px; width: 100%; text-align: left; padding: 9px 11px; border-radius: 8px; font-size: 0.88rem; font-weight: 500; color: var(--navy, #022135); background: none; border: 0; cursor: pointer; list-style: none; }
+.gf-dt-menu-item:hover, .gf-dt-sub > summary:hover { background: var(--surface, #FAFAFA); }
+.gf-dt-sub-n { margin-left: auto; font-size: 0.68rem; font-weight: 600; color: var(--text-2, #8A929C); background: var(--surface, #F2F2F0); border-radius: 999px; padding: 1px 7px; }
+.gf-dt-sub-opts { padding: 4px 4px 6px 10px; }
+.gf-dt-opt-search { position: sticky; top: 0; background: #fff; padding: 2px 2px 6px; }
+.gf-dt-opt-search input { width: 100%; padding: 7px 10px; font-size: 0.8rem; border: 1px solid var(--line, #E4E4E4); border-radius: 8px; background: var(--surface, #FAFAFA); outline: none; }
+.gf-dt-opt-search input:focus { border-color: var(--gold, #FAC805); background: #fff; }
+.gf-dt-opt-list { max-height: 240px; overflow-y: auto; }
+.gf-dt-opt { display: block; width: 100%; text-align: left; padding: 7px 10px; border-radius: 7px; font-size: 0.84rem; color: var(--text-2, #6B7480); background: none; border: 0; cursor: pointer; white-space: normal; line-height: 1.3; }
+.gf-dt-opt:hover { background: var(--surface, #FAFAFA); color: var(--navy, #022135); }
+.gf-dt-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 0.78rem; font-weight: 600; color: var(--navy, #022135); background: var(--cream-100, #F6EFE3); border: 1px solid #E7DCC8; cursor: pointer; }
+.gf-dt-pill-k { color: var(--text-2, #6B7480); font-weight: 500; }
+.gf-dt-pill-x { color: #9AA8B2; font-weight: 700; }
+.gf-dt-pill:hover .gf-dt-pill-x { color: var(--neg, #B42318); }
+.gf-dt-clear { font-size: 0.78rem; font-weight: 600; color: var(--text-2, #6B7480); background: none; border: 0; cursor: pointer; text-decoration: underline; }
+.gf-dt-clear:hover { color: var(--navy, #022135); }
+.gf-th-sort { cursor: pointer; user-select: none; white-space: nowrap; }
+.gf-th-sort:hover { color: var(--navy, #022135); background: var(--surface, #FAFAFA); }
+/* B — fixed layout so a sort never reflows columns; long values ellipsis, never widen. */
+.gf-table-fixed { table-layout: fixed; width: 100%; }
+.gf-table-fixed td, .gf-table-fixed th { overflow: hidden; text-overflow: ellipsis; }
+.gf-th-label { overflow: hidden; text-overflow: ellipsis; }
+/* Always-on sort caret: a stacked up/down triangle pair in a reserved fixed-width slot,
+   so BOTH arrows are clearly visible at rest and the active direction lights up gold.
+   Width is reserved whether or not sorted ⇒ a sort click never reflows the header. */
+.gf-caret { display: inline-flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 18px; height: 1.7em; margin-left: 7px; vertical-align: middle; line-height: 0; flex: none; gap: 3px; }
+/* Deliberately larger than the label text so the sort control is unmistakable. */
+.gf-caret::before, .gf-caret::after { font-size: 0.82em; line-height: 0.6; color: #5A6570; }
+.gf-caret::before { content: '▲'; }
+.gf-caret::after  { content: '▼'; }
+.gf-th-sort:hover .gf-caret::before, .gf-th-sort:hover .gf-caret::after { color: var(--navy, #022135); }
+/* Active: the pointing arrow is bold gold; the opposite arrow fades right back. */
+.gf-caret.is-asc::before  { color: var(--gold-700, #9A6E15); }
+.gf-caret.is-asc::after   { color: #C7CED4; }
+.gf-caret.is-desc::after  { color: var(--gold-700, #9A6E15); }
+.gf-caret.is-desc::before { color: #C7CED4; }
+.gf-row-click { cursor: pointer; }
+.gf-dt-footer { padding-top: 12px; }
+
+/* Uniform form-control height — text inputs, selects, datetime-local and money fields all
+   render to EXACTLY the same box so a row of fields never looks ragged. box-sizing:border-box
+   keeps the declared height inclusive of padding + border regardless of native control quirks. */
+.gf-field { height: 42px; box-sizing: border-box; line-height: 1.2; }
+select.gf-field { -webkit-appearance: none; appearance: none; padding-right: 2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7480' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 0.7rem center; }
+/* datetime-local sits a touch high internally on WebKit — nudge its value to vertical centre. */
+input.gf-field[type="datetime-local"] { line-height: normal; }
+
+/* DateRange segmented strip */
+.gf-daterange { display: inline-flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.gf-seg-strip { display: inline-flex; background: var(--surface, #FAFAFA); border: 1px solid var(--line, #E9E9E9); border-radius: 9px; padding: 2px; }
+.gf-seg { padding: 5px 12px; border: 0; background: none; border-radius: 7px; font-size: 0.78rem; font-weight: 500; color: var(--text-2, #6B7480); cursor: pointer; white-space: nowrap; }
+.gf-seg:hover { color: var(--navy, #022135); }
+/* F11 — compare pills use the SAME navy-fill active state and font as the date
+   strip (one segmented-control idiom, one font, no raw blue). */
+.gf-seg.is-active { background: var(--navy, #022135); color: #fff; }
+/* Resolved-window caption, inline beside the strip — one quiet source of truth for the dates. */
+.gf-dr-cap { display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; font-weight: 600; color: var(--navy, #022135); white-space: nowrap; letter-spacing: -0.01em; }
+.gf-dr-cap-ic { width: 14px; height: 14px; color: var(--gold-deep, #C2900E); flex-shrink: 0; }
+
+/* Chart hover tooltip + per-point hit columns (trend charts). */
+.gf-ct-layer { position: absolute; inset: 0; z-index: 3; overflow: hidden; }
+.gf-ct-hit { position: absolute; top: 0; bottom: 0; transform: translateX(-50%); cursor: crosshair; }
+.gf-ct-line { position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: rgba(10,58,87,0.16); opacity: 0; transition: opacity .1s; pointer-events: none; }
+.gf-ct-dot { position: absolute; left: 50%; transform: translate(-50%,-50%); width: 9px; height: 9px; border-radius: 50%; background: #0A3A57; border: 2px solid #fff; box-shadow: 0 0 0 1px rgba(10,58,87,0.25); opacity: 0; transition: opacity .1s; pointer-events: none; }
+.gf-ct-hit:hover .gf-ct-line, .gf-ct-hit:hover .gf-ct-dot { opacity: 1; }
+#gf-charttip { position: fixed; z-index: 9999; pointer-events: none; background: var(--navy, #022135); color: #fff; font-family: Inter, sans-serif; font-size: 11px; font-weight: 700; line-height: 1.35; padding: 6px 10px; border-radius: 8px; box-shadow: 0 8px 24px rgba(2,33,53,0.22); opacity: 0; transition: opacity .1s; white-space: nowrap; transform: translate(-50%, calc(-100% - 12px)); }
+#gf-charttip .gf-tt-l { display: block; color: #9DB4C6; font-weight: 500; font-size: 10px; letter-spacing: .02em; margin-bottom: 1px; }
+#gf-charttip b { color: var(--gold, #F2C21A); font-weight: 700; }
+
+/* ==========================================================================
+   F1 — Animated goldfinch sign-in. Navy canvas, the brand bird + wordmark
+   animate in over a soft gold glow with drifting gold-dust. Motion-safe.
+   ========================================================================== */
+@keyframes gfBirdIn  { 0% { opacity: 0; transform: translateY(16px) scale(.82) rotate(-6deg); } 55% { opacity: 1; } 100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); } }
+@keyframes gfFloat   { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes gfWordIn  { 0% { opacity: 0; transform: translateY(9px); } 100% { opacity: 1; transform: translateY(0); } }
+@keyframes gfGlow    { 0%,100% { opacity: .32; transform: translateX(-50%) scale(1); } 50% { opacity: .58; transform: translateX(-50%) scale(1.08); } }
+@keyframes gfDust    { 0% { opacity: 0; transform: translateY(0) scale(.5); } 12% { opacity: .95; } 100% { opacity: 0; transform: translateY(-120px) scale(1.15); } }
+@keyframes gfCardUp  { 0% { opacity: 0; transform: translateY(18px); } 100% { opacity: 1; transform: translateY(0); } }
+
+.gf-auth-hero { position: relative; display: flex; flex-direction: column; align-items: center; width: 100%; margin-bottom: 20px; padding-top: 14px; }
+.gf-auth-glow { position: absolute; left: 50%; top: -6px; width: 280px; height: 190px; border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(250,200,5,.30), rgba(250,200,5,0) 68%);
+  transform: translateX(-50%); animation: gfGlow 5s ease-in-out infinite; pointer-events: none; z-index: 0; }
+.gf-auth-logo { position: relative; z-index: 2; width: min(272px, 66vw); height: auto; overflow: visible; }
+/* Real brand PNG (logo-full.png), whitened for the dark canvas + animated in. */
+.gf-auth-img { display: block; filter: brightness(0) invert(1); opacity: 0;
+  animation: gfBirdIn 1s cubic-bezier(.2,.8,.25,1) .1s forwards, gfFloat 4.6s ease-in-out 1.3s infinite; }
+.gf-auth-tag { margin-top: 14px; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; font-weight: 600; color: rgba(255,255,255,.45); opacity: 0; animation: gfWordIn .6s ease-out 1.2s forwards; }
+/* Gold dust — a NARROW centred band so the motes rise close around the logo, not spread wide. */
+.gf-dust { position: absolute; left: 50%; transform: translateX(-50%); width: 240px; top: -6px; height: 150px; z-index: 1; pointer-events: none; }
+.gf-dust i { position: absolute; bottom: 8px; border-radius: 50%; background: radial-gradient(circle, #FDE08A, #FAC805);
+  box-shadow: 0 0 6px 1px rgba(250,200,5,.65); animation-name: gfDust; animation-timing-function: ease-in; animation-iteration-count: infinite; }
+.gf-auth-card-anim { animation: gfCardUp .6s cubic-bezier(.2,.8,.25,1) .45s both; }
+/* ── CRM sign-in overlay ──────────────────────────────────────────────────────
+   Background = two FIXED layers: a pre-blurred copy beneath a sharp copy that fades out
+   on `.is-blur` (a cheap opacity cross-fade — smooth, no per-frame filter jank). Being
+   fixed, they always cover the viewport, so scrolling never reveals the app behind. */
+.gf-auth-bg { position: fixed; inset: 0; background: url('loginbgfin.jpg') center/cover no-repeat; }
+.gf-auth-bg-blur  { z-index: 0; filter: blur(4px); transform: scale(1.03); }
+.gf-auth-bg-sharp { z-index: 1; opacity: 1; transition: opacity .85s ease; }
+#authOverlay.is-blur .gf-auth-bg-sharp { opacity: 0; }
+/* Hand-off to the app: the whole sign-in overlay dissolves + zooms gently as the dashboard
+   fades in behind it (a fluid cross-dissolve, not a hard cut). */
+#authOverlay { transition: opacity .6s ease, transform .6s cubic-bezier(.4,0,.2,1); }
+#authOverlay.is-fading { opacity: 0; transform: scale(1.04); pointer-events: none; }
+.gf-auth-wash { position: fixed; inset: 0; z-index: 2;
+  background: linear-gradient(180deg, rgba(8,5,2,0.66) 0%, rgba(8,5,2,0.38) 42%, rgba(8,5,2,0.72) 100%); }
+.gf-auth-scroll { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center;
+  padding: 1rem; overflow-y: auto; overflow-x: hidden; }
+.gf-auth-stage { position: relative; }
+
+/* The logo is centred instantly at intro (JS measures the exact offset), then GLIDES to the top
+   as the card fades in — pure transform, smooth every frame (no max-height reflow). */
+#authHero { transition: transform .72s cubic-bezier(.22,.9,.32,1); will-change: transform; }
+.gf-auth-stage #authCard { transition: opacity .45s ease .12s, transform .6s cubic-bezier(.22,.9,.32,1) .1s; }
+.gf-auth-stage.is-intro #authCard,
+.gf-auth-stage.is-signing #authCard { opacity: 0; transform: translateY(22px); pointer-events: none; }
+/* During the sign-in loader the hero's own tagline is hidden so it doesn't collide with the
+   loader's "Signing you in…" caption below the re-centred logo. (Cancel its forwards-filled
+   gfWordIn animation, which would otherwise pin it visible.) */
+.gf-auth-stage.is-signing .gf-auth-tag { animation: none !important; opacity: 0 !important; transition: opacity .25s ease; }
+
+/* Sign-in loader — bar + caption, centred just below the re-centred logo. */
+.gf-auth-loaderbar { position: absolute; z-index: 4; left: 0; right: 0; top: calc(50% + 62px);
+  flex-direction: column; align-items: center; gap: 12px; }
+.gf-auth-loaderbar.flex { display: flex; }
+.gf-auth-loaderbar .gf-loader-cap { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: rgba(255,255,255,.5); }
+
+/* CRM sign-in loading screen — brief branded splash between "Sign in" and the app. */
+@keyframes gfLoaderBar { 0% { transform: translateX(-100%); } 100% { transform: translateX(320%); } }
+@keyframes gfLoaderLogo { 0% { opacity: 0; transform: scale(.94); } 100% { opacity: 1; transform: scale(1); } }
+#crmLoader { background: #0a0805; }              /* image + wash come from ::before / ::after */
+#crmLoader.is-on { display: flex; }
+#crmLoader > * { position: relative; z-index: 2; }   /* logo + bar above the blurred texture */
+.gf-loader-logo { width: min(220px, 60vw); filter: brightness(0) invert(1); animation: gfLoaderLogo .5s ease-out both; }
+.gf-loader-track { width: 168px; height: 3px; border-radius: 3px; background: rgba(255,255,255,.12); overflow: hidden; position: relative; }
+.gf-loader-track > span { position: absolute; top: 0; left: 0; height: 100%; width: 42%; border-radius: 3px; background: linear-gradient(90deg, transparent, #FAC805, transparent); animation: gfLoaderBar 1.1s cubic-bezier(.5,.1,.4,.9) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gf-auth-img, .gf-auth-tag, .gf-auth-glow, .gf-auth-card-anim, .gf-loader-logo { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .gf-dust, .gf-loader-track > span { display: none; }
+  #authHero { transition: none !important; }
+  .gf-auth-stage.is-intro #authCard, .gf-auth-stage.is-signing #authCard { opacity: 1 !important; transform: none !important; }
+  .gf-auth-bg-sharp { transition: none !important; }
+}

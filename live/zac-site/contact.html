@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contact — ZAC AI Technologies</title>
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="ZAC AI Technologies">
+<meta property="og:title" content="Contact — ZAC AI Technologies">
+<meta property="og:description" content="Let's Talk. Ready to transform your business with AI and custom software? We're here to help.">
+<meta property="og:url" content="https://www.zacaitechnologies.com/contact.html">
+<meta property="og:image" content="https://www.zacaitechnologies.com/assets/og-image.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://www.zacaitechnologies.com/contact.html">
+<meta name="description" content="Let's Talk. Ready to transform your business with AI and custom software? We're here to help.">
+<style>
+[data-chars]:not(.split-ready),[data-words]:not(.split-ready){visibility:hidden}
+.hero__copy,.hero__title{opacity:0;transition:opacity .35s ease}
+html.fx-ready .hero__copy,html.fx-ready .hero__title{opacity:1}
+</style>
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" href="assets/icon-512.png">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="preload" as="image" href="assets/zac-mark-white.png" fetchpriority="high">
+<link rel="preload" as="image" href="assets/beds/contact-desk-team-f0.jpg" fetchpriority="high">
+<link rel="stylesheet" href="assets/zac.css">
+<link rel="stylesheet" href="assets/fx.css">
+<style>
+.hero--desk{ justify-content:center; align-items:stretch; text-align:left;
+  padding-top:clamp(96px,11.5vh,132px); padding-bottom:clamp(34px,5vh,62px); }
+.hero > .hero__wash{ position:absolute !important; z-index:1; }
+.herobed .bedstill{ position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; z-index:0; }
+.hero--desk .herobed video{ z-index:1; }
+.hero--desk .herobed video.ready{ opacity:1; }
+.hero--desk .herobed__grade{ z-index:2; }
+.hero--desk .herobed__grade{
+  background:
+    radial-gradient(120% 92% at 50% 46%,rgba(0,0,0,.76),rgba(0,0,0,.52) 78%),
+    linear-gradient(180deg,rgba(0,0,0,.88) 0%,rgba(0,0,0,.44) 40%,rgba(0,0,0,.84) 100%); }
+.desk{ width:100%; max-width:1080px; margin-inline:auto;
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.06fr);
+  gap:clamp(22px,2.6vw,46px); align-items:start; }
+.desk__lead{ display:flex; flex-direction:column; gap:clamp(16px,2.2vh,26px); }
+.desk .hero__title{ padding-top:0; }
+.desk .hero__sub{ margin:clamp(12px,1.8vh,18px) 0 0; max-width:34ch;
+  padding-bottom:clamp(14px,2.2vh,20px);
+  border-bottom:1px solid rgba(255,255,255,.24); }
+.desk .cform{ margin:0; gap:clamp(12px,1.3vw,16px); }
+.desk__form{ position:relative; border-radius:clamp(16px,1.6vw,24px);
+  padding:clamp(18px,1.9vw,28px);
+  background:linear-gradient(180deg,rgba(18,18,21,.80),rgba(10,10,12,.88));
+  border:1px solid rgba(255,255,255,.13);
+  -webkit-backdrop-filter:blur(22px) saturate(115%); backdrop-filter:blur(22px) saturate(115%);
+  box-shadow:0 50px 100px -50px rgba(0,0,0,.95); }
+.desk__form .fld textarea{ min-height:104px; padding-top:26px; }
+.desk__form .cform__send{ margin-top:2px; }
+.fld select option{ background:#1d1d1f; color:var(--w); }
+.sect__lab{ padding-bottom:9px; border-bottom:1px solid rgba(255,255,255,.22);
+  margin-bottom:clamp(14px,1.8vh,20px); }
+.wa{ display:grid; grid-template-columns:auto minmax(0,1fr);
+  align-items:center; gap:4px clamp(12px,1.4vw,20px);
+  padding:clamp(18px,1.9vw,26px) clamp(16px,1.7vw,26px);
+  border-radius:clamp(16px,1.6vw,24px);
+  border:1px solid rgba(120,200,140,.32);
+  -webkit-backdrop-filter:blur(16px) saturate(115%); backdrop-filter:blur(16px) saturate(115%);
+  background:
+    radial-gradient(120% 160% at 0% 0%,rgba(37,211,102,.16),transparent 62%),
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.02));
+  transition:border-color .45s var(--ease); }
+.wa:hover{ border-color:rgba(120,200,140,.6); }
+.wa__ico{ grid-row:1 / 3; align-self:center;
+  width:clamp(44px,3.4vw,54px); height:clamp(44px,3.4vw,54px);
+  border-radius:50%; display:grid; place-items:center; flex:none;
+  background:rgba(37,211,102,.16); border:1px solid rgba(37,211,102,.4); color:#4ade80; }
+.wa__ico svg{ width:52%; height:52%; }
+.wa__t{ grid-column:2; align-self:end; margin:0;
+  font-size:clamp(15px,1.05vw,17px); font-weight:600; letter-spacing:-.022em; }
+.wa__n{ grid-column:2; align-self:start; }
+.wa__go{ grid-column:1 / -1; justify-self:start;
+  margin-top:clamp(12px,1.4vh,16px); }  
+.wa__go svg{ width:17px; height:17px; flex:none; }
+.tel{ display:inline-flex; align-items:center; min-height:44px;
+  font-family:var(--sf);
+  font-size:clamp(20px,1.7vw,26px); line-height:1.1;
+  font-weight:500; letter-spacing:0;
+  white-space:nowrap; color:#fff;
+  transition:color .25s var(--ease); }
+.tel:hover{ color:#4ade80; }
+.tel:focus-visible{ outline:2px solid #9dbaff; outline-offset:4px; border-radius:4px; }
+.rec{ margin:0; display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  column-gap:clamp(18px,2vw,32px); }
+.rec__r{ display:grid; gap:3px; align-content:start;
+  padding-top:clamp(10px,1.4vh,14px); margin-top:clamp(10px,1.4vh,14px);
+  border-top:1px solid rgba(255,255,255,.16); }
+.rec__r dt{ margin:0; font-size:13px; font-weight:600; letter-spacing:-.01em; }
+.rec__r dd{ margin:0; font-size:13px; line-height:1.4; color:var(--w); opacity:.8; }
+.rec__r dd a{ color:var(--blue-hi); }
+@media (max-width:860px){
+  .hero--desk{ padding-top:clamp(104px,14vh,140px); }
+  .desk{ grid-template-columns:1fr; gap:clamp(22px,4vh,34px); }
+  .desk .hero__sub{ max-width:none; }
+  .rec{ grid-template-columns:1fr; }
+}
+@media (max-width:560px){
+  .wa{ grid-template-columns:auto minmax(0,1fr); }
+}
+@media (min-width:861px){
+  .desk{ grid-template-columns:minmax(0,1fr) minmax(0,1.06fr); }
+}
+.desk{ gap:clamp(26px,3.6vw,52px); }
+.desk__lead{ gap:clamp(22px,3.4vh,34px); }
+.desk .hero__sub{ margin-top:clamp(14px,2vh,20px);
+  padding-bottom:clamp(16px,2.4vh,22px); border-bottom-color:var(--hair); }
+html .wa{ padding:clamp(18px,2.1vw,28px) clamp(17px,1.9vw,28px);
+  gap:6px clamp(14px,1.5vw,20px); }
+.wa__go{ margin-top:clamp(14px,1.7vh,20px); }
+.sect__lab{ padding-bottom:10px; border-bottom-color:var(--hair);
+  margin-bottom:clamp(14px,1.9vh,20px); }
+.rec{ column-gap:clamp(20px,2.2vw,34px); }
+html .rec__r{ gap:5px; padding-top:clamp(12px,1.6vh,16px);
+  margin-top:clamp(12px,1.6vh,16px); border-top-color:var(--hair); }
+html .rec__r:nth-child(-n+2){ border-top:0; padding-top:0; margin-top:0; }
+@media (max-width:860px){
+  html .rec__r:nth-child(-n+2){ border-top:1px solid var(--hair);
+    padding-top:clamp(12px,1.6vh,16px); margin-top:clamp(12px,1.6vh,16px); }
+  html .rec__r:first-child{ border-top:0; padding-top:0; margin-top:0; }
+}
+html .desk__form{ padding:clamp(18px,2.2vw,30px); }
+.desk .cform{ gap:clamp(16px,1.5vw,20px); }
+.desk__form .cform__send{ margin-top:clamp(6px,1vh,10px); }
+html .hero--desk{ padding-top:clamp(84px,10vh,116px); padding-bottom:var(--sp-xl); }
+html .desk__form{ padding:clamp(20px,2.4vw,34px); }
+.desk .cform{ gap:clamp(18px,1.7vw,23px); }
+html .wa{ padding:clamp(20px,2.3vw,30px) clamp(19px,2.1vw,30px); }
+.desk__lead{ gap:clamp(24px,3.6vh,38px); }
+@media (max-width:860px){
+  .desk{ gap:clamp(24px,4vh,38px); }
+  .desk__lead{ gap:clamp(18px,2.4vh,26px); }
+  html .rec__r{ padding-top:clamp(10px,1.3vh,14px); margin-top:clamp(10px,1.3vh,14px); }
+}
+@media (min-width:861px){
+  .desk{ align-items:stretch; }
+  .desk__form{ display:flex; flex-direction:column; }
+  .desk__form .cform{ flex:1 1 auto; grid-template-rows:auto auto minmax(0,1fr) auto; }
+  .desk__form .fld--msg{ display:flex; flex-direction:column; min-height:0; }
+  html .desk__form .fld--msg textarea{ flex:1 1 auto; height:100%; resize:none; }
+}
+html .wa, html .wa__ico, html .desk__form{ border:0 !important; }
+html .desk .hero__sub, html .sect__lab{ border-bottom:0 !important; }
+html .rec__r, html .rec__r:nth-child(-n+2){ border-top:0 !important; }
+@media (min-width:861px){
+  html body .hero--desk{ --dm:clamp(18px,4.2vh,48px);
+    min-height:100vh !important; min-height:100svh !important; height:auto;
+    padding:calc(var(--nav-h,64px) + var(--dm)) var(--gut) var(--dm) !important;
+    justify-content:center; box-sizing:border-box;
+    overflow:hidden;  }
+  html body .desk{ min-height:min(calc(100svh - var(--nav-h,64px) - 2 * var(--dm)),780px);
+    align-items:stretch; flex:none; }
+  html .desk__lead{ justify-content:space-between; gap:clamp(12px,2vh,24px); min-height:0; }
+  html .desk__form{ display:flex; flex-direction:column; min-height:0;
+    padding:clamp(18px,2vw,30px); }
+  html .desk .cform{ flex:1 1 auto; min-height:0; gap:clamp(12px,1.6vh,20px);
+    grid-template-rows:auto auto minmax(0,1fr) auto; }
+  html .desk__form .fld--msg{ min-height:0; }
+  html body .desk__form .fld--msg textarea{ min-height:88px; height:100%; flex:1 1 auto; }
+  html .desk__form .cform__send{ margin-top:0; }
+  html .desk .hero__sub{ margin-top:clamp(8px,1.4vh,16px); padding-bottom:0; }
+  html .wa{ padding:clamp(14px,1.9vh,22px) clamp(16px,1.6vw,24px); row-gap:2px; }
+  html .wa__go{ margin-top:clamp(8px,1.3vh,14px); }
+  html .sect__lab{ padding-bottom:0; margin-bottom:clamp(6px,1.1vh,12px); }
+  html .rec{ row-gap:0; }
+  html .rec__r, html .rec__r:nth-child(-n+2){ gap:2px; padding-top:0; margin-top:clamp(8px,1.4vh,14px); }
+  html .rec__r:nth-child(-n+2){ margin-top:0; }
+  html .rec__r dd{ line-height:1.35; }
+}
+</style>
+</head>
+<body class="fd fd-contact">
+
+<header class="nav">
+  <div class="nav__in">
+    <a class="nav__brand" href="index.html">
+      <img decoding="async" fetchpriority="high" class="brandmark brandmark--nav" src="assets/zac-mark-white.png" alt="ZAC AI Technologies Sdn Bhd">
+    </a>
+    <nav class="nav__links" aria-label="Main">
+      <a href="index.html">Home</a>
+      <a href="edge.html">Edge</a>
+      <a href="software.html">Software</a>
+      <a href="ai-lab.html">AI Lab</a>
+      <a href="work.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="partnership.html">Partnership</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:10px">
+      <a class="nav__cta" href="contact.html">Book a Call</a>
+      <button class="nav__burger" aria-label="Menu" aria-expanded="false"><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>
+
+<div class="sheet">
+  <a href="index.html">Home<small>ZAC AI Technologies</small></a>
+  <a href="edge.html">ZAC Edge<small>Consulting</small></a>
+  <a href="software.html">ZAC Software<small>Engineering</small></a>
+  <a href="ai-lab.html">ZAC AI Lab<small>R&amp;D / Applied AI</small></a>
+  <a href="work.html">Work<small>Case studies</small></a>
+  <a href="about.html">About<small>The company</small></a>
+  <a href="partnership.html">Partnership<small>Partner programme</small></a>
+  <a aria-current="page" href="contact.html">Contact<small>Get in touch</small></a>
+</div>
+
+<main>
+
+  <section class="hero hero--desk" id="desk">
+    <div class="herobed" data-herobed>
+      
+      <img class="bedstill" src="assets/beds/contact-desk-team-f0.jpg" alt="" decoding="async" fetchpriority="high">
+      <video muted playsinline preload="auto"
+             poster="assets/beds/contact-desk-team-f0.jpg"
+             src="assets/video/contact-desk-team.mp4"></video>
+      <div class="herobed__grade"></div>
+    </div>
+    <div class="hero__wash"></div>
+
+    <div class="desk">
+
+      <div class="desk__lead">
+        <div class="hero__title">
+          <h1 class="t-huge r">Let's Talk</h1>
+          <p class="t-lead hero__sub r">Ready to transform your business with AI and custom software? We're here to help.</p>
+        </div>
+
+        <section class="wa r" aria-labelledby="wa-t">
+          <span class="wa__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.47s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35z"/><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.16 8.16 0 0 1-1.25-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.25 8.23z"/></svg>
+          </span>
+          <h2 class="wa__t" id="wa-t">WhatsApp</h2>
+          <a class="tel wa__n" href="tel:+601118808226">+60 11-1880 8226</a>
+          <a class="cta wa__go" href="https://wa.me/601118808226" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.47 14.38c-.3-.15-1.75-.86-2.02-.96-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.65-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.45-.53.15-.18.2-.3.3-.5.1-.2.05-.38-.02-.53-.08-.15-.67-1.6-.92-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.47s1.06 2.87 1.21 3.07c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.75-.72 2-1.41.25-.69.25-1.28.17-1.41-.07-.13-.27-.2-.57-.35z"/><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.16 8.16 0 0 1-1.25-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.83 2.42a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.23-8.25 8.23z"/></svg>
+            Message us on WhatsApp
+          </a>
+        </section>
+
+        <div>
+          <div class="sect__lab"><p class="t-kicker r" style="margin:0">Contact</p></div>
+          <dl class="rec">
+            <div class="rec__r r"><dt>Company</dt><dd>ZAC AI Technologies Sdn Bhd</dd></div>
+            <div class="rec__r r"><dt>Reg. No.</dt><dd>202501040039 (1641448-M)</dd></div>
+            <div class="rec__r r"><dt>Address</dt><dd>2A, Lorong Dato Abu Bakar, Section 16,<br>46350 Petaling Jaya, Malaysia</dd></div>
+            <div class="rec__r r"><dt class="foot__k">Subsidiary</dt><dd class="foot__v">Sentinel Alliance &amp; Company Sdn. Bhd. (1484558-K)</dd></div>
+            
+            <div class="rec__r r"><dt>Enquiries</dt><dd><a href="#desk">Contact form</a></dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <div class="desk__form r">
+      
+      <form class="cform" action="/api/contact" method="post" data-endpoint="/api/contact" novalidate>
+        
+        <div class="cform__hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+
+        <div class="cform__row">
+          <div class="fld">
+            <input type="text" id="name" name="name" placeholder=" " required>
+            <label for="name">Name *</label>
+          </div>
+          <div class="fld">
+            <input type="text" id="company" name="company" placeholder=" ">
+            <label for="company">Company</label>
+          </div>
+        </div>
+
+        <div class="cform__row">
+          <div class="fld">
+            <input type="email" id="email" name="email" placeholder=" " required>
+            <label for="email">Email *</label>
+          </div>
+          <div class="fld fld--select">
+            <select id="need" name="need" required>
+              <option value="">Select an option</option>
+              <option value="consulting">ZAC Edge - Consulting &amp; Strategy</option>
+              <option value="software">ZAC Software - Custom Engineering</option>
+              <option value="ai">ZAC AI Lab - Applied AI Solutions</option>
+              <option value="general">General Inquiry</option>
+              <option value="partnership">Partnership Opportunity</option>
+            </select>
+            <label for="need">What do you need? *</label>
+          </div>
+        </div>
+
+        <div class="fld fld--msg">
+          <textarea id="message" name="message" rows="4" placeholder=" " required></textarea>
+          <label for="message">Message *</label>
+        </div>
+
+        <button class="cta cform__send" type="submit">Send Message
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;flex:none"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>
+        </button>
+        <p class="cform__status" role="status" aria-live="polite" hidden></p>
+      </form>
+      </div>
+
+    </div>
+    <p class="credit">Video: Pexels</p>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot__glow"></div>
+  <div class="foot__in" style="max-width:1240px;margin-inline:auto;padding:clamp(56px,9vh,110px) var(--gut) 0">
+
+    <div class="foot__hero">
+      <div>
+        <p class="foot__claim">Built for SMEs. Built in Malaysia.</p>
+      </div>
+      <dl class="foot__meta">
+        <div><dt>Company</dt><dd>ZAC AI Technologies Sdn Bhd</dd></div>
+        <div><dt>Reg. No.</dt><dd>202501040039 (1641448-M)</dd></div>
+        <div><dt>Address</dt><dd>2A, Lorong Dato Abu Bakar, Section 16,<br>46350 Petaling Jaya, Malaysia</dd></div>
+        <div><dt class="foot__k">Subsidiary</dt><dd class="foot__v">Sentinel Alliance &amp; Company Sdn. Bhd. (1484558-K)</dd></div>
+      </dl>
+    </div>
+
+    <div class="foot__top">
+      <div>
+        <h4>Divisions</h4>
+        <div class="foot__links">
+          <a href="edge.html">ZAC Edge</a>
+          <a href="software.html">ZAC Software</a>
+          <a href="ai-lab.html">ZAC AI Lab</a>
+        </div>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <div class="foot__links">
+          <a href="work.html">Work</a>
+          <a href="about.html">About</a>
+          <a href="partnership.html">Partnership</a>
+          <a href="contact.html">Contact</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="foot__wordmark">
+      <div class="foot__logowrap">
+        <img decoding="async" class="foot__logomark" src="assets/zac-lockup-white.png" alt="ZAC AI Technologies Sdn Bhd" fetchpriority="low">
+      </div>
+    </div>
+    <div class="foot__bar">
+      <span class="t-small">&copy; 2026 ZAC. All rights reserved.</span>
+      <span class="t-small">Petaling Jaya, Malaysia</span>
+    </div>
+  </div>
+</footer>
+
+<button class="totop" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+</button>
+
+<script src="assets/zac.js"></script>
+<script src="assets/fx.js"></script>
+<script src="assets/fd-viz.js"></script>
+<script>
+(function() {
+  var v = document.querySelector("main section:first-of-type video");
+  if (!v) return;
+  function done() {
+    var c = getComputedStyle(v);
+    if (v.readyState < 2 || c.display === "none" || parseFloat(c.opacity) < .99) return false;
+    [].slice.call(v.closest("section").querySelectorAll(".bedstill,.herobed__fb")).forEach(function(e) {
+      e.style.setProperty("opacity", "0", "important");
+      e.style.setProperty("visibility", "hidden", "important");
+    });
+    return true;
+  }
+  function watch() {
+    var n = 0;
+    (function loop() {
+      if (done() || n++ > 60) return;
+      setTimeout(loop, 100);
+    })();
+  }
+  v.addEventListener("loadeddata", watch);
+  if (v.readyState >= 2) watch();
+})();
+</script>
+
+<style>
+  .cform__hp{ position:absolute !important; left:-9999px !important; width:1px; height:1px; overflow:hidden; }
+  .cform__status{ margin:14px 0 0; font-size:var(--t-sm,16px); line-height:1.5; color:rgba(255,255,255,.82); }
+  .cform__status[data-state="ok"]{ color:#8fe3b0; }
+  .cform__status[data-state="err"]{ color:#ffb4a8; }
+  .cform [aria-invalid="true"]{ box-shadow:0 0 0 2px rgba(255,120,100,.75) inset; }
+  .cform__send[disabled]{ opacity:.6; cursor:progress; }
+</style>
+<script>
+(function() {
+  "use strict";
+  var form = document.querySelector("form.cform");
+  if (!form) return;
+  var btn = form.querySelector(".cform__send"), status = form.querySelector(".cform__status");
+  var endpoint = form.getAttribute("data-endpoint") || form.getAttribute("action") || "/api/contact";
+  function say(msg, state) {
+    status.hidden = false;
+    status.textContent = msg;
+    status.setAttribute("data-state", state || "");
+  }
+  form.addEventListener("input", function(e) {
+    if (e.target.checkValidity && e.target.checkValidity()) e.target.removeAttribute("aria-invalid");
+  });
+  form.addEventListener("submit", function(e) {
+    e.preventDefault();
+    var bad = [].slice.call(form.querySelectorAll("input,select,textarea")).filter(function(el) {
+      if (el.name === "website") return false;
+      var ok = el.checkValidity() && !(el.tagName === "SELECT" && el.required && !el.value);
+      if (ok) el.removeAttribute("aria-invalid"); else el.setAttribute("aria-invalid", "true");
+      return !ok;
+    });
+    if (bad.length) {
+      say("Please fill in the highlighted fields.", "err");
+      bad[0].focus();
+      return;
+    }
+    var data = {};
+    new FormData(form).forEach(function(v, k) {
+      data[k] = String(v).trim();
+    });
+    data.page = location.pathname;
+    data.submittedAt = (new Date).toISOString();
+    btn.disabled = true;
+    say("Sending…");
+    fetch(endpoint, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json"
+      },
+      body: JSON.stringify(data)
+    }).then(function(r) {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r;
+    }).then(function() {
+      form.reset();
+      say("Thanks — your message has been sent.", "ok");
+    }).catch(function() {
+      say("Sorry, your message could not be sent. Please try again, or message us on WhatsApp.", "err");
+    }).then(function() {
+      btn.disabled = false;
+    });
+  });
+})();
+</script>
+</body>
+</html>
